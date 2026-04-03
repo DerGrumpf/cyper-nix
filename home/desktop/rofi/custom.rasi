@@ -1,0 +1,232 @@
+* {
+  rosewater: #f5e0dc;
+  flamingo: #f2cdcd;
+  pink: #f5c2e7;
+  mauve: #cba6f7;
+  red: #f38ba8;
+  maroon: #eba0ac;
+  peach: #fab387;
+  yellow: #f9e2af;
+  green: #a6e3a1;
+  teal: #94e2d5;
+  sky: #89dceb;
+  sapphire: #74c7ec;
+  blue: #89b4fa;
+  lavender: #b4befe;
+  text: #cdd6f4;
+  subtext1: #bac2de;
+  subtext0: #a6adc8;
+  overlay2: #9399b2;
+  overlay1: #7f849c;
+  overlay0: #6c7086;
+  surface2: #585b70;
+  surface1: #45475a;
+  surface0: #313244;
+  base: #1e1e2e;
+  mantle: #181825;
+  crust: #11111b;
+}
+
+configuration {
+    show-icons: 				 true;
+    modi:						 "window,drun,filebrowser";
+	display-drun:				 "Apps";
+	display-filebrowser:		 "Files";
+	display-run:				 "RUN";
+	display-window:				 "Active";
+	drun-display-format:		 "{name}";
+	window-format:				 "{w} · {c} · {t}";
+}
+
+/* Main Window */
+window {
+    /* properties for window widget */
+    transparency:                "real";
+    location:                    center;
+    anchor:                      center;
+    fullscreen:                  false;
+    width:                       50%;
+	height:						 90%;
+    x-offset:                    0px;
+    y-offset:                    0px;
+
+    /* properties for all widgets */
+    enabled:                     true;
+    border-radius:               1px;
+    cursor:                      "default";
+    background-color:            @base;
+    
+	border:		 				 4px;
+	border-color: 				 @yellow;
+}
+
+/* Main Box */
+
+mainbox {
+    enabled:                     true;
+    spacing:                     0px;
+    background-color:            transparent;
+    orientation:                 horizontal;
+    children:                    [ "imagebox", "listbox" ];
+}
+
+imagebox {
+    padding:                     20px;
+    background-color:            transparent;
+    background-image:            url("~/.config/rofi/background.png", height);
+    orientation:                 vertical;
+    children:                    [  "inputbar", "weatherelement", "dummy", "mode-switcher" ];
+}
+
+listbox {
+    spacing:                     20px;
+    padding:                     20px;
+    background-color:            transparent;
+    orientation:                 vertical;
+    children:                    [ "message", "listview" ];
+}
+
+weatherelement {
+		border-radius: 20px;
+		background-color: transparent;
+		text-color: @peach;
+		str: "Hello This is text"; 
+}
+
+dummy {
+    background-color:            transparent;
+}
+
+/* Input */ 
+inputbar {
+    enabled:                     true;
+    spacing:                     10px;
+    padding:                     15px;
+    border-radius:               10px;
+    background-color:            @crust;
+    text-color:                  @text;
+    children:                    [ "textbox-prompt-colon", "entry" ];
+}
+textbox-prompt-colon {
+    enabled:                     true;
+    expand:                      false;
+    str:                         "";
+    background-color:            inherit;
+    text-color:                  inherit;
+}
+entry {
+    enabled:                     true;
+    background-color:            inherit;
+    text-color:                  inherit;
+    cursor:                      text;
+    placeholder:                 "Search";
+    placeholder-color:           inherit;
+}
+
+/* Mode Switcher */
+mode-switcher{
+    enabled:                     true;
+    spacing:                     20px;
+    background-color:            transparent;
+    text-color:                  @text;
+}
+button {
+    padding:                     15px;
+    border-radius:               10px;
+    background-color:            @base;
+    text-color:                  inherit;
+    cursor:                      pointer;
+}
+button selected {
+    background-color:            @base;
+    text-color:                  @pink;
+}
+
+/* Listview */
+listview {
+    enabled:                     true;
+    columns:                     1;
+    lines:                       8;
+    cycle:                       true;
+    dynamic:                     true;
+    scrollbar:                   false;
+    layout:                      vertical;
+    reverse:                     false;
+    fixed-height:                true;
+    fixed-columns:               true;
+    
+    spacing:                     10px;
+    background-color:            transparent;
+    text-color:                  @text;
+    cursor:                      "default";
+}
+
+/* Elements */ 
+element {
+    enabled:                     true;
+    spacing:                     15px;
+    padding:                     8px;
+    border-radius:               10px;
+    background-color:            transparent;
+    text-color:                  @mauve;
+    cursor:                      pointer;
+}
+
+element normal.normal {
+    background-color:            inherit;
+    text-color:                  inherit;
+}
+element normal.urgent {
+    background-color:            inherit;
+    text-color:                  @red;
+}
+element normal.active {
+    background-color:            inherit;
+    text-color:                  @blue;
+}
+
+element selected.normal {
+    background-color:            @crust;
+    text-color:                  @pink;
+}
+element selected.urgent {
+    background-color:            @crust;
+    text-color:                  @maroon;
+}
+element selected.active {
+    background-color:            @crust;
+    text-color:                  @sky;
+}
+element-icon {
+    background-color:            transparent;
+    text-color:                  inherit;
+    size:                        32px;
+    cursor:                      inherit;
+}
+element-text {
+    background-color:            transparent;
+    text-color:                  inherit;
+    cursor:                      inherit;
+    vertical-align:              0.5;
+    horizontal-align:            0.0;
+}
+
+/* Message */
+message {
+    background-color:            transparent;
+}
+textbox {
+    padding:                     15px;
+    border-radius:               10px;
+    background-color:            @overlay0;
+    text-color:                  @peach;
+    vertical-align:              0.5;
+    horizontal-align:            0.0;
+}
+
+error-message {
+    padding:                     15px;
+    border-radius:               20px;
+    background-color:            @surface0;
+    text-color:                  @red;
+}

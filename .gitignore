@@ -1,0 +1,20 @@
+# Nix build results
+result
+result-*
+
+# sops age keys (never commit private keys)
+*.age
+keys.txt
+
+# macOS
+.DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store
+
+# secrets (encrypted via sops, but extra safety)
+secrets/*.yaml~
+
+# Editor
+.direnv/
+.envrc
