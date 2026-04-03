@@ -54,22 +54,22 @@ nix-switch
 ## Project Structure
 ```mermaid
 graph TD
-    flake[flake.nix] --> desktop[nixosConfigurations\ncyper-desktop]
-    flake --> mac[darwinConfigurations\ncyper-mac]
+    flake[flake.nix] --> desktop[nixosConfigurations<br/>cyper-desktop]
+    flake --> mac[darwinConfigurations<br/>cyper-mac]
 
-    desktop --> nixos[nixos/\nNixOS system modules]
-    desktop --> hd[hosts/cyper-desktop/\nhardware + networking]
-    desktop --> home[home/\nshared home-manager]
+    desktop --> nixos[nixos/<br/>NixOS system modules]
+    desktop --> hd[hosts/cyper-desktop/<br/>hardware + networking]
+    desktop --> home[home/<br/>shared home-manager]
 
-    mac --> darwin[darwin/\nmacOS system modules]
-    mac --> hm[hosts/cyper-mac/\nhost specific]
+    mac --> darwin[darwin/<br/>macOS system modules]
+    mac --> hm[hosts/cyper-mac/<br/>host specific]
     mac --> home
 
-    home --> shared["shared\npackages, git, shell, python\nnixvim, nixcord, spicetify\nfloorp, obsidian"]
+    home --> shared[shared<br/>packages, git, shell, python<br/>nixvim, nixcord, spicetify<br/>floorp, obsidian]
     home --> deskmod[desktop/]
 
-    deskmod --> dlinux["Linux only\nhyprland, niri\nwaybar, rofi\ngtk, qt, onlyoffice\nxdg, waypaper"]
-    deskmod --> dmac["macOS only\nsketchybar"]
+    deskmod --> dlinux[Linux only<br/>hyprland, niri<br/>waybar, rofi<br/>gtk, qt, onlyoffice<br/>xdg, waypaper]
+    deskmod --> dmac[macOS only<br/>sketchybar]
 ```
 
 ## Secrets
