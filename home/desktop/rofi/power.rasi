@@ -1,0 +1,163 @@
+* {
+  rosewater: #f5e0dc;
+  flamingo: #f2cdcd;
+  pink: #f5c2e7;
+  mauve: #cba6f7;
+  red: #f38ba8;
+  maroon: #eba0ac;
+  peach: #fab387;
+  yellow: #f9e2af;
+  green: #a6e3a1;
+  teal: #94e2d5;
+  sky: #89dceb;
+  sapphire: #74c7ec;
+  blue: #89b4fa;
+  lavender: #b4befe;
+  text: #cdd6f4;
+  subtext1: #bac2de;
+  subtext0: #a6adc8;
+  overlay2: #9399b2;
+  overlay1: #7f849c;
+  overlay0: #6c7086;
+  surface2: #585b70;
+  surface1: #45475a;
+  surface0: #313244;
+  base: #1e1e2e;
+  mantle: #181825;
+  crust: #11111b;
+}
+
+configuration {
+    font:						 "Fira Code Bold 20px";
+    show-icons: 				 true;
+}
+
+/*
+USE_BUTTONS=YES
+*/
+
+/*****----- Main Window -----*****/
+window {
+    transparency:                "real";
+    location:                    center;
+    anchor:                      center;
+    fullscreen:                  false;
+    width:                       1000px;
+    x-offset:                    0px;
+    y-offset:                    0px;
+
+    padding:                     0px;
+    border:                      4px solid;
+    border-radius:               2px;
+    border-color:                @blue;
+    cursor:                      "default";
+    background-color:            @base;
+}
+
+/*****----- Main Box -----*****/
+mainbox {
+    enabled:                     true;
+    spacing:                     0px;
+    margin:                      0px;
+    padding:                     0px;
+    border:                      0px solid;
+    border-radius:               0px;
+    border-color:                @blue;
+    background-color:            transparent;
+    children:                    [ "inputbar", "listview", "message" ];
+}
+
+
+/*****----- Inputbar -----*****/
+inputbar {
+    enabled:                     true;
+    spacing:                     20px;
+    padding:                     100px 40px;
+    background-color:            transparent;
+    background-image:            url("~/.config/rofi/power.jpg", width);
+    children:                    [ "textbox-prompt-colon", "prompt"];
+}
+
+dummy {
+    background-color:            transparent;
+}
+
+textbox-prompt-colon {
+    enabled:                     true;
+    expand:                      false;
+    str:                         "  System";
+    padding:                     15px;
+    border:                      0px 0px 0px 10px;
+    border-radius:               100% 100% 0px 100%;
+    border-color:                @blue;
+    background-color:            @crust;
+    text-color:                  @text;
+}
+prompt {
+    enabled:                     true;
+    padding:                     15px;
+    border:                      0px;
+    border-radius:               0px 100% 100% 100%;
+    border-color:                @blue;
+    background-color:            @crust;
+    text-color:                  @text;
+}
+
+/*****----- Listview -----*****/
+listview {
+    enabled:                     true;
+    columns:                     6;
+    lines:                       1;
+    cycle:                       true;
+    dynamic:                     true;
+    scrollbar:                   false;
+    layout:                      vertical;
+    reverse:                     false;
+    fixed-height:                true;
+    fixed-columns:               true;
+    
+    spacing:                     30px;
+    margin:                      10px;
+    background-color:            transparent;
+    cursor:                      "default";
+}
+
+/*****----- Elements -----*****/
+element {
+    enabled:                     true;
+    padding:                     10px;
+    border-radius:               1%;
+    background-color:            @crust;
+    text-color:                  @text;
+    cursor:                      pointer;
+	children:					 [ element-text ];
+}
+element-text {
+    background-color:            transparent;
+    text-color:                  inherit;
+    cursor:                      inherit;
+    vertical-align:              0.5;
+    horizontal-align:            0.5;
+}
+element selected.normal {
+    background-color:            @crust;
+    text-color:                  @yellow;
+}
+
+/*****----- Message -----*****/
+message {
+    enabled:                     true;
+    margin:                      0px;
+    padding:                     15px;
+    border-radius:               0px;
+    background-color:            @crust;
+    text-color:                  @yellow;
+}
+textbox {
+    background-color:            inherit;
+    text-color:                  inherit;
+    vertical-align:              0.5;
+    horizontal-align:            0.5;
+}
+
+

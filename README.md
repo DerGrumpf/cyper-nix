@@ -37,7 +37,7 @@ cd ~/.config/nix
 
 Replace placeholders in `home/git.nix`:
 - `DerGrumpf` → your Git username
-- `p.keier@beyerstedt-it.de` → your Git email
+- `phil.keier@hotmail.com` → your Git email
 
 ### Apply
 ```bash

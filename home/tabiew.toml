@@ -1,0 +1,141 @@
+# Catppuccin Mocha Theme for Tabiew
+# Base colors from Catppuccin Mocha palette
+
+[table_header]
+fg = "#F5E0DC"  # Rosewater
+bg = "#181825"  # Mantle
+add_modifier = "BOLD"
+sub_modifier = ""
+
+[[table_headers]]
+fg = "#F5C2E7"  # Pink
+bg = "#181825"  # Mantle
+add_modifier = "BOLD"
+sub_modifier = ""
+
+[[table_headers]]
+fg = "#CBA6F7"  # Mauve
+bg = "#181825"  # Mantle
+add_modifier = "BOLD"
+sub_modifier = ""
+
+[[table_headers]]
+fg = "#89DCEB"  # Sky
+bg = "#181825"  # Mantle
+add_modifier = "BOLD"
+sub_modifier = ""
+
+[[rows]]
+fg = "#CDD6F4"  # Text
+bg = "#313244"  # Surface0
+add_modifier = ""
+sub_modifier = ""
+
+[[rows]]
+fg = "#CDD6F4"  # Text
+bg = "#181825"  # Mantle
+add_modifier = ""
+sub_modifier = ""
+
+[highlight]
+fg = "#181825"  # Mantle
+bg = "#F9E2AF"  # Yellow
+add_modifier = "BOLD"
+sub_modifier = ""
+
+[[table_tags]]
+fg = "#181825"  # Mantle
+bg = "#F38BA8"  # Red
+add_modifier = "BOLD"
+sub_modifier = ""
+
+[[table_tags]]
+fg = "#181825"  # Mantle
+bg = "#A6E3A1"  # Green
+add_modifier = "BOLD"
+sub_modifier = ""
+
+[block]
+fg = "#FAB387"  # Peach
+bg = "#313244"  # Surface0
+add_modifier = ""
+sub_modifier = ""
+
+[block_tag]
+fg = "#181825"  # Mantle
+bg = "#FAB387"  # Peach
+add_modifier = "BOLD"
+sub_modifier = ""
+
+[text]
+fg = "#CDD6F4"  # Text
+bg = "#313244"  # Surface0
+add_modifier = ""
+sub_modifier = ""
+
+[subtext]
+fg = "#9399B2"  # Overlay1
+bg = "#313244"  # Surface0
+add_modifier = ""
+sub_modifier = ""
+
+[error]
+fg = "#CDD6F4"  # Text
+bg = "#F38BA8"  # Red
+add_modifier = "BOLD"
+sub_modifier = ""
+
+[[chart]]
+fg = "#F38BA8"  # Red
+bg = "#313244"  # Surface0
+add_modifier = ""
+sub_modifier = ""
+
+[[chart]]
+fg = "#FAB387"  # Peach (Orange)
+bg = "#313244"  # Surface0
+add_modifier = ""
+sub_modifier = ""
+
+[[chart]]
+fg = "#F9E2AF"  # Yellow
+bg = "#313244"  # Surface0
+add_modifier = ""
+sub_modifier = ""
+
+[[chart]]
+fg = "#A6E3A1"  # Green
+bg = "#313244"  # Surface0
+add_modifier = ""
+sub_modifier = ""
+
+[[chart]]
+fg = "#94E2D5"  # Teal
+bg = "#313244"  # Surface0
+add_modifier = ""
+sub_modifier = ""
+
+[[chart]]
+fg = "#89DCEB"  # Sky (Cyan)
+bg = "#313244"  # Surface0
+add_modifier = ""
+sub_modifier = ""
+
+[[chart]]
+fg = "#89B4FA"  # Blue
+bg = "#313244"  # Surface0
+add_modifier = ""
+sub_modifier = ""
+
+[[chart]]
+fg = "#CBA6F7"  # Mauve (Purple)
+bg = "#313244"  # Surface0
+add_modifier = ""
+sub_modifier = ""
+
+[[chart]]
+fg = "#F5C2E7"  # Pink
+bg = "#313244"  # Surface0
+add_modifier = ""
+sub_modifier = ""
+
