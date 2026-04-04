@@ -101,9 +101,9 @@
     defaultSopsFile = ../secrets/secrets.yaml;
     defaultSopsFormat = "yaml";
     age.keyFile = if pkgs.stdenv.isDarwin then
-      "/Users/${primaryUser}/.config/sops/age/keys.txt"
+      "/Users/${primaryUser}/.config/nix/secrets/keys.txt"
     else
-      "/home/${primaryUser}/.config/sops/age/keys.txt";
+      "/home/${primaryUser}/.config/nix/secrets/keys.txt";
 
     secrets = {
       GROQ_API_KEY = { };

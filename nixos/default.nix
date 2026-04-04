@@ -93,7 +93,7 @@
     home = "/home/${primaryUser}";
     shell = pkgs.fish;
     isNormalUser = true;
-    openssh.authorizedKeys.keyFiles = [ ./ssh-key ];
+    openssh.authorizedKeys.keyFiles = [ ../secrets/ssh-key ];
     extraGroups = [ "wheel" "video" "audio" "libvirtd" ];
   };
 }
