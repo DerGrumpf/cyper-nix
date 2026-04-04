@@ -1,5 +1,6 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
+
+  # TODO: This need to be tested against the cam and kernel rules need to be refined
   services.udev.extraRules = ''
     ACTION=="add", \
     SUBSYSTEM=="usb", \

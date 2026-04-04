@@ -5,6 +5,7 @@ result-*
 # sops age keys (never commit private keys)
 *.age
 keys.txt
+!key.txt.age
 
 # macOS
 .DS_Store
