@@ -1,32 +1,25 @@
-{ pkgs, inputs, lib, system, ... }:
-let isDarwin = builtins.match ".*-darwin" system != null;
-in {
-  imports = [ inputs.catppuccin.homeModules.catppuccin ]
-    ++ lib.optionals (!isDarwin) [
-      ./hyprland
-      ./rofi
-      ./waybar
-      ./gtk.nix
-      ./qt.nix
-    ] ++ lib.optionals isDarwin [ ./sketchybar.nix ];
+{ pkgs, inputs, ... }: {
+  imports = [
+    inputs.catppuccin.homeModules.catppuccin
+    ./hyprland
+    ./rofi
+    ./waybar
+    ./gtk.nix
+    ./qt.nix
+  ];
 
-  _module.args.compositor = if isDarwin then "quartz" else "hyprland";
+  _module.args.compositor = "hyprland";
 
-  home = lib.mkIf (!isDarwin) {
-    packages = with pkgs; [ waypaper awww ];
-    file.".config/waypaper/config.ini".source = ./waypaper.ini;
-  };
+  home.packages = with pkgs; [ waypaper awww ];
+  home.file.".config/waypaper/config.ini".source = ./waypaper.ini;
 
-  # TODO: Qutebrowser install
-  programs = lib.mkIf (!isDarwin) {
+  programs = {
     mangohud = {
       enable = true;
       settings = {
         position = "top-right";
-
         offset_x = 20;
         offset_y = 20;
-
         fps = true;
         cpu_stats = true;
         gpu_stats = true;
@@ -34,15 +27,9 @@ in {
         gpu_temp = true;
         ram = true;
         vram = true;
-
         background_alpha = 0.5;
       };
     };
-
-    # TODO: Needs config!
-    mpv = {
-      enable = true;
-
-    };
+    mpv.enable = true;
   };
 }

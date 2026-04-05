@@ -1,4 +1,4 @@
-{ inputs, pkgs, lib, ... }:
+{ inputs, pkgs, ... }:
 let
   super = "SUPER";
   terminal = "kitty";
@@ -9,7 +9,7 @@ let
   power =
     "rofi -show p -modi p:rofi-power-menu -theme $HOME/.config/rofi/power.rasi";
   apps = "rofi -show window ${theme}";
-in lib.mkIf (!pkgs.stdenv.isDarwin) {
+in {
 
   imports = [ ./hypridle.nix ./hyprlock.nix ./mako.nix ./portal.nix ];
 

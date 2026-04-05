@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, isDarwin, lib, ... }: {
   home.packages = with pkgs; [
     eza # ls replacement
     tdf # terminal pdf viewer
@@ -71,7 +71,7 @@
   programs.newsboat = {
     enable = true;
     autoReload = true;
-    browser = if pkgs.stdenv.isDarwin then "open" else "xdg-open";
+    browser = if isDarwin then "open" else "xdg-open";
     urls = [
       {
         url = "https://www.tagesschau.de/xml/rss2";
@@ -171,10 +171,15 @@
       cat = "bat --color=always --style=numbers";
       grep = "rg";
       cp = "rsync -ah --progress";
-      nix-switch = if pkgs.stdenv.isDarwin then
+      nix-switch = if isDarwin then
         "sudo darwin-rebuild switch --flake ~/.config/nix#(hostname -s)"
       else
         "sudo nixos-rebuild switch --flake ~/.config/nix#(hostname -s)";
+
+      nix-check = if isDarwin then
+        "nix eval ~/.config/nix#darwinConfigurations.(hostname -s).config.system.build.toplevel.outPath"
+      else
+        "nix flake check --no-build ~/.config/nix";
     };
 
     interactiveShellInit = ''
@@ -266,6 +271,6 @@
     ".config/fastfetch/config.jsonc".source = ./fastfetch.jsonc;
     ".config/tabiew/theme.toml".source = ./tabiew.toml;
     ".config/kitty/tab_bar.py".source = ./tab_bar.py;
-    ".hushlogin".text = ""; # Suppress login
+    ".hushlogin" = lib.mkIf isDarwin { text = ""; }; # Suppress Login
   };
 }
