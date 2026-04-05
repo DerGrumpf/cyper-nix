@@ -12,6 +12,7 @@
     ./packages.nix
     ./git.nix
     ./shell.nix
+    ./ssh.nix
     ./xdg.nix
     ./neovim
     ./python.nix
