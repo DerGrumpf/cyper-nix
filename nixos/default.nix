@@ -107,7 +107,6 @@
     home = "/home/${primaryUser}";
     shell = pkgs.fish;
     isNormalUser = true;
-    openssh.authorizedKeys.keyFiles = [ ../secrets/ssh-key ];
     extraGroups = [
       "wheel"
       "video"

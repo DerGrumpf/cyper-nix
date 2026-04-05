@@ -1,8 +1,9 @@
 { primaryUser, isDarwin, ... }:
 {
-  ssh = {
+  programs.ssh = {
     enable = true;
-    matchBlock = {
+    addKeysToAgent = "yes";
+    matchBlocks = {
       "*.cyperpunk.de" = {
         identityFile =
           if isDarwin then "/Users/${primaryUser}/.ssh/ssh" else "/home/${primaryUser}/.ssh/ssh";
