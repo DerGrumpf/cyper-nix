@@ -1,32 +1,24 @@
-{
-  pkgs,
-  inputs,
-  lib,
-  ...
-}:
-{
-  imports = [
-    inputs.catppuccin.homeModules.catppuccin
-    ./hyprland
-    ./rofi
-    ./waybar
-    ./gtk.nix
-    ./qt.nix
-    ./sketchybar.nix
-  ];
+{ pkgs, inputs, lib, system, ... }:
+let isDarwin = builtins.match ".*-darwin" system != null;
+in {
+  imports = [ inputs.catppuccin.homeModules.catppuccin ]
+    ++ lib.optionals (!isDarwin) [
+      ./hyprland
+      ./rofi
+      ./waybar
+      ./gtk.nix
+      ./qt.nix
+    ] ++ lib.optionals isDarwin [ ./sketchybar.nix ];
 
-  _module.args.compositor = if pkgs.stdenv.isDarwin then "quartz" else "hyprland";
+  _module.args.compositor = if isDarwin then "quartz" else "hyprland";
 
-  home = lib.mkIf (!pkgs.stdenv.isDarwin) {
-    packages = with pkgs; [
-      waypaper
-      awww
-    ];
+  home = lib.mkIf (!isDarwin) {
+    packages = with pkgs; [ waypaper awww ];
     file.".config/waypaper/config.ini".source = ./waypaper.ini;
   };
 
   # TODO: Qutebrowser install
-  programs = lib.mkIf (!pkgs.stdenv.isDarwin) {
+  programs = lib.mkIf (!isDarwin) {
     mangohud = {
       enable = true;
       settings = {
