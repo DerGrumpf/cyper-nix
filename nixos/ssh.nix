@@ -1,4 +1,5 @@
-_: {
+{ primaryUser, ... }:
+{
   services.openssh = {
     enable = true;
     openFirewall = true;
@@ -6,9 +7,8 @@ _: {
       PasswordAuthentication = false;
       PermitRootLogin = "no";
     };
-    authorizedKeys.keyFiles = [ ../secrets/ssh-key ];
   };
-
+  users.users.${primaryUser}.openssh.authorizedKeys.keyFiles = [ ../secrets/ssh-key ];
   programs.ssh.startAgent = true;
 
 }
