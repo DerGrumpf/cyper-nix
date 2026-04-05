@@ -1,4 +1,10 @@
-{ pkgs, inputs, primaryUser, ... }: {
+{
+  pkgs,
+  inputs,
+  primaryUser,
+  ...
+}:
+{
   imports = [
     ./fonts.nix
     ./sops.nix
@@ -34,12 +40,19 @@
   # nix config
   nix = {
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       max-jobs = "auto";
       cores = 0;
-      substituters =
-        [ "https://hyprland.cachix.org" "https://nix-community.cachix.org" ];
+      substituters = [
+        "https://cache.nixos.org"
+        "https://hyprland.cachix.org"
+        "https://nix-community.cachix.org"
+      ];
       trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
@@ -61,14 +74,15 @@
     info.enable = false; # Skip info pages
   };
 
-  nixpkgs.config = { allowUnfree = true; };
+  nixpkgs.config = {
+    allowUnfree = true;
+  };
 
   programs = {
     fish.enable = true;
     hyprland = {
       enable = true;
-      package =
-        inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+      package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     };
     steam.enable = true;
     dconf.enable = true;
@@ -94,6 +108,11 @@
     shell = pkgs.fish;
     isNormalUser = true;
     openssh.authorizedKeys.keyFiles = [ ../secrets/ssh-key ];
-    extraGroups = [ "wheel" "video" "audio" "libvirtd" ];
+    extraGroups = [
+      "wheel"
+      "video"
+      "audio"
+      "libvirtd"
+    ];
   };
 }

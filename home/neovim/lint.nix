@@ -35,7 +35,6 @@
       lua54Packages.luacheck
       statix
       ruff
-      nodePackages.eslint
       clippy
     ];
   };

@@ -1,4 +1,13 @@
-{ config, primaryUser, inputs, self, pkgs, lib, ... }: {
+{
+  config,
+  primaryUser,
+  inputs,
+  self,
+  pkgs,
+  lib,
+  ...
+}:
+{
   imports = [
 
     ./packages.nix
@@ -16,9 +25,11 @@
     ./obsidian.nix
 
     ./desktop
-
+    ./xdg.nix
     inputs.sops-nix.homeManagerModules.sops
-  ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [ ./xdg.nix ];
+  ];
+
+  nixpkgs.config.allowUnfree = true;
 
   catppuccin = {
     enable = false;
@@ -100,19 +111,18 @@
   sops = {
     defaultSopsFile = ../secrets/secrets.yaml;
     defaultSopsFormat = "yaml";
-    age.keyFile = if pkgs.stdenv.isDarwin then
-      "/Users/${primaryUser}/.config/nix/secrets/keys.txt"
-    else
-      "/home/${primaryUser}/.config/nix/secrets/keys.txt";
+    age.keyFile =
+      if pkgs.stdenv.isDarwin then
+        "/Users/${primaryUser}/.config/nix/secrets/keys.txt"
+      else
+        "/home/${primaryUser}/.config/nix/secrets/keys.txt";
 
     secrets = {
       GROQ_API_KEY = { };
       OPENWEATHER_API_KEY = { };
       ssh_private_key = {
-        path = if pkgs.stdenv.isDarwin then
-          "/Users/${primaryUser}/.ssh/ssh"
-        else
-          "/home/${primaryUser}/.ssh/ssh";
+        path =
+          if pkgs.stdenv.isDarwin then "/Users/${primaryUser}/.ssh/ssh" else "/home/${primaryUser}/.ssh/ssh";
         mode = "0600";
       };
     };

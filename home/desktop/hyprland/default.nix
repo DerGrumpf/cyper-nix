@@ -196,7 +196,7 @@ in
       #     ];
 
       exec-once = [
-        "swww-daemon & disown"
+        "awww-daemon & disown"
         "waybar &"
       ];
 
