@@ -1,5 +1,5 @@
-{ pkgs, ... }: {
-  programs.nixvim = {
+{ isDarwin, lib, ... }: {
+  programs.nixvim = lib.mkIf (!isDarwin) {
     plugins.molten = {
       enable = true;
       python3Dependencies = p:

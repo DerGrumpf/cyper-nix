@@ -13,7 +13,6 @@
 
         # GUI
         openscad
-        blender
         fstl
 
         # PDF Tools
@@ -60,6 +59,7 @@
         thunderbird
         xonotic
         irssi
+        blender
       ] ++ lib.optionals pkgs.stdenv.isDarwin [ graphite-cli ];
   };
 }

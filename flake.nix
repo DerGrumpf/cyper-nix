@@ -85,12 +85,16 @@
             {
               home-manager.extraSpecialArgs = {
                 inherit inputs primaryUser self;
+                isDarwin = false;
               };
               home-manager.users.${primaryUser} = import ./home;
             }
             inputs.sops-nix.nixosModules.sops
           ];
-          specialArgs = { inherit inputs primaryUser self hostName; };
+          specialArgs = {
+            inherit inputs primaryUser self hostName;
+            isDarwin = false;
+          };
         };
 
       mkDarwin = hostName:
@@ -105,12 +109,16 @@
             {
               home-manager.extraSpecialArgs = {
                 inherit inputs primaryUser self;
+                isDarwin = true;
               };
               home-manager.users.${primaryUser} = import ./home;
             }
             inputs.sops-nix.darwinModules.sops
           ];
-          specialArgs = { inherit inputs primaryUser self hostName; };
+          specialArgs = {
+            inherit inputs primaryUser self hostName;
+            isDarwin = true;
+          };
         };
     in {
       nixosConfigurations."cyper-desktop" = mkNixos "cyper-desktop";

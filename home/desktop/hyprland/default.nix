@@ -1,23 +1,17 @@
-{ inputs, pkgs, ... }:
+{ inputs, pkgs, lib, ... }:
 let
-  package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
   super = "SUPER";
   terminal = "kitty";
   fileManager = "yazi";
   theme = "-theme $HOME/.config/rofi/custom.rasi";
   menu = "rofi -show drun ${theme}";
   filebrowser = "rofi -show filebrowser ${theme}";
-  power = "rofi -show p -modi p:rofi-power-menu -theme $HOME/.config/rofi/power.rasi";
+  power =
+    "rofi -show p -modi p:rofi-power-menu -theme $HOME/.config/rofi/power.rasi";
   apps = "rofi -show window ${theme}";
-in
-{
+in lib.mkIf (!pkgs.stdenv.isDarwin) {
 
-  imports = [
-    ./hypridle.nix
-    ./hyprlock.nix
-    ./mako.nix
-    ./portal.nix
-  ];
+  imports = [ ./hypridle.nix ./hyprlock.nix ./mako.nix ./portal.nix ];
 
   home.packages = with pkgs; [
     catppuccin-cursors.mochaDark
@@ -29,12 +23,12 @@ in
     playerctl
   ];
 
-  systemd.user.targets.hyprland-session.Unit.Wants = [
-    "xdg-desktop-autostart.target"
-  ];
+  systemd.user.targets.hyprland-session.Unit.Wants =
+    [ "xdg-desktop-autostart.target" ];
 
   wayland.windowManager.hyprland = {
-    inherit package;
+    package =
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     enable = true;
 
     xwayland.enable = true;
@@ -45,10 +39,12 @@ in
       enableXdgAutostart = false;
     };
 
-    plugins = with inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}; [
-      #hyprbars
-      #      hyprexpo
-    ];
+    plugins =
+      with inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system};
+      [
+        #hyprbars
+        #      hyprexpo
+      ];
 
     settings = {
       env = [
@@ -69,10 +65,8 @@ in
         "XCURSOR_SIZE,24"
       ];
 
-      monitor = [
-        "DP-1, 1920x1080@60, 1920x0, 1"
-        "HDMI-A-2, 1920x1080@60, 0x0, 1"
-      ];
+      monitor =
+        [ "DP-1, 1920x1080@60, 1920x0, 1" "HDMI-A-2, 1920x1080@60, 0x0, 1" ];
 
       input = {
         kb_layout = "de";
@@ -126,7 +120,7 @@ in
           size = 1;
           passes = 3;
           new_optimizations = 1;
-          noise = 0.04;
+          noise = 4.0e-2;
         };
       };
 
@@ -195,10 +189,7 @@ in
       #  "noblur, class:^(org\\.gnome\\.|io\\.github\\.|org\\.gtk\\.)"
       #     ];
 
-      exec-once = [
-        "awww-daemon & disown"
-        "waybar &"
-      ];
+      exec-once = [ "awww-daemon & disown" "waybar &" ];
 
       # Keybindings
       bind = [
@@ -270,7 +261,8 @@ in
         "${super}, mouse_up, workspace, e-1"
 
         # Screenshot
-        ''${super}, Z, exec, grim -g "$(slurp)" $HOME/Pictures/Screenshots/$(date +'%s_grim.png')''
+        ''
+          ${super}, Z, exec, grim -g "$(slurp)" $HOME/Pictures/Screenshots/$(date +'%s_grim.png')''
         "${super}, U, exec, grim $HOME/Pictures/Screenshots/$(date +'%s_grim.png')"
       ];
 
