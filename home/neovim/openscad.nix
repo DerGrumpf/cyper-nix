@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   # OpenSCAD: 3D modeling language support with syntax highlighting,
   # cheatsheet, snippets, offline manual and fuzzy help
   programs.nixvim = {
@@ -8,13 +9,12 @@
       settings = {
         fuzzy_finder = "fzf";
         auto_open = true;
-        cheatsheet_toggle_key = "<leader>os";
+        cheatsheet_toggle_key = "<Enter>";
         default_mappings = true;
-        exec_openscad_trig_key = "<leader>oo";
-        help_manual_trig_key = "<leader>om";
-        help_trig_key = "<leader>oh";
-        top_toggle = "<leader>oc";
-
+        exec_openscad_trig_key = "<A-h>";
+        help_manual_trig_key = "<A-m>";
+        help_trig_key = "<A-o>";
+        top_toggle = "<A-c>";
       };
     };
 
@@ -25,4 +25,5 @@
       fzf
     ];
   };
+
 }

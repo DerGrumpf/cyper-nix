@@ -4,9 +4,9 @@
         "type": "kitty-icat",
 		"source": "~/Pictures/Avatar/avatar_no_bg.png",
         // "height": 15,
-        "width": 36,
+        "width": 32,
         "padding": {
-            "top": 0,
+            "top": 2,
             "left": 0
         }
     },
@@ -23,22 +23,22 @@
         },
         {
             "type": "cpu",
-            "key": "│ ├",
+            "key": "├ ",
             "keyColor": "green"
         },
         {
             "type": "gpu",
-            "key": "│ ├󰍛",
+            "key": "├󰍛 ",
             "keyColor": "green"
         },
         {
             "type": "disk",
-            "key": "│ ├",
+            "key": "├ ",
             "keyColor": "green"
         },
 		{
             "type": "memory",
-            "key": "└ └󰍛",
+            "key": "└󰍛 ",
             "keyColor": "green"
         },
         {
@@ -52,53 +52,54 @@
         },
         {
             "type": "os",
-            "key": " OS",
+            "key": "❄ OS",
             "keyColor": "yellow"
         },
         {
             "type": "kernel",
-            "key": "│ ├",
+            "key": "├ ",
             "keyColor": "yellow"
         },
         {
             "type": "bios",
-            "key": "│ ├",
+            "key": "├ ",
             "keyColor": "yellow"
         },
         {
             "type": "packages",
-            "key": "│ ├󰏖",
+            "key": "├󰏖 ",
             "keyColor": "yellow"
         },
         {
             "type": "shell",
-            "key": "└ └",
+            "key": "└ ",
             "keyColor": "yellow"
         },
         "break",
         {
-            "type": "de",
-            "key": " DE",
+            "type": "wm",
+            "key": " WM",
+			"format": "{pretty-name}", 
             "keyColor": "blue"
         },
         {
             "type": "lm",
-            "key": "│ ├",
+            "key": "├ ",
+            "keyColor": "blue"
+        },
+		{
+            "type": "font",
+            "key": "├󰉼 ",
             "keyColor": "blue"
         },
         {
-            "type": "wm",
-            "key": "│ ├",
-            "keyColor": "blue"
-        },
-        {
-            "type": "wmtheme",
-            "key": "│ ├󰉼",
+            "type": "icons",
+            "key": "├󰉼 ",
             "keyColor": "blue"
         },
         {
             "type": "terminal",
-            "key": "└ └",
+            "key": "└ ",
             "keyColor": "blue"
         },
         {
@@ -112,53 +113,26 @@
         },
         {
             "type": "command",
-            "key": "  OS Age ",
+            "key": "├ OS Age ",
             "keyColor": "magenta",
             "text": "birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days"
         },
         {
             "type": "uptime",
-            "key": "  Uptime ",
+            "key": "├ Uptime ",
             "keyColor": "magenta"
         },
         {
             "type": "datetime",
-            "key": "  DateTime ",
-            "keyColor": "magenta"
+            "key": "├ Date Time ",
+            "keyColor": "magenta",
+			"format": "{11}.{4}.{1} {14}:{17}:{20}",
         },
         {
             "type": "custom",
             "format": "\u001b[90m└────────────────────────────────────────────────────┘"
         },
 		"break",
-		{
-            "type": "custom",
-            "format": "\u001b[90m┌─────────────────────Networking─────────────────────┐"
-        },
-		{
-            "type": "publicip",
-            "key": "  Public ",
-            "keyColor": "magenta"
-        },
-		{
-            "type": "localip",
-            "key": "  Local ",
-            "keyColor": "magenta"
-        },
-		{
-            "type": "dns",
-            "key": "  DNS ",
-            "keyColor": "magenta"
-        },
-		{
-            "type": "netio",
-            "key": "  Net I/O ",
-            "keyColor": "magenta"
-        },
-		{
-            "type": "custom",
-            "format": "\u001b[90m└────────────────────────────────────────────────────┘"
-        },
         {
             "type": "colors",
             "paddingLeft": 2,

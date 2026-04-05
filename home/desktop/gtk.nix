@@ -4,7 +4,7 @@ let
   theme_name = "Catppuccin-GTK-Dark";
 in
 {
-  home = {
+  home = lib.mkIf (!pkgs.stdenv.isDarwin) {
     packages = with pkgs; [
       adwaita-icon-theme
     ];
@@ -20,7 +20,7 @@ in
       ".config/gtk-4.0/assets".source = "${theme}/share/themes/${theme_name}/gtk-4.0/assets";
     };
   };
-  gtk = {
+  gtk = lib.mkIf (!pkgs.stdenv.isDarwin) {
     enable = true;
     font = {
       name = "FiraCode Nerd Font Propo";
@@ -41,7 +41,7 @@ in
     };
     gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
   };
-  dconf = {
+  dconf = lib.mkIf (!pkgs.stdenv.isDarwin) {
     enable = true;
     settings = {
       "org/gnome/desktop/interface" = {

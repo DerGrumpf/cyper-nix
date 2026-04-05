@@ -15,13 +15,13 @@
     ./avante.nix
     ./openscad.nix
     ./molten.nix
-    ./live-server.nix
     ./which-key.nix
   ];
 
   home.packages = with pkgs; [
     nil
     biome
+    gdb
   ];
 
   programs.nixvim = {

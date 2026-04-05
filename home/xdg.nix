@@ -1,4 +1,9 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
   browser = [ "floorp.desktop" ];
 
@@ -44,7 +49,7 @@ let
   };
 in
 {
-  xdg = {
+  xdg = lib.mkIf (!pkgs.stdenv.isDarwin) {
     enable = true;
     cacheHome = config.home.homeDirectory + "/.local/cache";
 
