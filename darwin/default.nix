@@ -1,10 +1,24 @@
-{ pkgs, inputs, self, primaryUser, ... }: {
-  imports = [ ./homebrew.nix ./settings.nix ./yabai.nix ];
+{
+  pkgs,
+  inputs,
+  self,
+  primaryUser,
+  ...
+}:
+{
+  imports = [
+    ./homebrew.nix
+    ./settings.nix
+    ./yabai.nix
+  ];
 
   # nix config
   nix = {
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       max-jobs = "auto"; # Use all CPU cores
       cores = 0; # Use all cores per build
       # disabled due to https://github.com/NixOS/nix/issues/7273
@@ -15,12 +29,14 @@
     # Garbage collection
     gc = {
       automatic = true;
-      interval = { Weekday = 7; }; # Run weekly
+      interval = {
+        Weekday = 7;
+      }; # Run weekly
       options = "--delete-older-than 30d";
     };
   };
 
-  # Disable Docs 
+  # Disable Docs
   documentation = {
     enable = true;
     doc.enable = false; # Skip large documentation
@@ -28,7 +44,9 @@
     info.enable = false; # Skip info pages
   };
 
-  nixpkgs.config = { allowUnfree = true; };
+  nixpkgs.config = {
+    allowUnfree = true;
+  };
   # homebrew installation manager
   nix-homebrew = {
     user = primaryUser;
@@ -43,6 +61,7 @@
   users.users.${primaryUser} = {
     home = "/Users/${primaryUser}";
     shell = pkgs.fish;
+    openssh.authorizedKeys.keyFiles = [ ../secrets/ssh-key ];
   };
   environment = {
     systemPath = [ "/opt/homebrew/bin" ];

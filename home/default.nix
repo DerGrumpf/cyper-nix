@@ -1,4 +1,13 @@
-{ config, primaryUser, inputs, self, lib, isDarwin, ... }: {
+{
+  config,
+  primaryUser,
+  inputs,
+  self,
+  lib,
+  isDarwin,
+  ...
+}:
+{
   imports = [
     ./packages.nix
     ./git.nix
@@ -11,7 +20,9 @@
     ./floorp.nix
     ./obsidian.nix
     inputs.sops-nix.homeManagerModules.sops
-  ] ++ lib.optionals (!isDarwin) [ ./desktop ] ++ lib.optionals isDarwin [
+  ]
+  ++ lib.optionals (!isDarwin) [ ./desktop ]
+  ++ lib.optionals isDarwin [
     ./desktop/sketchybar
     inputs.catppuccin.homeModules.catppuccin
   ];
@@ -97,19 +108,21 @@
   sops = {
     defaultSopsFile = ../secrets/secrets.yaml;
     defaultSopsFormat = "yaml";
-    age.keyFile = if isDarwin then
-      "/Users/${primaryUser}/.config/nix/secrets/keys.txt"
-    else
-      "/home/${primaryUser}/.config/nix/secrets/keys.txt";
+    age.keyFile =
+      if isDarwin then
+        "/Users/${primaryUser}/.config/nix/secrets/keys.txt"
+      else
+        "/home/${primaryUser}/.config/nix/secrets/keys.txt";
 
     secrets = {
       GROQ_API_KEY = { };
       OPENWEATHER_API_KEY = { };
       ssh_private_key = {
-        path = if isDarwin then
-          "/Users/${primaryUser}/.ssh/ssh"
-        else
-          "/home/${primaryUser}/.ssh/ssh";
+        path = if isDarwin then "/Users/${primaryUser}/.ssh/ssh" else "/home/${primaryUser}/.ssh/ssh";
+        mode = "0600";
+      };
+      ssh_github_key = {
+        path = if isDarwin then "/Users/${primaryUser}/.ssh/github" else "/home/${primaryUser}/.ssh/github";
         mode = "0600";
       };
     };
