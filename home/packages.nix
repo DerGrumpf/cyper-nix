@@ -1,6 +1,8 @@
-{ pkgs, lib, ... }: {
+{ pkgs, lib, ... }:
+{
   home = {
-    packages = with pkgs;
+    packages =
+      with pkgs;
       [
         # dev tools
         curl
@@ -29,10 +31,12 @@
         zstd
         gnutar
         unrar
+        sops
 
         # Nix tools
         nix-index
-      ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [
+      ]
+      ++ lib.optionals (!pkgs.stdenv.isDarwin) [
         # dev tools
         pciutils
         usbutils
@@ -60,6 +64,7 @@
         xonotic
         irssi
         blender
-      ] ++ lib.optionals pkgs.stdenv.isDarwin [ graphite-cli ];
+      ]
+      ++ lib.optionals pkgs.stdenv.isDarwin [ graphite-cli ];
   };
 }
