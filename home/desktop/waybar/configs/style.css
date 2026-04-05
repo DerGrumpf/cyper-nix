@@ -157,6 +157,22 @@ window#waybar.hidden {
    margin-right: 20px;
 }
 
+#custom-mako {
+  color: @red;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+#custom-mako.enabled {
+  color: @red;
+}
+
+#custom-mako.disabled {
+  color: @overlay1;
+}
+
 /* SwayNC */ 
 #custom-notification {
   font-family: "NotoSansMono Nerd Font";

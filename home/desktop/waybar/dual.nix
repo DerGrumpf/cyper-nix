@@ -4,6 +4,8 @@
 let
   common = import ./common.nix;
   wm = if compositor == "hyprland" then import ./hyprland-wm.nix else import ./niri-wm.nix;
+  workspaceModule = if compositor == "hyprland" then "hyprland/workspaces" else "niri/workspaces";
+  notificationModule = if compositor == "hyprland" then "custom/mako" else "custom/swaync";
 in
 {
   enable = true;
@@ -18,10 +20,8 @@ in
         "clock"
       ];
       modules-center = [
-        "hyprland/workspaces"
-        "niri/workspaces"
-        "custom/mako"
-        "custom/swaync"
+        workspaceModule
+        notificationModule
       ];
       modules-right = [
         "group/hardware"
@@ -40,8 +40,7 @@ in
         "custom/wallpaper"
       ];
       modules-center = [
-        "hyprland/workspaces"
-        "niri/workspaces"
+        workspaceModule
       ];
       modules-right = [ "custom/weather" ];
     }
