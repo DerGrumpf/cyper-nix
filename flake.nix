@@ -34,7 +34,9 @@
     };
 
     # declarative homebrew management
-    nix-homebrew = { url = "github:zhaofengli/nix-homebrew"; };
+    nix-homebrew = {
+      url = "github:zhaofengli/nix-homebrew";
+    };
 
     # declarative Neovim
     nixvim = {
@@ -67,61 +69,92 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, darwin, nix-homebrew, nixvim
-    , hyprland, sops-nix, ... }@inputs:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      darwin,
+      nix-homebrew,
+      nixvim,
+      hyprland,
+      sops-nix,
+      ...
+    }@inputs:
     let
       primaryUser = "phil";
+      mkSystem =
+        {
+          hostName,
+          system,
+          isDarwin ? false,
+          isServer ? false,
+        }:
+        let
+          systemFunc = if isDarwin then darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
+          platformModuleSet = if isDarwin then "darwinModules" else "nixosModules";
 
-      mkNixos = hostName:
-        nixpkgs.lib.nixosSystem {
-          modules = [
-            {
-              nixpkgs.hostPlatform = "x86_64-linux";
-              networking.hostName = hostName;
-            }
-            ./nixos
-            ./hosts/cyper-desktop/configuration.nix
-            inputs.home-manager.nixosModules.home-manager
-            {
-              home-manager.extraSpecialArgs = {
-                inherit inputs primaryUser self;
-                isDarwin = false;
-              };
-              home-manager.users.${primaryUser} = import ./home;
-            }
-            inputs.sops-nix.nixosModules.sops
-          ];
-          specialArgs = {
-            inherit inputs primaryUser self hostName;
-            isDarwin = false;
+          sharedSpecialArgs = {
+            inherit
+              inputs
+              primaryUser
+              self
+              hostName
+              isDarwin
+              isServer
+              ;
           };
-        };
 
-      mkDarwin = hostName:
-        darwin.lib.darwinSystem {
-          system = "x86_64-darwin";
-          modules = [
-            ./darwin
-            ./hosts/cyper-mac/configuration.nix
+          sharedModules = [
             { networking.hostName = hostName; }
-            inputs.nix-homebrew.darwinModules.nix-homebrew
-            inputs.home-manager.darwinModules.home-manager
+            ./hosts/${hostName}/configuration.nix
+            inputs.sops-nix.${platformModuleSet}.sops
+            inputs.home-manager.${platformModuleSet}.home-manager
             {
-              home-manager.extraSpecialArgs = {
-                inherit inputs primaryUser self;
-                isDarwin = true;
-              };
+              home-manager.extraSpecialArgs = sharedSpecialArgs;
               home-manager.users.${primaryUser} = import ./home;
             }
-            inputs.sops-nix.darwinModules.sops
           ];
-          specialArgs = {
-            inherit inputs primaryUser self hostName;
-            isDarwin = true;
-          };
+
+          platformModules =
+            let
+              nixosBase = [
+                { nixpkgs.hostPlatform = system; }
+                ./nixos
+              ];
+            in
+            if isDarwin then
+              [
+                ./darwin
+                inputs.nix-homebrew.darwinModules.nix-homebrew
+              ]
+            else
+              nixosBase ++ (if isServer then [ ./nixos/server ] else [ ]);
+        in
+        systemFunc {
+          inherit system;
+          modules = sharedModules ++ platformModules;
+          specialArgs = sharedSpecialArgs;
         };
-    in {
-      nixosConfigurations."cyper-desktop" = mkNixos "cyper-desktop";
-      darwinConfigurations."cyper-mac" = mkDarwin "cyper-mac";
+    in
+    {
+      nixosConfigurations = {
+        "cyper-desktop" = mkSystem {
+          hostName = "cyper-desktop";
+          system = "x86_64-linux";
+        };
+
+        "cyper-node-1" = mkSystem {
+          hostName = "cyper-node-1";
+          system = "x86_64-linux";
+          isServer = true;
+        };
+      };
+
+      darwinConfigurations."cyper-mac" = mkSystem {
+        hostName = "cyper-mac";
+        system = "x86_64-darwin";
+        isDarwin = true;
+      };
     };
 }

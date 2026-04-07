@@ -2,8 +2,11 @@
 {
   programs.ssh = {
     enable = true;
-    addKeysToAgent = "yes";
+    enableDefaultConfig = false;
     matchBlocks = {
+      "*" = {
+        addKeysToAgent = "yes";
+      };
       "*.cyperpunk.de" = {
         identityFile =
           if isDarwin then "/Users/${primaryUser}/.ssh/ssh" else "/home/${primaryUser}/.ssh/ssh";

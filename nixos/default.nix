@@ -46,6 +46,8 @@
       ];
       max-jobs = "auto";
       cores = 0;
+      http-connections = 4;
+      download-buffer-size = 268435456;
       substituters = [
         "https://cache.nixos.org"
         "https://hyprland.cachix.org"
