@@ -169,7 +169,7 @@
 
     "custom/wallpaper" = {
       format = "【{} 】";
-      exec = "basename $(swww query | grep -oP 'image: \\K.*')";
+      exec = "basename $(awww query | grep -oP 'image: \\K.*')";
       interval = 5;
       on-click = "waypaper";
       tooltip = true;
