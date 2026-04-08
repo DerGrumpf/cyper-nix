@@ -1,37 +1,27 @@
-{
-  pkgs,
-  inputs,
-  self,
-  primaryUser,
-  ...
-}:
-{
-  imports = [
-    ./homebrew.nix
-    ./settings.nix
-    ./yabai.nix
-  ];
+{ pkgs, inputs, self, primaryUser, ... }: {
+  imports = [ ./homebrew.nix ./settings.nix ./yabai.nix ];
 
   # nix config
   nix = {
     settings = {
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
+      experimental-features = [ "nix-command" "flakes" ];
       max-jobs = "auto"; # Use all CPU cores
       cores = 0; # Use all cores per build
       # disabled due to https://github.com/NixOS/nix/issues/7273
       # auto-optimise-store = true;
+      substituters =
+        [ "https://cache.nixos.org" "https://nix-community.cachix.org" ];
+      trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
     };
     enable = true; # using determinate installer
 
     # Garbage collection
     gc = {
       automatic = true;
-      interval = {
-        Weekday = 7;
-      }; # Run weekly
+      interval = { Weekday = 7; }; # Run weekly
       options = "--delete-older-than 30d";
     };
   };
@@ -44,9 +34,7 @@
     info.enable = false; # Skip info pages
   };
 
-  nixpkgs.config = {
-    allowUnfree = true;
-  };
+  nixpkgs.config = { allowUnfree = true; };
   # homebrew installation manager
   nix-homebrew = {
     user = primaryUser;
