@@ -2,12 +2,17 @@
 result
 result-*
 
-# sops age keys (never commit private keys)
-*.age
-keys.txt
-!keys.txt.age
+# Ignore everything in the secrets directory
+secrets/*
 
-# Explicitly (dis)allow specific keys/secrets
+# Explicitly allow ONLY these files
+!secrets/secrets.yaml
+!secrets/keys.txt.age
+!secrets/ssh-github
+!secrets/ssh-key
+
+# Explicitly block the plain text keys (even if the rule above changes)
+secrets/keys.txt
 secrets/ssh-private
 
 # macOS
