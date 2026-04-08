@@ -1,6 +1,16 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   # Avante: AI-powered coding assistant (Cursor-like experience in Neovim)
   programs.nixvim = {
+    extraConfigLuaPre = ''
+      local groq_key_file = "/home/phil/.config/sops-nix/secrets/GROQ_API_KEY"
+      local f = io.open(groq_key_file, "r")
+      if f then
+        local key = f:read("*all"):gsub("%s+", "") -- read and trim whitespace
+        vim.env.GROQ_API_KEY = key
+        f:close()
+      end
+    '';
 
     plugins = {
       markdown-preview.enable = true;
@@ -31,7 +41,9 @@
 
           #        auto_suggestions_provider = "copilot";
 
-          render = { markdown = true; };
+          render = {
+            markdown = true;
+          };
 
           behaviour = {
             auto_suggestions = false;
@@ -74,7 +86,9 @@
             };
           };
 
-          hints = { enabled = true; };
+          hints = {
+            enabled = true;
+          };
 
           windows = {
             position = "right";
