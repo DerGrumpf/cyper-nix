@@ -7,8 +7,8 @@ result-*
 keys.txt
 !keys.txt.age
 
-# Explicitly allow specific keys/secrets
-!ssh-private
+# Explicitly (dis)allow specific keys/secrets
+secrets/ssh-private
 
 # macOS
 .DS_Store
