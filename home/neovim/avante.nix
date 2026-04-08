@@ -2,16 +2,6 @@
 {
   # Avante: AI-powered coding assistant (Cursor-like experience in Neovim)
   programs.nixvim = {
-    extraConfigLuaPre = ''
-      local groq_key_file = "/home/phil/.config/sops-nix/secrets/GROQ_API_KEY"
-      local f = io.open(groq_key_file, "r")
-      if f then
-        local key = f:read("*all"):gsub("%s+", "") -- read and trim whitespace
-        vim.env.GROQ_API_KEY = key
-        f:close()
-      end
-    '';
-
     plugins = {
       markdown-preview.enable = true;
       render-markdown.enable = true;
@@ -29,7 +19,7 @@
             __inherited_from = "openai";
             api_key_name = "GROQ_API_KEY";
             endpoint = "https://api.groq.com/openai/v1/";
-            model = "groq/compound-mini";
+            model = "llama-3.3-70b-versatile";
             disable_tools = true;
             extra_request_body = {
               temperature = 1;

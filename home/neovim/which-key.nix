@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+_: {
   # Which-key: Display available keybindings in popup
   # Shows all possible key combinations after pressing leader or other prefix keys
   programs.nixvim.plugins.which-key = {
@@ -85,7 +85,10 @@
       disable = {
         builtin_keys = {
           # Hide these default vim keys from which-key
-          i = [ "<C-R>" "<C-W>" ];
+          i = [
+            "<C-R>"
+            "<C-W>"
+          ];
           n = [ "<C-W>" ];
         };
       };
