@@ -17,15 +17,17 @@
 
           providers.groq = {
             __inherited_from = "openai";
-            api_key_name = "GROQ_API_KEY";
+            api_key_name = "cmd:cat /home/phil/.config/sops-nix/secrets/GROQ_API_KEY";
             endpoint = "https://api.groq.com/openai/v1/";
-            model = "llama-3.3-70b-versatile";
+            model = "qwen/qwen3-32b"; # "llama-3.3-70b-versatile";
+            system_promt = "You are a helpful coding assistant. Always respond in plain markdown format without using tool calls or JSON structures.";
             disable_tools = true;
             extra_request_body = {
               temperature = 1;
-              max_tokens = 8192;
-              tools = null;
-              tool_choice = "none";
+              max_tokens = 2000;
+              response_format = {
+                type = "text";
+              };
             };
           };
 
@@ -33,14 +35,21 @@
 
           render = {
             markdown = true;
+            syntax = true;
+            heading = true;
+            code = true;
+            link = true;
           };
 
           behaviour = {
+            enable_cursor_planning_mode = false;
             auto_suggestions = false;
             auto_set_highlight_group = true;
             auto_set_keymaps = true;
             auto_apply_diff_after_generation = false;
             support_paste_from_clipboard = false;
+            use_selection_as_context = true;
+            max_context_tokens = 2000;
           };
 
           mappings = {

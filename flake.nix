@@ -111,8 +111,11 @@
             inputs.sops-nix.${platformModuleSet}.sops
             inputs.home-manager.${platformModuleSet}.home-manager
             {
-              home-manager.extraSpecialArgs = sharedSpecialArgs;
-              home-manager.users.${primaryUser} = import ./home;
+              home-manager = {
+                extraSpecialArgs = sharedSpecialArgs;
+                users.${primaryUser} = import ./home;
+                backupFileExtension = "backup";
+              };
             }
           ];
 
