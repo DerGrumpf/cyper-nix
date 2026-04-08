@@ -1,5 +1,4 @@
-{ pkgs, inputs, ... }:
-{
+{ pkgs, inputs, ... }: {
   imports = [
     inputs.nixvim.homeModules.nixvim
     ./treesitter.nix
@@ -21,7 +20,7 @@
   home.packages = with pkgs; [
     nil
     biome
-    gdb
+    #gdb
   ];
 
   programs.nixvim = {

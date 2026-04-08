@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
 
   # Install language parsers declaratively
   # Syntax Highlighting
