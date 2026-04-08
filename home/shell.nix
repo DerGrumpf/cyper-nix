@@ -92,7 +92,7 @@
     ];
   };
 
-  programs.cava = { enable = true; };
+  programs.cava = lib.mkIf (!isDarwin) { enable = true; };
 
   programs.yazi = {
     enable = true;
