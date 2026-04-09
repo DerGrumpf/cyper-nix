@@ -4,10 +4,10 @@
         "type": "kitty-icat",
 		"source": "~/Pictures/Avatar/avatar_no_bg.png",
         // "height": 15,
-        "width": 32,
+        "width": 28,
         "padding": {
-            "top": 2,
-            "left": 0
+            "top": 0,
+            "left": 0,
         }
     },
     "modules": [

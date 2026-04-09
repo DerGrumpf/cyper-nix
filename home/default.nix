@@ -29,6 +29,8 @@
   ];
   nixpkgs.config.allowUnfree = true;
 
+  #targets.darwin.copyApps.enableChecks = isDarwin;
+
   catppuccin = {
     enable = false;
     accent = "sky";
@@ -86,6 +88,8 @@
   };
 
   home = {
+
+    # activation.checkAppManagementPermission = lib.mkForce "";
     username = primaryUser;
     stateVersion = "26.05";
     sessionVariables = lib.mkIf (!isDarwin) {

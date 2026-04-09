@@ -13,7 +13,7 @@
 
     # homebrew is best for GUI apps
     # nixpkgs is best for CLI tools
-    casks = [ "element" "affinity" "onlyoffice" "tailscale" ];
+    casks = [ "element" "affinity" "onlyoffice" ];
     brews = [ ];
     taps = [ ];
   };
