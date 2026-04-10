@@ -8,6 +8,26 @@ in
   services = {
     grafana = {
       enable = true;
+      provision = {
+        enable = true;
+        datasources.settings = {
+          apiVersion = 1;
+          datasources = [
+            {
+              name = "Prometheus";
+              type = "prometheus";
+              url = "http://127.0.0.1:${toString config.services.prometheus.port}";
+              isDefault = true;
+            }
+            {
+              name = "Loki";
+              type = "loki";
+              url = "http://127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}";
+              isDefault = false;
+            }
+          ];
+        };
+      };
       settings = {
         server = {
           domain = serverIP; # "grafana.cyperpunk.de";
@@ -112,5 +132,9 @@ in
     # TODO: Remove
     9001
     3100
+  ];
+
+  systemd.tmpfiles.rules = [
+    "d /var/loki 0700 loki loki -"
   ];
 }
