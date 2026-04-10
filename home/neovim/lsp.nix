@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   # LSP configuration: Language Server Protocol provides IDE features
   # like autocomplete, go-to-definition, diagnostics, and more.
   programs.nixvim = {
@@ -80,6 +81,10 @@
     };
 
     # Install LSP servers
-    extraPackages = with pkgs; [ lua-language-server nil rust-analyzer ];
+    extraPackages = with pkgs; [
+      lua-language-server
+      nil
+      rust-analyzer
+    ];
   };
 }

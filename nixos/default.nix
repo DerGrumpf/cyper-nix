@@ -1,43 +1,28 @@
 {
   pkgs,
   inputs,
+  lib,
   primaryUser,
+  isServer,
   ...
 }:
 {
   imports = [
     ./fonts.nix
     ./sops.nix
+    ./locale.nix
+    ./tailscale.nix
+    ./ssh.nix
+  ]
+  ++ lib.optionals (!isServer) [
     ./regreet.nix
     ./plymouth.nix
     ./audio.nix
-    ./ssh.nix
-    ./locale.nix
-    ./tailscale.nix
-    ./virt.nix
     ./webcam.nix
-
-    inputs.catppuccin.nixosModules.catppuccin
+    ./virt.nix
+    ./catppuccin.nix
   ];
 
-  catppuccin = {
-    enable = true;
-    accent = "sky";
-    flavor = "mocha";
-    cache.enable = true;
-
-    cursors = {
-      enable = true;
-      accent = "sapphire";
-    };
-
-    fcitx5.enable = false;
-    forgejo.enable = false;
-    gitea.enable = false;
-    sddm.enable = false;
-  };
-
-  # nix config
   nix = {
     settings = {
       experimental-features = [
@@ -59,8 +44,6 @@
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
     };
-
-    # Garbage collection
     gc = {
       automatic = true;
       dates = "weekly";
@@ -68,39 +51,38 @@
     };
   };
 
-  # Disable Docs
   documentation = {
     enable = true;
-    doc.enable = false; # Skip large documentation
-    man.enable = false; # Keep man pages
-    info.enable = false; # Skip info pages
+    doc.enable = false;
+    man.enable = false;
+    info.enable = false;
   };
 
-  nixpkgs.config = {
-    allowUnfree = true;
-  };
+  nixpkgs.config.allowUnfree = true;
 
   programs = {
     fish.enable = true;
+  }
+  // lib.optionalAttrs (!isServer) {
+    dconf.enable = true;
     hyprland = {
       enable = true;
       package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     };
     steam.enable = true;
-    dconf.enable = true;
     appimage = {
       enable = true;
       binfmt = true;
     };
   };
 
-  security = {
+  security = lib.mkIf (!isServer) {
     pam.services.swaylock = { };
     polkit.enable = true;
     apparmor.enable = false;
   };
 
-  services.gnome = {
+  services.gnome = lib.mkIf (!isServer) {
     tinysparql.enable = true;
     localsearch.enable = true;
   };
@@ -111,6 +93,8 @@
     isNormalUser = true;
     extraGroups = [
       "wheel"
+    ]
+    ++ lib.optionals (!isServer) [
       "video"
       "audio"
       "libvirtd"

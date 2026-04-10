@@ -1,7 +1,6 @@
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 {
   imports = [
-    inputs.catppuccin.homeModules.catppuccin
     ./hyprland
     ./rofi
     ./waybar
