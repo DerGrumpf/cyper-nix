@@ -5,6 +5,7 @@
   self,
   lib,
   isDarwin,
+  isServer,
   ...
 }:
 {
@@ -16,93 +17,37 @@
     ./xdg.nix
     ./neovim
     ./python.nix
+    inputs.sops-nix.homeManagerModules.sops
+  ]
+  ++ lib.optionals (!isDarwin && !isServer) [
+    ./desktop
+    ./catppuccin.nix
+  ]
+  ++ lib.optionals isDarwin [
+    ./desktop/sketchybar
+    ./catppuccin.nix
+  ]
+  ++ lib.optionals (!isServer) [
     ./nixcord.nix
     ./spicetify.nix
     ./floorp.nix
     ./obsidian.nix
-    inputs.sops-nix.homeManagerModules.sops
-  ]
-  ++ lib.optionals (!isDarwin) [ ./desktop ]
-  ++ lib.optionals isDarwin [
-    ./desktop/sketchybar
-    inputs.catppuccin.homeModules.catppuccin
   ];
+
   nixpkgs.config.allowUnfree = true;
 
-  #targets.darwin.copyApps.enableChecks = isDarwin;
-
-  catppuccin = {
-    enable = false;
-    accent = "sky";
-    flavor = "mocha";
-
-    eza.enable = true;
-    fzf.enable = true;
-    bat.enable = true;
-
-    element-desktop = lib.mkIf (!isDarwin) {
-      enable = true;
-      accent = "green";
-    };
-
-    btop.enable = true;
-
-    cava = lib.mkIf (!isDarwin) {
-      enable = true;
-      transparent = true;
-    };
-
-    kitty.enable = true;
-    lazygit.enable = true;
-    yazi.enable = true;
-    fish.enable = true;
-
-    cursors = lib.mkIf (!isDarwin) {
-      enable = true;
-      accent = "sapphire";
-    };
-
-    hyprland = lib.mkIf (!isDarwin) { enable = true; };
-
-    hyprlock = lib.mkIf (!isDarwin) {
-      enable = true;
-      useDefaultConfig = false;
-    };
-
-    waybar = lib.mkIf (!isDarwin) {
-      enable = true;
-      mode = "createLink";
-    };
-
-    mako.enable = lib.mkIf (!isDarwin) true;
-    mpv.enable = lib.mkIf (!isDarwin) true;
-    newsboat.enable = lib.mkIf (!isDarwin) true;
-    mangohud.enable = lib.mkIf (!isDarwin) true;
-
-    gtk.icon.enable = lib.mkIf (!isDarwin) true;
-
-    kvantum = lib.mkIf (!isDarwin) {
-      enable = true;
-      apply = true;
-    };
-  };
-
   home = {
-
-    # activation.checkAppManagementPermission = lib.mkForce "";
     username = primaryUser;
     stateVersion = "26.05";
-    sessionVariables = lib.mkIf (!isDarwin) {
+    sessionVariables = lib.mkIf (!isDarwin && !isServer) {
       GROQ_API_KEY = config.sops.secrets.GROQ_API_KEY.path;
       OPENWEATHER_API_KEY = config.sops.secrets.OPENWEATHER_API_KEY.path;
     };
-
-    file = {
+    file = lib.mkIf (!isServer) {
       "Pictures/Avatar" = {
         source = "${self}/assets/avatar";
         recursive = true;
       };
-
       "Pictures/Wallpapers" = {
         source = "${self}/assets/wallpapers";
         recursive = true;
@@ -118,7 +63,6 @@
         "/Users/${primaryUser}/.config/nix/secrets/keys.txt"
       else
         "/home/${primaryUser}/.config/nix/secrets/keys.txt";
-
     secrets = {
       GROQ_API_KEY = { };
       OPENWEATHER_API_KEY = { };
