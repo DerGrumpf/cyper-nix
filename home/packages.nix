@@ -64,6 +64,7 @@
         xonotic
         irssi
         blender
+        cinny-desktop
       ]
       ++ lib.optionals pkgs.stdenv.isDarwin [ graphite-cli ];
   };

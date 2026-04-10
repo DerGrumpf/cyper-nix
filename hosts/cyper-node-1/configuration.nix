@@ -2,6 +2,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../nixos/roles/monitoring.nix
+    ../../nixos/roles/matrix.nix
   ];
 
   networking = {
