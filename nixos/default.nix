@@ -4,6 +4,7 @@
   lib,
   primaryUser,
   isServer,
+  isDarwin,
   ...
 }:
 {
@@ -82,9 +83,16 @@
     apparmor.enable = false;
   };
 
-  services.gnome = lib.mkIf (!isServer) {
-    tinysparql.enable = true;
-    localsearch.enable = true;
+  services = {
+    prometheus.exporters.node = lib.mkIf (!isDarwin) {
+      enable = true;
+      port = 9002;
+    };
+
+    gnome = lib.mkIf (!isServer) {
+      tinysparql.enable = true;
+      localsearch.enable = true;
+    };
   };
 
   users.users.${primaryUser} = {

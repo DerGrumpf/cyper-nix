@@ -120,19 +120,17 @@
           ];
 
           platformModules =
-            let
-              nixosBase = [
-                { nixpkgs.hostPlatform = system; }
-                ./nixos
-              ];
-            in
             if isDarwin then
               [
                 ./darwin
                 inputs.nix-homebrew.darwinModules.nix-homebrew
               ]
             else
-              nixosBase ++ (if isServer then [ ./nixos/server ] else [ ]);
+              [
+                { nixpkgs.hostPlatform = system; }
+                ./nixos
+              ];
+
         in
         systemFunc {
           inherit system;
