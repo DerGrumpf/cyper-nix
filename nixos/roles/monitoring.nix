@@ -6,6 +6,7 @@
       domain = "grafana.cyperpunk.de";
       port = 2342;
       addr = "127.0.0.1";
+      settings.security.secret_key = "$__file{${config.sops.secrets.grafana_secret_key.path}}";
     };
 
     # nginx reverse proxy
