@@ -7,6 +7,7 @@
     secrets = {
       grafana_secret_key = {
         owner = "grafana";
+        group = "grafana";
       };
     };
   };

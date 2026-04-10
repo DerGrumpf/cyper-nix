@@ -4,7 +4,6 @@
   lib,
   primaryUser,
   isServer,
-  isDarwin,
   ...
 }:
 {
@@ -84,9 +83,29 @@
   };
 
   services = {
-    prometheus.exporters.node = lib.mkIf (!isDarwin) {
+    prometheus.exporters.node = {
       enable = true;
       port = 9002;
+    };
+
+    alloy = {
+      enable = true;
+      extraFlags = [ "--stability.level=public-preview" ];
+      configPath = pkgs.writeText "config.alloy" ''
+        loki.write "default" {
+          endpoint {
+            url = "http://192.168.2.30:3100/loki/api/v1/push"
+          }
+        }
+
+        loki.source.journal "journal" {
+          forward_to = [loki.write.default.receiver]
+          labels = {
+            job  = "systemd-journal",
+            host = sys.env("HOSTNAME"),
+          }
+        }
+      '';
     };
 
     gnome = lib.mkIf (!isServer) {
@@ -95,7 +114,10 @@
     };
   };
 
-  networking.firewall.allowedTCPPorts = [ 9002 ];
+  networking.firewall.allowedTCPPorts = [
+    9002
+    3100
+  ];
 
   users.users.${primaryUser} = {
     home = "/home/${primaryUser}";
