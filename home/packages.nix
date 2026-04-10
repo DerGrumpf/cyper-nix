@@ -1,4 +1,9 @@
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  isServer,
+  ...
+}:
 {
   home = {
     packages =
@@ -12,18 +17,14 @@
         ripgrep
         jq
         yq-go
-
         # GUI
         openscad
         fstl
-
         # PDF Tools
         pandoc
-
         # misc
         yt-dlp
         ffmpeg
-
         # Archives
         zip
         unzip
@@ -32,7 +33,6 @@
         gnutar
         unrar
         sops
-
         # Nix tools
         nix-index
       ]
@@ -47,11 +47,11 @@
         file
         which
         libnotify
-
         # encryption
         age
         ssh-to-age
-
+      ]
+      ++ lib.optionals (!pkgs.stdenv.isDarwin && !isServer) [
         # GUI
         element-desktop
         zapzap
