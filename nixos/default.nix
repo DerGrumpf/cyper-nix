@@ -95,6 +95,8 @@
     };
   };
 
+  networking.firewall.allowedTCPPorts = [ 9002 ];
+
   users.users.${primaryUser} = {
     home = "/home/${primaryUser}";
     shell = pkgs.fish;
