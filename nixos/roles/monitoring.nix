@@ -33,7 +33,8 @@ in
           domain = serverIP; # "grafana.cyperpunk.de";
           http_port = 2342;
           http_addr = "127.0.0.1";
-          serve_from_sub_path = false;
+          root_url = "http://${serverIP}/grafana/";
+          serve_from_sub_path = true;
         };
         security = {
           secret_key = "$__file{${config.sops.secrets.grafana_secret_key.path}}";
@@ -48,12 +49,12 @@ in
     # nginx reverse proxy
     nginx = {
       enable = true;
-      virtualHosts.${config.services.grafana.settings.server.domain} = {
-        locations."/" = {
+      virtualHosts."${serverIP}" = {
+        locations."/grafana/" = {
           proxyPass = "http://127.0.0.1:${toString config.services.grafana.settings.server.http_port}";
           proxyWebsockets = true;
           extraConfig = ''
-            proxy_set_header Host ${config.services.grafana.settings.server.domain};
+            proxy_set_header Host ${serverIP};
           '';
         };
       };
