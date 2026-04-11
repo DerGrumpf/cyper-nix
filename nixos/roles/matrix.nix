@@ -10,6 +10,14 @@ in
     8080
   ];
 
+  sops.secrets = {
+    matrix_macaroon_secret = { };
+    matrix_registration_secret = {
+      owner = "matrix-synapse";
+      group = "matrix-synapse";
+    };
+  };
+
   services = {
     matrix-synapse = {
       enable = true;
