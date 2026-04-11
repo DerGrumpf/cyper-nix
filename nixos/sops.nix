@@ -9,6 +9,11 @@
         owner = "grafana";
         group = "grafana";
       };
+      matrix_macaroon_secret = { };
+      matrix_registration_secret = {
+        owner = "matrix-synapse";
+        group = "matrix-synapse";
+      };
     };
   };
 }

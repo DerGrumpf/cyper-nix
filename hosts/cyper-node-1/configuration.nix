@@ -3,6 +3,8 @@
     ./hardware-configuration.nix
     ../../nixos/roles/monitoring.nix
     ../../nixos/roles/matrix.nix
+    ../../nixos/roles/postgresql.nix
+    ../../nixos/roles/wyl.nix
   ];
 
   networking = {
