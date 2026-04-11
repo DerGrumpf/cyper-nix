@@ -2,6 +2,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../nixos/roles/wyl.nix
+    ../../nixos/roles/unifi.nix
   ];
 
   networking = {
