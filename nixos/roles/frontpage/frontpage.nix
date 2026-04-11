@@ -37,27 +37,23 @@ let
     chmod -R u+w $out
     cp ${mainConfig} $out/config.yml
     mkdir -p $out/assets/icons
-    cp ${./assets/catppuccin-${catppuccinFlavor}.css} $out/assets/catppuccin-${catppuccinFlavor}.css
-    cp ${./assets/dark_circle.png} $out/assets/dark_circle.png
-    cp ${./assets/light_circle.png} $out/assets/light_circle.png
-    cp -r ${./assets/icons}/. $out/assets/icons/
+    cp ${./assets/flavours/catppuccin-${catppuccinFlavor}.css} $out/assets/catppuccin-${catppuccinFlavor}.css
+    cp ${./assets/logos/dark_circle.png} $out/assets/dark_circle.png
+    cp ${./assets/logos/light_circle.png} $out/assets/light_circle.png
   '';
 in
 {
-  services.nginx = {
-    enable = true;
-    virtualHosts."homer-main" = {
-      listen = [
-        {
-          addr = "0.0.0.0";
-          port = port;
-        }
-      ];
-      root = "${mainRoot}";
-      locations."/" = {
-        index = "index.html";
-        tryFiles = "$uri $uri/ /index.html";
-      };
+  services.nginx.virtualHosts."homer-main" = {
+    listen = [
+      {
+        inherit port;
+        addr = "0.0.0.0";
+      }
+    ];
+    root = "${mainRoot}";
+    locations."/" = {
+      index = "index.html";
+      tryFiles = "$uri $uri/ /index.html";
     };
   };
 

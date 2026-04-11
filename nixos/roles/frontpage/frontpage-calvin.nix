@@ -32,8 +32,8 @@ in
   services.nginx.virtualHosts."homer-calvin" = {
     listen = [
       {
+        inherit port;
         addr = "0.0.0.0";
-        port = port;
       }
     ];
     root = "${calvinRoot}";
