@@ -5,6 +5,7 @@
     ../../nixos/roles/matrix.nix
     ../../nixos/roles/postgresql.nix
     ../../nixos/roles/wyl.nix
+    ../../nixos/roles/adguard.nix
   ];
 
   networking = {
