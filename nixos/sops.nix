@@ -1,4 +1,4 @@
-{ primaryUser, ... }:
+{ primaryUser, config, ... }:
 {
   sops = {
     defaultSopsFile = ../secrets/secrets.yaml;
@@ -14,6 +14,17 @@
         owner = "matrix-synapse";
         group = "matrix-synapse";
       };
+      vaultwarden_admin_token = {
+        owner = "vaultwarden";
+        group = "vaultwarden";
+      };
+    };
+    templates.vaultwarden_env = {
+      content = ''
+        ADMIN_TOKEN=${config.sops.placeholder.vaultwarden_admin_token}
+      '';
+      owner = "vaultwarden";
+      group = "vaultwarden";
     };
   };
 }

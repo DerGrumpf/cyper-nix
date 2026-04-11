@@ -1,8 +1,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../nixos/roles/wyl.nix
-    ../../nixos/roles/unifi.nix
+    ../../nixos/roles/vaultwarden.nix
   ];
 
   networking = {
