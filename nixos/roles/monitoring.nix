@@ -5,6 +5,11 @@ let
   );
 in
 {
+  sops.secrets.grafana_secret_key = {
+    owner = "grafana";
+    group = "grafana";
+  };
+
   services = {
     grafana = {
       enable = true;
