@@ -1,7 +1,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../nixos/roles/vaultwarden.nix
+    ../../nixos/roles/searxng.nix
   ];
 
   networking = {
