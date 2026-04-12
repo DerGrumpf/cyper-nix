@@ -6,11 +6,11 @@
 }:
 
 let
-  giteaTheme = pkgs.fetchFromGitHub {
-    owner = "catppuccin";
-    repo = "gitea";
-    rev = "main";
-    sha256 = "sha256-ba5Bh/eTg2Dn80vyuudDpZVbKK1EDyv2rFUSwgMONq0=";
+
+  giteaTheme = pkgs.fetchzip {
+    url = "https://github.com/catppuccin/gitea/releases/download/v1.0.1/catppuccin-gitea.tar.gz";
+    sha256 = "sha256-et5luA3SI7iOcEIQ3CVIu0+eiLs8C/8mOitYlWQa/uI=";
+    stripRoot = false;
   };
 
   domain = "192.168.2.31"; # swap to git.cyperpunk.de for prod
@@ -182,9 +182,9 @@ in
 
   # symlink catppuccin css files into gitea's custom dir on every service start
   systemd.services.gitea.preStart = lib.mkAfter ''
-    themeDir="/var/lib/gitea/custom/public/assets/css"
+    themeDir="${config.services.gitea.stateDir}/custom/public/assets/css"
     mkdir -p "$themeDir"
-    for f in ${giteaTheme}/theme/*.css; do
+    for f in ${giteaTheme}/*.css; do
       name=$(basename "$f")
       ln -sf "$f" "$themeDir/$name"
     done
