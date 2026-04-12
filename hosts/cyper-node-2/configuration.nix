@@ -1,10 +1,8 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../nixos/roles/searxng.nix
-    ../../nixos/roles/frontpage
-    ../../nixos/roles/vaultwarden.nix
     ../../nixos/roles/gitea.nix
+    ../../nixos/roles/filebrowser.nix
   ];
 
   networking = {
