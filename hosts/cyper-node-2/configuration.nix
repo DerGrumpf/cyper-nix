@@ -4,6 +4,7 @@
     ../../nixos/roles/searxng.nix
     ../../nixos/roles/frontpage
     ../../nixos/roles/vaultwarden.nix
+    ../../nixos/roles/gitea.nix
   ];
 
   networking = {
