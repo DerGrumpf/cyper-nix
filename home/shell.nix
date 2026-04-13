@@ -189,7 +189,7 @@
       f = "nvim $(fzf)";
       tree = "eza --icons=always -T";
       i = "kitty +kitten icat";
-      cat = "bat --color=always --style=numbers";
+      bat = "bat --color=always --style=numbers";
       grep = "rg";
       cp = "rsync -ah --progress";
       nix-switch =
