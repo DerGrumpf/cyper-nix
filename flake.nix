@@ -145,6 +145,12 @@
           system = "x86_64-linux";
         };
 
+        "cyper-controller" = mkSystem {
+          hostName = "cyper-controller";
+          system = "x86_64-linux";
+          isServer = true;
+        };
+
         "cyper-node-1" = mkSystem {
           hostName = "cyper-node-1";
           system = "x86_64-linux";
