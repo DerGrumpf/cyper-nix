@@ -1,6 +1,7 @@
 # Nix build results
 result
 result-*
+*.qcow2
 
 # Ignore everything in the secrets directory
 secrets/*
@@ -23,6 +24,7 @@ secrets/ssh-private
 
 # secrets (encrypted via sops, but extra safety)
 secrets/*.yaml~
+
 
 # Editor
 .direnv/

@@ -12,6 +12,7 @@
     ../../nixos/roles/gitea.nix
     ../../nixos/roles/vaultwarden.nix
     ../../nixos/roles/frontpage
+    ../../nixos/roles/cage.nix
   ];
 
   networking = {
