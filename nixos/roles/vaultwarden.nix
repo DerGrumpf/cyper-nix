@@ -17,13 +17,12 @@ in
     backupDir = "/var/local/vaultwarden/backup";
 
     config = {
-      DOMAIN = "http://${ip}:${toString port}";
+      DOMAIN = "https://vault.cyperpunk.de"; # "http://${ip}:${toString port}";
       ROCKET_ADDRESS = "0.0.0.0";
       ROCKET_PORT = port;
       ROCKET_LOG = "critical";
       SIGNUPS_ALLOWED = true;
       WEBSOCKET_ENABLED = true;
-      ROCKET_TLS = "{certs=\"/var/lib/vaultwarden/ssl/cert.pem\",key=\"/var/lib/vaultwarden/ssl/key.pem\"}";
     };
   };
 
@@ -34,39 +33,21 @@ in
 
   networking.firewall.allowedTCPPorts = [ port ];
 
-  systemd.services.vaultwarden-backup-rotate = {
-    description = "Rotate old Vaultwarden backups";
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.findutils}/bin/find /var/lib/vaultwarden/backup -mtime +30 -delete";
+  systemd = {
+    services.vaultwarden-backup-rotate = {
+      description = "Rotate old Vaultwarden backups";
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.findutils}/bin/find /var/lib/vaultwarden/backup -mtime +30 -delete";
+      };
     };
-  };
 
-  systemd.timers.vaultwarden-backup-rotate = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "daily";
-      Persistent = true;
+    timers.vaultwarden-backup-rotate = {
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnCalendar = "daily";
+        Persistent = true;
+      };
     };
-  };
-
-  # TODO: Remove for proper TLS Setup
-  systemd.services.vaultwarden-gen-cert = {
-    description = "Generate self-signed cert for Vaultwarden";
-    before = [ "vaultwarden.service" ];
-    wantedBy = [ "vaultwarden.service" ];
-    serviceConfig.Type = "oneshot";
-    script = ''
-      mkdir -p /var/lib/vaultwarden/ssl
-      if [ ! -f /var/lib/vaultwarden/ssl/cert.pem ]; then
-        ${pkgs.openssl}/bin/openssl req -x509 -newkey rsa:4096 -nodes \
-          -keyout /var/lib/vaultwarden/ssl/key.pem \
-          -out /var/lib/vaultwarden/ssl/cert.pem \
-          -days 3650 \
-          -subj "/CN=${ip}" \
-          -addext "subjectAltName=IP:${ip}"
-        chown -R vaultwarden:vaultwarden /var/lib/vaultwarden/ssl
-      fi
-    '';
   };
 }

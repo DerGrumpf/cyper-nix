@@ -6,7 +6,7 @@
     ../../nixos/roles/postgresql.nix
     ../../nixos/roles/wyl.nix
     ../../nixos/roles/adguard.nix
-    ../../nixos/roles/unifi.nix
+#    ../../nixos/roles/unifi.nix
     ../../nixos/roles/searxng.nix
     ../../nixos/roles/filebrowser.nix
     ../../nixos/roles/gitea.nix

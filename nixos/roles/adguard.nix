@@ -50,7 +50,7 @@ in
         };
 
         dhcp = {
-          enabled = false;
+          enabled = true;
           interface_name = primaryInterface;
           local_domain_name = "lan";
           dhcpv4 = {
