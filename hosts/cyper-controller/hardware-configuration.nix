@@ -22,12 +22,12 @@
     extraModulePackages = [ ];
   };
   fileSystems = {
-    "/" = {
+    "/" = lib.mkForce {
       device = "/dev/disk/by-label/NIXROOT";
       fsType = "ext4";
     };
 
-    "/boot" = {
+    "/boot" = lib.mkForce {
       device = "/dev/disk/by-label/NIXBOOT";
       fsType = "vfat";
       options = [
