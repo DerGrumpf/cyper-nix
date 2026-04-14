@@ -13,7 +13,7 @@ let
     stripRoot = false;
   };
 
-  domain = "192.168.2.31"; # swap to git.cyperpunk.de for prod
+  domain = "git.cyperpunk.de"; # swap to git.cyperpunk.de for prod
   httpPort = 9000;
   sshPort = 12222;
 in
@@ -95,7 +95,7 @@ in
         HTTP_PORT = httpPort;
         SSH_PORT = sshPort;
         SSH_LISTEN_PORT = sshPort;
-        ROOT_URL = "http://${domain}:${toString httpPort}/";
+        ROOT_URL = "https://${domain}/";
         DISABLE_SSH = false;
         START_SSH_SERVER = true;
       };

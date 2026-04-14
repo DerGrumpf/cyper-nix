@@ -51,6 +51,34 @@
     };
   };
 
+  virtualisation = lib.mkIf isServer {
+    vmVariant = {
+      virtualisation = {
+        forwardPorts = [
+          {
+            from = "host";
+            host.port = 2222;
+            guest.port = 22;
+          }
+        ];
+        qemu.networkingOptions = [
+          "-device virtio-net-pci,netdev=net0"
+          "-netdev user,id=net0,net=10.0.2.0/24,dhcpstart=10.0.2.15"
+        ];
+      };
+
+      systemd.network.networks."10-ethernet" = lib.mkForce {
+        matchConfig.Name = "ens*";
+        networkConfig = {
+          Address = "10.0.2.15/24";
+          Gateway = "10.0.2.2";
+          DNS = "8.8.8.8";
+          DHCP = "no";
+        };
+      };
+    };
+  };
+
   documentation = {
     enable = true;
     doc.enable = false;

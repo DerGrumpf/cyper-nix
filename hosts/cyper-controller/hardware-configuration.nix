@@ -2,6 +2,7 @@
   config,
   lib,
   modulesPath,
+  primaryUser,
   ...
 }:
 
@@ -21,13 +22,14 @@
     kernelModules = [ "kvm-intel" ];
     extraModulePackages = [ ];
   };
+
   fileSystems = {
-    "/" = {
+    "/" = lib.mkForce {
       device = "/dev/disk/by-label/NIXROOT";
       fsType = "ext4";
     };
 
-    "/boot" = {
+    "/boot" = lib.mkForce {
       device = "/dev/disk/by-label/NIXBOOT";
       fsType = "vfat";
       options = [
@@ -37,7 +39,46 @@
     };
 
     # TODO: Add External Devices as by-label with no necessity for boot
+    "/storage/internal" = {
+      device = "/dev/disk/by-label/STORAGE";
+      fsType = "btrfs";
+      options = [
+        "compress=zstd"
+        "noatime"
+        "nofail"
+      ];
+    };
+
+    "/storage/fast" = {
+      device = "/dev/disk/by-label/FAST";
+      fsType = "ext4";
+      options = [
+        "nofail"
+        "noatime"
+        "x-systemd.automount"
+        "x-systemd.idle-timeout=60"
+      ];
+    };
+
+    "/storage/backup" = {
+      device = "/dev/disk/by-label/BACKUP";
+      fsType = "ext4";
+      options = [
+        "nofail"
+        "noatime"
+        "x-systemd.automount"
+        "x-systemd.idle-timeout=60"
+      ];
+    };
+
   };
+
+  systemd.tmpfiles.rules = [
+    "d /storage 0755 ${primaryUser} users -"
+    "d /storage/internal 0755 ${primaryUser} users -"
+    "d /storage/fast 0755 ${primaryUser} users -"
+    "d /storage/backup 0755 ${primaryUser} users -"
+  ];
 
   swapDevices = [
     {
