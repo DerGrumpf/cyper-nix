@@ -1,10 +1,11 @@
-{ config, ... }:
+{ pkgs, config, ... }:
 {
   networking.firewall = {
     allowedTCPPorts = [
       8008
       8448
       3478
+      8009
     ];
     allowedUDPPorts = [
       3478
@@ -91,6 +92,34 @@
       extraConfig = ''
         no-multicast-peers
       '';
+    };
+
+    nginx = {
+      virtualHosts."cinny" = {
+        listen = [
+          {
+            addr = "0.0.0.0";
+            port = 8009;
+          }
+        ];
+        root = "${pkgs.cinny}";
+
+        #        locations."/config.json" = {
+        #          extraConfig = ''
+        #                        default_type application/json;
+        #                        return 200 '{
+        #            				"defaultHomeserver":0,
+        #            				"homeserverList": [
+        #            						{
+        #            								"name":"cyperpunk.de",
+        #            								"url":"https://matrix.cyperpunk.de"
+        #            						}
+        #            				],
+        #            				"allowCustomHomeservers":true
+        #            		     }';
+        #          '';
+        #        };
+      };
     };
   };
 }
