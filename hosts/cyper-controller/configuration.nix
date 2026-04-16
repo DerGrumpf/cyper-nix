@@ -1,12 +1,13 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./smb.nix
     ../../nixos/roles/monitoring.nix
     ../../nixos/roles/matrix.nix
     ../../nixos/roles/postgresql.nix
     ../../nixos/roles/wyl.nix
     ../../nixos/roles/adguard.nix
-#    ../../nixos/roles/unifi.nix
+    ../../nixos/roles/unifi.nix
     ../../nixos/roles/searxng.nix
     ../../nixos/roles/filebrowser.nix
     ../../nixos/roles/gitea.nix
