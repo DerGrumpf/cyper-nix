@@ -122,7 +122,7 @@
       configPath = pkgs.writeText "config.alloy" ''
         loki.write "default" {
           endpoint {
-            url = "http://192.168.2.30:3100/loki/api/v1/push"
+            url = "http://192.168.2.2:3100/loki/api/v1/push"
           }
         }
 
