@@ -1,13 +1,33 @@
-{ config, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 let
   serverIP = builtins.head (
     builtins.match "([0-9.]+)/.*" config.systemd.network.networks."10-ethernet".networkConfig.Address
   );
+
+  nodePort = toString config.services.prometheus.exporters.node.port;
+
+  mkNodeJob = name: ip: {
+    job_name = name;
+    static_configs = [ { targets = [ "${ip}:${nodePort}" ]; } ];
+  };
+
+  extraNodes = {
+    "cyper-desktop" = "192.168.2.40";
+    "cyper-node-1" = "192.168.2.30";
+    "cyper-node-2" = "192.168.2.31";
+  };
 in
 {
-  sops.secrets.grafana_secret_key = {
-    owner = "grafana";
-    group = "grafana";
+  sops.secrets = {
+    grafana_secret_key = {
+      owner = "grafana";
+      group = "grafana";
+    };
+
   };
 
   services = {
@@ -55,24 +75,11 @@ in
     prometheus = {
       enable = true;
       port = 9001;
+
       scrapeConfigs = [
-        {
-          job_name = config.networking.hostName;
-          static_configs = [
-            {
-              targets = [ "${serverIP}:${toString config.services.prometheus.exporters.node.port}" ];
-            }
-          ];
-        }
-        {
-          job_name = "cyper-desktop";
-          static_configs = [
-            {
-              targets = [ "192.168.2.40:${toString config.services.prometheus.exporters.node.port}" ];
-            }
-          ];
-        }
-      ];
+        (mkNodeJob config.networking.hostName serverIP)
+      ]
+      ++ (lib.mapAttrsToList mkNodeJob extraNodes);
     };
 
     loki = {
