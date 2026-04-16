@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   primaryUser,
   ...
@@ -66,16 +65,24 @@
     description = "Set Samba password for ${primaryUser}";
     wantedBy = [ "multi-user.target" ];
     after = [
-      "smbd.service"
-      "sops-nix.service"
+      "samba-smbd.service"
+      "sops-install-secrets.service"
     ];
-    requires = [ "smbd.service" ];
+    requires = [ "samba-smbd.service" ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
       ExecStart = pkgs.writeShellScript "samba-set-password" ''
-        PASSWORD=$(cat /run/secrets/smb-password-phil)
-        echo -e "$PASSWORD\n$PASSWORD" | ${pkgs.samba}/bin/smbpasswd -a -s ${primaryUser}
+        # Wait for smbd to initialize its passdb
+        for i in $(seq 1 10); do
+          [ -f /var/lib/samba/private/passdb.tdb ] && break
+          echo "Waiting for passdb.tdb... attempt $i"
+          sleep 1
+        done
+
+        PASSWORD=$(cat /run/secrets/smb_passwd)
+        (echo "$PASSWORD"; echo "$PASSWORD") | ${pkgs.samba}/bin/smbpasswd -a -s ${primaryUser} || \
+        (echo "$PASSWORD"; echo "$PASSWORD") | ${pkgs.samba}/bin/smbpasswd -s ${primaryUser}
       '';
     };
   };
