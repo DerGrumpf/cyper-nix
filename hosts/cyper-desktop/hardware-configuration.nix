@@ -76,6 +76,7 @@
             "iocharset=utf8"
             "_netdev"
             "auto"
+            "nofail"
             "x-systemd.requires=samba-smbd.service"
             "x-systemd.after=samba-smbd.service"
             "x-systemd.requires=sops-install-secrets.service"
