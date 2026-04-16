@@ -2,6 +2,7 @@
   config,
   lib,
   modulesPath,
+  primaryUser,
   ...
 }:
 
@@ -32,6 +33,17 @@
     '';
   };
 
+  sops = {
+    secrets.smb_passwd = { };
+
+    templates.smb_credentials = {
+      content = ''
+        username=${primaryUser}
+        password=${config.sops.placeholder.smb_passwd}
+      '';
+    };
+  };
+
   fileSystems = {
     "/" = {
       device = "/dev/disk/by-label/NIXROOT";
@@ -51,7 +63,32 @@
       device = "/dev/disk/by-label/STORAGE";
       fsType = "ext4";
     };
-  };
+  }
+  // builtins.listToAttrs (
+    map
+      (share: {
+        name = "/shares/${share}";
+        value = {
+          device = "//127.0.0.1/${share}";
+          fsType = "cifs";
+          options = [
+            "credentials=${config.sops.templates.smb_credentials.path}"
+            "iocharset=utf8"
+            "_netdev"
+            "auto"
+            "x-systemd.requires=samba-smbd.service"
+            "x-systemd.after=samba-smbd.service"
+            "x-systemd.requires=sops-install-secrets.service"
+            "x-systemd.after=sops-install-secrets.service"
+          ];
+        };
+      })
+      [
+        "internal"
+        "fast"
+        "backup"
+      ]
+  );
 
   swapDevices = [ ];
 
