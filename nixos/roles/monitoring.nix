@@ -78,6 +78,50 @@ in
 
       scrapeConfigs = [
         (mkNodeJob config.networking.hostName serverIP)
+        {
+          job_name = "gitea";
+          static_configs = [
+            {
+              targets = [
+                "localhost:${toString config.services.gitea.settings.server.HTTP_PORT}"
+              ];
+            }
+          ];
+          metrics_path = "/metrics";
+        }
+        {
+          job_name = "weather_braunschweig";
+          scrape_interval = "5m"; # be a polite citizen to wttr.in
+          scrape_timeout = "30s";
+          metrics_path = "/Braunschweig";
+          params = {
+            format = [ "p1" ];
+          };
+          static_configs = [ { targets = [ "wttr.in" ]; } ];
+          scheme = "https";
+          metric_relabel_configs = [
+            {
+              target_label = "location";
+              replacement = "Braunschweig";
+            }
+          ];
+        }
+        {
+          job_name = "synapse";
+          scrape_interval = "15s";
+          metrics_path = "/_synapse/metrics";
+          static_configs = [
+            {
+              targets = [ "127.0.0.1:9009" ];
+              labels = {
+                instance = config.networking.hostName;
+                job = "master";
+                index = "1";
+              };
+            }
+          ];
+        }
+
       ]
       ++ (lib.mapAttrsToList mkNodeJob extraNodes);
     };

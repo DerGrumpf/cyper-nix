@@ -1,6 +1,5 @@
 {
   pkgs,
-  config,
   lib,
   ...
 }:
@@ -27,7 +26,6 @@ let
       is_dark = true;
     }
   ];
-
   accents = [
     "rosewater"
     "flamingo"
@@ -44,7 +42,6 @@ let
     "blue"
     "lavender"
   ];
-
   themeHashes = {
     "latte/rosewater" = "0l1m4bhaxdam07rfqag6pjbzhdpyi5w3i14vp6rq7aj59pildw3a";
     "latte/flamingo" = "1m8hh2l87xv2rfgpnnl5vzddmam0n82h25fwadb37blgab08vhsr";
@@ -60,7 +57,6 @@ let
     "latte/sapphire" = "18dl1srxp3xccvvy56za6kp05n68d918l0wrxga11746g9sib7r3";
     "latte/blue" = "1zv9nap21d80flvd1jwmjph05jgykxngv5kqbhk95mvqh962ygnf";
     "latte/lavender" = "03j4fwbscip1qm6px1qxkha0c5csq2wwvzg9vwjkc2ja48v1mp9k";
-
     "frappe/rosewater" = "032qbgj32mvgpankl9777x2lxk18451kglsxg5215k8zrwcg9y95";
     "frappe/flamingo" = "1grhgynn8q7isv18981km5k8ll72ihsjw2ciy8widl6wikv29j8p";
     "frappe/pink" = "0h33g721bph8ihd6lmbc7szxy4dq85ng1cgg5cxjb5y2m7wpdbsy";
@@ -75,7 +71,6 @@ let
     "frappe/sapphire" = "03fa9rnclvs5ljd0lzz15vnkzpqpbrhfppg3zwfchs9fvak0n3ni";
     "frappe/blue" = "0r4jjn3pab77w1aanlv3143ch60400q44mdzaqmcjbcr6l2knmjh";
     "frappe/lavender" = "1mrkaz72w6j9hh4dpxwgd6ks5wsnq9ydgy6f9gms4jx1611aab96";
-
     "macchiato/rosewater" = "001akfnhlvwaiz5faahl4qi0qp6as6ilvkbja6bjy9f5iasr4ygp";
     "macchiato/flamingo" = "06xq3pbx4cb3pyblx2vydr4bp0ylm7866d66agg5wg5qnr356wb3";
     "macchiato/pink" = "1hb32dj0n3wx4f1wxa4n7fib2mazghwsg2ljycza9macfn2n87qn";
@@ -90,7 +85,6 @@ let
     "macchiato/sapphire" = "1744jiv57aqz4qi52n92nrx0s1rhylgg08qqc31jr2clk9h6bw18";
     "macchiato/blue" = "1arp8r2g8ivs1xipq39d3l6cvx0zrr1vwv9yac5j33d6c93wbb2i";
     "macchiato/lavender" = "0kak1f574c07gqjfafg3w5avrci584iqxjkmvrl2pv1879g84nn3";
-
     "mocha/rosewater" = "0p3ck9crskrhk1za6knaznjlj464mx4sdkkadna6k2152m3czjpz";
     "mocha/flamingo" = "04xx1mky230saqxxqin2fph8cnnz1jhmvb9qd9f5yc3pai3q5wdw";
     "mocha/pink" = "1cj9zdd72vcc45ziav625yq6hrp1zw21f7xsic0ip065xcqzdl3p";
@@ -106,7 +100,6 @@ let
     "mocha/blue" = "06ay46x2aq1q5ghz2zhzhn6qyqkrrf4p9j59qywnxh1jvv728ns8";
     "mocha/lavender" = "0iip063f6km17998c7ak0lb3kq6iskyi3xv2phn618mhslnxhwm5";
   };
-
   catppuccinThemes = lib.concatMap (
     flavour:
     map (
@@ -121,7 +114,6 @@ let
       )
     ) accents
   ) flavours;
-
   elementConfig = builtins.toFile "element-config.json" (
     builtins.toJSON {
       default_server_config = {
@@ -136,158 +128,63 @@ let
       };
     }
   );
-
   elementWebConfigured = pkgs.element-web.overrideAttrs (old: {
     postInstall = (old.postInstall or "") + ''
       cp ${elementConfig} $out/config.json
     '';
   });
-
   synapseAdmin = pkgs.synapse-admin-etkecc.withConfig {
     restrictBaseUrl = [ "https://matrix.cyperpunk.de" ];
     loginFlows = [ "password" ];
   };
 in
 {
-  networking.firewall = {
-    allowedTCPPorts = [
-      8008 # Matrix Synapse
-      8009 # Cinny
-      8010 # Element
-      8011 # Synapse Admin
-      8012 # FluffyChat
-      8448 # Matrix federation
-      3478 # TURN (coturn)
-    ];
-    allowedUDPPorts = [
-      3478 # TURN (coturn)
-    ];
-    allowedUDPPortRanges = [
-      {
-        from = 49152;
-        to = 65535; # TURN relay ports (coturn)
-      }
-    ];
-  };
 
-  sops.secrets = {
-    matrix_macaroon_secret = { };
-    matrix_registration_secret = {
-      owner = "matrix-synapse";
-      group = "matrix-synapse";
+  networking.firewall.allowedTCPPorts = [
+    8009 # Cinny
+    8010 # Element
+    8011 # Synapse Admin
+    8012 # FluffyChat
+  ];
+
+  services.nginx.virtualHosts = {
+    "cinny.cyperpunk.de" = {
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 8009;
+        }
+      ];
+      root = "${pkgs.cinny}";
     };
-    matrix_turn_secret = {
-      owner = "matrix-synapse";
-      group = "matrix-synapse";
+    "element.cyperpunk.de" = {
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 8010;
+        }
+      ];
+      root = "${elementWebConfigured}";
     };
-  };
-
-  services = {
-    matrix-synapse = {
-      enable = true;
-      settings = {
-        server_name = "cyperpunk.de";
-        public_baseurl = "https://matrix.cyperpunk.de";
-        enable_registration = true; # TODO: disable
-        enable_registration_without_verification = true;
-        trusted_key_servers = [ { server_name = "matrix.org"; } ];
-        suppress_key_server_warning = true;
-        registration_shared_secret_path = config.sops.secrets.matrix_registration_secret.path;
-        macaroon_secret_key = "$__file{${config.sops.secrets.matrix_macaroon_secret.path}}";
-
-        # TURN configuration
-        turn_uris = [
-          "turn:turn.cyperpunk.de?transport=udp"
-          "turn:turn.cyperpunk.de?transport=tcp"
-        ];
-        turn_shared_secret_path = config.sops.secrets.matrix_turn_secret.path;
-        turn_user_lifetime = "1h";
-        experimental_features = {
-          "msc3266_enabled" = true;
-        };
-        extra_well_known_client_content = {
-          "io.element.call.backend" = {
-            url = "https://call.element.io";
-          };
-        };
-
-        listeners = [
-          {
-            port = 8008;
-            bind_addresses = [ "0.0.0.0" ];
-            type = "http";
-            tls = false;
-            x_forwarded = true;
-            resources = [
-              {
-                names = [
-                  "client"
-                  "federation"
-                ];
-                compress = false;
-              }
-            ];
-          }
-        ];
+    "fluffy.cyperpunk.de" = {
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 8012;
+        }
+      ];
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:8082";
       };
     };
-
-    coturn = {
-      enable = true;
-      no-cli = true;
-      no-tcp-relay = true;
-      min-port = 49152;
-      max-port = 65535;
-      use-auth-secret = true;
-      static-auth-secret-file = config.sops.secrets.matrix_turn_secret.path;
-      realm = "turn.cyperpunk.de";
-      extraConfig = ''
-        no-multicast-peers
-      '';
-    };
-
-    nginx.virtualHosts = {
-      "cinny.cyperpunk.de" = {
-        listen = [
-          {
-            addr = "0.0.0.0";
-            port = 8009;
-          }
-        ];
-        root = "${pkgs.cinny}";
-      };
-
-      "element.cyperpunk.de" = {
-        listen = [
-          {
-            addr = "0.0.0.0";
-            port = 8010;
-          }
-        ];
-        root = "${elementWebConfigured}";
-      };
-
-      "fluffy.cyperpunk.de" = {
-        listen = [
-          {
-            addr = "0.0.0.0";
-            port = 8012;
-          }
-        ];
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:8082";
-        };
-      };
-
-      "admin.cyperpunk.de" = {
-        listen = [
-          {
-            addr = "0.0.0.0";
-            port = 8011;
-          }
-        ];
-        root = "${synapseAdmin}";
-      };
+    "admin.cyperpunk.de" = {
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 8011;
+        }
+      ];
+      root = "${synapseAdmin}";
     };
   };
 
