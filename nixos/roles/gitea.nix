@@ -100,14 +100,11 @@ in
         START_SSH_SERVER = true;
       };
 
-      # security = {
-      #   SECRET_KEY_URI = "file://${config.sops.secrets."gitea/secretKey".path}";
-      #   INTERNAL_TOKEN_URI = "file://${config.sops.secrets."gitea/internalToken".path}";
-      # };
-
-      #lfs = {
-      #   JWT_SECRET_URI = "file://${config.sops.secrets."gitea/lfsJwtSecret".path}";
-      # };
+      metrics = {
+        ENABLED = true;
+        ENABLED_ISSUE_BY_LABEL = true;
+        ENABLED_ISSUE_BY_REPOSITORY = true;
+      };
 
       ui = {
         DEFAULT_THEME = "catppuccin-mocha-green";
