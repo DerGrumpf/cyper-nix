@@ -4,7 +4,7 @@
 {
   imports = [
     ./synapse.nix
-    ./coturn.nix
+    #    ./coturn.nix
     ./clients.nix
   ];
 
