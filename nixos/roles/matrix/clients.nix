@@ -129,11 +129,6 @@ let
       features = {
         feature_group_calls = true;
       };
-      element_call = {
-        url = "https://livekit.cyperpunk.de";
-        participant_limit = 8;
-        brand = "Element Call";
-      };
     }
   );
   elementWebConfigured = pkgs.element-web.overrideAttrs (old: {
