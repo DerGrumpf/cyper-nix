@@ -20,6 +20,44 @@ let
     "cyper-node-1" = "192.168.2.30";
     "cyper-node-2" = "192.168.2.31";
   };
+
+  mkWeatherScrapeConfigs =
+    cities:
+    map (city: {
+      job_name = "weather_${lib.strings.toLower (lib.strings.replaceStrings [ " " ] [ "_" ] city)}";
+      scrape_interval = "5m";
+      scrape_timeout = "30s";
+      metrics_path = "/${city}";
+      params.format = [ "p1" ];
+      static_configs = [ { targets = [ "wttr.in" ]; } ];
+      scheme = "https";
+      metric_relabel_configs = [
+        {
+          target_label = "location";
+          replacement = city;
+        }
+      ];
+    }) cities;
+
+  weatherCities = [
+    # Braunschweig itself
+    "Braunschweig"
+
+    # Immediate surroundings (~15km)
+    "Wolfenbuettel"
+    "Salzgitter"
+    "Peine"
+    "Cremlingen"
+    "Wendeburg"
+    "Sickte"
+
+    # Greater region (~50km)
+    "Wolfsburg"
+    "Gifhorn"
+    "Goslar"
+    "Hildesheim"
+    "Hannover"
+  ];
 in
 {
   sops.secrets = {
@@ -90,23 +128,6 @@ in
           metrics_path = "/metrics";
         }
         {
-          job_name = "weather_braunschweig";
-          scrape_interval = "5m"; # be a polite citizen to wttr.in
-          scrape_timeout = "30s";
-          metrics_path = "/Braunschweig";
-          params = {
-            format = [ "p1" ];
-          };
-          static_configs = [ { targets = [ "wttr.in" ]; } ];
-          scheme = "https";
-          metric_relabel_configs = [
-            {
-              target_label = "location";
-              replacement = "Braunschweig";
-            }
-          ];
-        }
-        {
           job_name = "synapse";
           scrape_interval = "15s";
           metrics_path = "/_synapse/metrics";
@@ -121,9 +142,9 @@ in
             }
           ];
         }
-
       ]
-      ++ (lib.mapAttrsToList mkNodeJob extraNodes);
+      ++ (lib.mapAttrsToList mkNodeJob extraNodes)
+      ++ (mkWeatherScrapeConfigs weatherCities);
     };
 
     loki = {
