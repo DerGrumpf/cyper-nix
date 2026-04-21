@@ -16,10 +16,6 @@
       owner = "matrix-synapse";
       group = "matrix-synapse";
     };
-    matrix_turn_secret = {
-      owner = "matrix-synapse";
-      group = "matrix-synapse";
-    };
   };
 
   services = {
@@ -34,20 +30,8 @@
         suppress_key_server_warning = true;
         registration_shared_secret_path = config.sops.secrets.matrix_registration_secret.path;
         macaroon_secret_key = "$__file{${config.sops.secrets.matrix_macaroon_secret.path}}";
-        turn_uris = [
-          "turn:turn.cyperpunk.de?transport=udp"
-          "turn:turn.cyperpunk.de?transport=tcp"
-        ];
-        turn_shared_secret_path = config.sops.secrets.matrix_turn_secret.path;
-        turn_user_lifetime = "1h";
         experimental_features = {
           "msc3266_enabled" = true;
-        };
-        extra_well_known_client_content = {
-          "io.element.call.backend" = {
-            url = "https://livekit.cyperpunk.de";
-            livekit_service_url = "https://livekit.cyperpunk.de/_matrix/livekit/jwt";
-          };
         };
         listeners = [
           {
