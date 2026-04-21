@@ -22,6 +22,7 @@
         "map to guest" = "Never";
         "invalid users" = [ "root" ];
         "socket options" = "TCP_NODELAY IPTOS_LOWDELAY";
+        "smb encrypt" = "required";
         "use sendfile" = "yes";
         "log level" = "1";
         "log file" = "/var/log/samba/log.%m";

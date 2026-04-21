@@ -69,27 +69,34 @@
       (share: {
         name = "/shares/${share}";
         value = {
-          device = "//127.0.0.1/${share}";
+          device = "//192.168.2.2/${share}";
           fsType = "cifs";
           options = [
             "credentials=${config.sops.templates.smb_credentials.path}"
             "iocharset=utf8"
             "_netdev"
-            "auto"
             "nofail"
-            "x-systemd.requires=samba-smbd.service"
-            "x-systemd.after=samba-smbd.service"
-            "x-systemd.requires=sops-install-secrets.service"
-            "x-systemd.after=sops-install-secrets.service"
+            "uid=${toString config.users.users.${primaryUser}.uid}"
+            "gid=${toString config.users.users.${primaryUser}.group}"
+            "file_mode=0664"
+            "dir_mode=0775"
+            "x-systemd.automount"
+            "x-systemd.idle-timeout=60"
           ];
         };
       })
       [
-        "internal"
-        "fast"
-        "backup"
+        "storage-internal"
+        "storage-fast"
+        "storage-backup"
       ]
   );
+
+  systemd.tmpfiles.rules = [
+    "d /shares/storage-internal 0775 ${primaryUser} users -"
+    "d /shares/storage-fast 0775 ${primaryUser} users -"
+    "d /shares/storage-backup 0775 ${primaryUser} users -"
+  ];
 
   swapDevices = [ ];
 
