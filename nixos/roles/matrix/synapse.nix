@@ -45,7 +45,8 @@
         };
         extra_well_known_client_content = {
           "io.element.call.backend" = {
-            url = "https://call.element.io";
+            url = "https://livekit.cyperpunk.de";
+            livekit_service_url = "https://livekit.cyperpunk.de/_matrix/livekit/jwt";
           };
         };
         listeners = [
