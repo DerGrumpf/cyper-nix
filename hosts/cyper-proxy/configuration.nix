@@ -13,16 +13,9 @@
 
   systemd.network = {
     enable = true;
-    networks."10-venet" = {
-      matchConfig.Name = "venet0";
-      networkConfig = {
-        Address = "178.254.8.35/24";
-        DNS = "178.254.16.141 178.254.16.151";
-        DHCP = "no";
-      };
-      routes = [
-        { routeConfig.Destination = "0.0.0.0/0"; }
-      ];
+    networks."10-eth" = {
+      matchConfig.Name = "en* eth*"; # catches both naming schemes
+      networkConfig.DHCP = "yes";
     };
   };
 

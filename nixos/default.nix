@@ -51,6 +51,7 @@
     };
   };
 
+  # TODO: Get rid of this
   virtualisation = lib.mkIf isServer {
     vmVariant = {
       virtualisation = {
