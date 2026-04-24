@@ -1,5 +1,60 @@
-{ ... }:
+_:
+let
+  upstream = "100.109.179.25";
 
+  # helper: simple reverse proxy, force SSL
+  mkProxy = port: {
+    forceSSL = true;
+    enableACME = true;
+    locations."/" = {
+      proxyPass = "http://${upstream}:${toString port}";
+    };
+  };
+
+  # helper: like mkProxy but with websocket support
+  mkWsProxy =
+    port:
+    (mkProxy port)
+    // {
+      locations."/" = {
+        proxyPass = "http://${upstream}:${toString port}";
+        proxyWebsockets = true;
+      };
+    };
+
+  # helper: no forceSSL (for internal/non-redirected hosts)
+  mkWsProxyNoSSL = port: {
+    enableACME = true;
+    locations."/" = {
+      proxyPass = "http://${upstream}:${toString port}";
+      proxyWebsockets = true;
+    };
+  };
+
+  matrixConfig = ''
+    client_max_body_size 50M;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Host $host;
+  '';
+
+  wellKnownMatrix = {
+    "/.well-known/matrix/client" = {
+      extraConfig = ''
+        default_type application/json;
+        add_header Access-Control-Allow-Origin *;
+        return 200 '{"m.homeserver":{"base_url":"https://matrix.cyperpunk.de"}}';
+      '';
+    };
+    "/.well-known/matrix/server" = {
+      extraConfig = ''
+        default_type application/json;
+        add_header Access-Control-Allow-Origin *;
+        return 200 '{"m.server":"matrix.cyperpunk.de:443"}';
+      '';
+    };
+  };
+in
 {
   networking.firewall.allowedTCPPorts = [
     80
@@ -8,7 +63,7 @@
 
   security.acme = {
     acceptTerms = true;
-    defaults.email = "your@email.de";
+    defaults.email = "phil.keier@hotmail.com"; # Change accordingly
   };
 
   services.nginx = {
@@ -19,120 +74,40 @@
     recommendedGzipSettings = true;
 
     virtualHosts = {
-      "git.cyperpunk.de" = {
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = {
-          proxyPass = "http://100.109.179.25:9000";
-        };
-      };
+      "git.cyperpunk.de" = mkProxy 9000;
+      "search.cyperpunk.de" = mkProxy 11080;
+      "file.cyperpunk.de" = mkProxy 10000;
+
+      "vault.cyperpunk.de" = mkWsProxy 8222;
+      "fluffy.cyperpunk.de" = mkWsProxy 8012;
 
       "www.cyperpunk.de" = {
         enableACME = true;
         locations = {
           "/" = {
-            proxyPass = "http://100.109.179.25:15005";
+            proxyPass = "http://${upstream}:15005";
             proxyWebsockets = true;
           };
           "/grafana" = {
-            proxyPass = "http://100.109.179.25:2342";
+            proxyPass = "http://${upstream}:2342";
             proxyWebsockets = true;
           };
         };
       };
 
-      "search.cyperpunk.de" = {
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = {
-          proxyPass = "http://100.109.179.25:11080";
-        };
-      };
-
-      "vault.cyperpunk.de" = {
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = {
-          proxyPass = "http://100.109.179.25:8222";
-          proxyWebsockets = true;
-        };
-      };
-
-      "file.cyperpunk.de" = {
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = {
-          proxyPass = "http://100.109.179.25:10000";
-        };
-      };
-
-      "calvin.cyperpunk.de" = {
-        enableACME = true;
-        locations."/" = {
-          proxyPass = "http://100.109.179.25:15006";
-        };
-      };
+      "calvin.cyperpunk.de" = mkWsProxyNoSSL 15006;
+      "cinny.cyperpunk.de" = mkWsProxyNoSSL 8009;
+      "element.cyperpunk.de" = mkWsProxyNoSSL 8010;
 
       "cyperpunk.de" = {
         forceSSL = true;
         enableACME = true;
+        serverAliases = [ "matrix.cyperpunk.de" ];
         http2 = true;
-        extraConfig = ''
-          client_max_body_size 50m;
-        '';
-        locations."/" = {
-          proxyPass = "http://100.109.179.25:8008";
-          proxyWebsockets = true;
-        };
-      };
-
-      "matrix.cyperpunk.de" = {
-        forceSSL = true;
-        enableACME = true;
-        http2 = true;
-        extraConfig = ''
-          client_max_body_size 50m;
-        '';
-        locations."/" = {
-          proxyPass = "http://100.109.179.25:8008";
-          proxyWebsockets = true;
-        };
-      };
-
-      "cinny.cyperpunk.de" = {
-        enableACME = true;
-        locations."/" = {
-          proxyPass = "http://100.109.179.25:8009";
-          proxyWebsockets = true;
-        };
-      };
-
-      "element.cyperpunk.de" = {
-        enableACME = true;
-        locations."/" = {
-          proxyPass = "http://100.109.179.25:8010";
-          proxyWebsockets = true;
-        };
-      };
-
-      "fluffy.cyperpunk.de" = {
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = {
-          proxyPass = "http://100.109.179.25:8012";
-          proxyWebsockets = true;
-        };
-      };
-
-      "livekit.cyperpunk.de" = {
-        enableACME = true;
-        locations = {
+        extraConfig = matrixConfig;
+        locations = wellKnownMatrix // {
           "/" = {
-            proxyPass = "http://192.168.64.1:7880";
-            proxyWebsockets = true;
-          };
-          "/_matrix/livekit/jwt" = {
-            proxyPass = "http://192.168.64.1:8080";
+            proxyPass = "http://${upstream}:8008";
             proxyWebsockets = true;
           };
         };
