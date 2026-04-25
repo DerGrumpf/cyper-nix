@@ -1,40 +1,45 @@
 { config, lib, ... }:
-
 let
-  address = config.systemd.network.networks."10-ethernet".networkConfig.Address;
-  ip = builtins.elemAt (lib.splitString "/" address) 0;
+  mkFlameInstance =
+    {
+      name,
+      port,
+      extraVolumes ? [ ],
+    }:
+    lib.nameValuePair name {
+      image = "pawelmalak/flame:2.4.0";
+      ports = [ "${toString port}:5005" ];
+      volumes = [
+        "/var/lib/flame-${name}:/app/data"
+      ]
+      ++ extraVolumes;
+      environmentFiles = [ config.sops.secrets."flame_${name}_password".path ];
+    };
+
+  instances = [
+    {
+      name = "phil";
+      port = 15005;
+      extraVolumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
+    }
+    {
+      name = "calvin";
+      port = 15006;
+    }
+  ];
 in
 {
-  sops.secrets.flame_password = { };
-  sops.secrets.flame_calvin_password = { };
+  sops.secrets = lib.listToAttrs (
+    map ({ name, ... }: lib.nameValuePair "flame_${name}_password" { }) instances
+  );
 
   virtualisation = {
     docker.enable = true;
     oci-containers = {
       backend = "docker";
-      containers = {
-        flame = {
-          image = "pawelmalak/flame:latest";
-          ports = [ "15005:5005" ];
-          volumes = [
-            "/var/lib/flame:/app/data"
-            "/var/run/docker.sock:/var/run/docker.sock"
-          ];
-          environmentFiles = [ config.sops.secrets.flame_password.path ];
-        };
-        flame-calvin = {
-          image = "pawelmalak/flame:latest";
-          ports = [ "15006:5005" ];
-          volumes = [ "/var/lib/flame-calvin:/app/data" ];
-          environmentFiles = [ config.sops.secrets.flame_calvin_password.path ];
-        };
-      };
+      containers = lib.listToAttrs (map mkFlameInstance instances);
     };
   };
 
-  networking.firewall.allowedTCPPorts = [
-    15005
-    15006
-  ];
-
+  networking.firewall.allowedTCPPorts = map ({ port, ... }: port) instances;
 }
