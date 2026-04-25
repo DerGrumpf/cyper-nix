@@ -1,36 +1,42 @@
 { lib, modulesPath, ... }:
 {
   imports = [
-    (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
   boot = {
-    initrd.availableKernelModules = [
-      "virtio_pci"
-      "virtio_blk"
-      "virtio_net"
-      "ahci"
-      "xhci_pci"
-    ];
-    initrd.kernelModules = [ ];
-    kernelModules = [ ];
-    extraModulePackages = [ ];
-    loader.systemd-boot.enable = true;
-    loader.efi.canTouchEfiVariables = true;
-  };
+  	loader.grub = {
+		enable = true;
+  		device = "/dev/vda";
+		};
+
+  	initrd = {
+		availableKernelModules = [
+    "ata_piix"
+    "virtio_pci"
+    "virtio_scsi"
+    "virtio_blk"
+    "xhci_pci"
+    "sr_mod"
+  ];
+  		kernelModules = [ ];
+	};
+  kernelModules = [ ];
+  extraModulePackages = [ ];
+	};
 
   fileSystems = {
-    "/" = {
-      device = "/dev/disk/by-label/NIXROOT";
-      fsType = "ext4";
-    };
-
-    "/boot" = {
-      device = "/dev/disk/by-label/NIXBOOT";
-      fsType = "vfat";
-    };
+  	"/" = {
+    device = "/dev/disk/by-label/NIXROOT";
+    fsType = "ext4";
   };
+
+  	"/boot" = {
+    device = "/dev/disk/by-label/NIXBOOT";
+    fsType = "vfat";
+    options = [ "fmask=0022" "dmask=0022" ];
+  };
+};
 
   swapDevices = [ ];
 
