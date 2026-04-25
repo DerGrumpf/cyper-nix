@@ -1,3 +1,4 @@
+{ ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -5,19 +6,19 @@
   ];
 
   networking = {
-    hostName = "cyper-proxy";
-    useNetworkd = true;
-    useDHCP = false;
-    firewall.enable = true;
+  hostName = "cyper-proxy";
+  useDHCP = false;
+  interfaces.ens3 = {
+    ipv4.addresses = [
+      { address = "178.254.8.35"; prefixLength = 23; }
+    ];
   };
+  defaultGateway = "178.254.8.1";
+  nameservers = [ "178.254.16.151" "178.254.16.141" ];
 
-  systemd.network = {
-    enable = true;
-    networks."10-eth" = {
-      matchConfig.Name = "en* eth*"; # catches both naming schemes
-      networkConfig.DHCP = "yes";
-    };
-  };
+  firewall.allowedTCPPorts = [ 80 443 ];
+
+};
 
   system.stateVersion = "26.05";
 }
