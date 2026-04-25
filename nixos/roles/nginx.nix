@@ -22,15 +22,6 @@ let
       };
     };
 
-  # helper: no forceSSL (for internal/non-redirected hosts)
-  mkWsProxyNoSSL = port: {
-    enableACME = true;
-    locations."/" = {
-      proxyPass = "http://${upstream}:${toString port}";
-      proxyWebsockets = true;
-    };
-  };
-
   matrixConfig = ''
     client_max_body_size 50M;
     proxy_set_header X-Forwarded-For $remote_addr;
@@ -82,6 +73,7 @@ in
       "fluffy.cyperpunk.de" = mkWsProxy 8012;
 
       "www.cyperpunk.de" = {
+        forceSSL = true;
         enableACME = true;
         locations = {
           "/" = {
@@ -95,9 +87,9 @@ in
         };
       };
 
-      "calvin.cyperpunk.de" = mkWsProxyNoSSL 15006;
-      "cinny.cyperpunk.de" = mkWsProxyNoSSL 8009;
-      "element.cyperpunk.de" = mkWsProxyNoSSL 8010;
+      "calvin.cyperpunk.de" = mkWsProxy 15006;
+      "cinny.cyperpunk.de" = mkWsProxy 8009;
+      "element.cyperpunk.de" = mkWsProxy 8010;
 
       "cyperpunk.de" = {
         forceSSL = true;
