@@ -13,6 +13,7 @@
     ../../nixos/roles/vaultwarden.nix
     ../../nixos/roles/frontpage
     ../../nixos/roles/cage.nix
+    ../../nixos/roles/paperless-ngx.nix
   ];
 
   networking = {
