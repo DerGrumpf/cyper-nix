@@ -33,6 +33,8 @@
         experimental_features = {
           "msc3266_enabled" = true;
           "msc3779_enabled" = true;
+          "msc3401_enabled" = true;
+          "msc4143_enabled" = true;
         };
         listeners = [
           {

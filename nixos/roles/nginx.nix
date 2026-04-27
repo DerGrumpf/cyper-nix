@@ -34,7 +34,17 @@ let
       extraConfig = ''
         default_type application/json;
         add_header Access-Control-Allow-Origin *;
-        return 200 '{"m.homeserver":{"base_url":"https://matrix.cyperpunk.de"},"org.matrix.msc4143.rtc_foci":[{"type":"livekit","livekit_service_url":"https://cyperpunk.de/livekit/jwt"}]}';
+        return 200 '{
+        		"m.homeserver":{
+        				"base_url":"https://matrix.cyperpunk.de"
+        		},
+        		"org.matrix.msc4143.rtc_foci":[
+        				{
+        						"type":"livekit",
+        						"livekit_service_url":"https://cyperpunk.de/livekit/jwt"
+        				}
+        		]
+        }';
       '';
     };
     "/.well-known/matrix/server" = {
@@ -102,7 +112,7 @@ in
             proxyPass = "http://${upstream}:8008";
             proxyWebsockets = true;
           };
-          "^~ /livekit/jwt/" = {
+          "^~ /livekit/jwt" = {
             priority = 400;
             proxyPass = "http://127.0.0.1:8080";
           };
@@ -110,6 +120,14 @@ in
             priority = 400;
             proxyPass = "http://127.0.0.1:7880";
             proxyWebsockets = true;
+            extraConfig = ''
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_read_timeout 86400s;
+              proxy_send_timeout 86400s;
+            '';
           };
         };
       };

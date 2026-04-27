@@ -126,8 +126,11 @@ let
         preferred_domain = "jitsi.cyperpunk.de";
       };
       element_call = {
-        url = "https://cyperpunk.de/livekit/jwt";
+        url = "https://call.element.io";
         use_exclusively = true;
+      };
+      livekit = {
+        livekit_service_url = "https://cyperpunk.de/livekit/jwt";
       };
       setting_defaults = {
         custom_themes = catppuccinThemes;
