@@ -34,7 +34,7 @@ let
       extraConfig = ''
         default_type application/json;
         add_header Access-Control-Allow-Origin *;
-        return 200 '{"m.homeserver":{"base_url":"https://matrix.cyperpunk.de"}}';
+        return 200 '{"m.homeserver":{"base_url":"https://matrix.cyperpunk.de"},"org.matrix.msc4143.rtc_foci":[{"type":"livekit","livekit_service_url":"https://cyperpunk.de/livekit/jwt"}]}';
       '';
     };
     "/.well-known/matrix/server" = {
@@ -100,6 +100,15 @@ in
         locations = wellKnownMatrix // {
           "/" = {
             proxyPass = "http://${upstream}:8008";
+            proxyWebsockets = true;
+          };
+          "^~ /livekit/jwt/" = {
+            priority = 400;
+            proxyPass = "http://127.0.0.1:8080";
+          };
+          "^~ /livekit/sfu" = {
+            priority = 400;
+            proxyPass = "http://127.0.0.1:7880";
             proxyWebsockets = true;
           };
         };

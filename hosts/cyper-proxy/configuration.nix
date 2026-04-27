@@ -3,7 +3,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../nixos/roles/nginx.nix
-    ../../nixos/roles/jitsi.nix
+    ../../nixos/roles/livekit.nix
   ];
 
   networking = {
