@@ -122,6 +122,13 @@ let
           server_name = "cyperpunk.de";
         };
       };
+      jitsi = {
+        preferred_domain = "jitsi.cyperpunk.de";
+      };
+      element_call = {
+        url = "https://cyperpunk.de/livekit/jwt";
+        use_exclusively = true;
+      };
       setting_defaults = {
         custom_themes = catppuccinThemes;
         feature_custom_themes = true;

@@ -32,6 +32,7 @@
         macaroon_secret_key = "$__file{${config.sops.secrets.matrix_macaroon_secret.path}}";
         experimental_features = {
           "msc3266_enabled" = true;
+          "msc3779_enabled" = true;
         };
         listeners = [
           {
