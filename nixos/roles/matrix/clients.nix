@@ -128,6 +128,8 @@ let
       element_call = {
         url = "https://call.element.io";
         use_exclusively = true;
+        participant_limit = 8;
+        brand = "Cyperpunk Call";
       };
       livekit = {
         livekit_service_url = "https://cyperpunk.de/livekit/jwt";
