@@ -29,6 +29,13 @@
       443
     ];
 
+    hosts = {
+      "178.254.8.35" = [
+        "cyperpunk.de"
+        "matrix.cyperpunk.de"
+      ];
+    };
+
   };
 
   system.stateVersion = "26.05";
