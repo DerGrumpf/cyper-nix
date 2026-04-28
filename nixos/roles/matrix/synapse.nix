@@ -35,6 +35,7 @@
           "msc3779_enabled" = true;
           "msc3401_enabled" = true;
           "msc4143_enabled" = true;
+          "msc4195_enabled" = true;
         };
         listeners = [
           {
