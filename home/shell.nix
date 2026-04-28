@@ -15,6 +15,7 @@
     fd # find alternative
     bat # cat alternative
     ripgrep # grep alternative
+    dnsutils
 
     # LLM in the Terminal
     (pkgs.llm.withPlugins { llm-groq = true; })
