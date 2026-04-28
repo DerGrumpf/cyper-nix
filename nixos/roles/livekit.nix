@@ -34,8 +34,9 @@ in
 
     lk-jwt-service = {
       enable = true;
-      livekitUrl = "ws://127.0.0.1:7880";
+      #livekitUrl = "wss://cyperpunk.de/livekit/sfu";
       inherit keyFile;
+      livekitUrl = "wss://127.0.0.1:7880";
     };
   };
 
