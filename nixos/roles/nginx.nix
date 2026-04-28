@@ -78,6 +78,7 @@ in
       "git.cyperpunk.de" = mkProxy 9000;
       "search.cyperpunk.de" = mkProxy 11080;
       "file.cyperpunk.de" = mkProxy 10000;
+      "ngx.cyperpunk.de" = mkWsProxy 28101;
 
       "vault.cyperpunk.de" = mkWsProxy 8222;
       "fluffy.cyperpunk.de" = mkWsProxy 8012;
@@ -100,6 +101,7 @@ in
       "calvin.cyperpunk.de" = mkWsProxy 15006;
       "cinny.cyperpunk.de" = mkWsProxy 8009;
       "element.cyperpunk.de" = mkWsProxy 8010;
+      "element-call.cyperpunk.de" = mkWsProxy 8013;
 
       "cyperpunk.de" = {
         forceSSL = true;
@@ -112,13 +114,13 @@ in
             proxyPass = "http://${upstream}:8008";
             proxyWebsockets = true;
           };
-          "^~ /livekit/jwt" = {
+          "^~ /livekit/jwt/" = {
             priority = 400;
-            proxyPass = "http://127.0.0.1:8080";
+            proxyPass = "http://127.0.0.1:8080/";
           };
-          "^~ /livekit/sfu" = {
+          "^~ /livekit/sfu/" = {
             priority = 400;
-            proxyPass = "http://127.0.0.1:7880";
+            proxyPass = "http://127.0.0.1:7880/";
             proxyWebsockets = true;
             extraConfig = ''
               proxy_set_header Host $host;
@@ -127,6 +129,7 @@ in
               proxy_set_header X-Forwarded-Proto $scheme;
               proxy_read_timeout 86400s;
               proxy_send_timeout 86400s;
+
             '';
           };
         };
