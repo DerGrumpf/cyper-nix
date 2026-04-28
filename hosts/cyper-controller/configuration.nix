@@ -12,8 +12,8 @@
     ../../nixos/roles/gitea.nix
     ../../nixos/roles/vaultwarden.nix
     ../../nixos/roles/frontpage
-    ../../nixos/roles/cage.nix
     ../../nixos/roles/paperless-ngx.nix
+    ../../nixos/roles/octoprint.nix
   ];
 
   networking = {
