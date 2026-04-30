@@ -41,7 +41,7 @@ let
         		"org.matrix.msc4143.rtc_foci":[
         				{
         						"type":"livekit",
-        						"livekit_service_url":"https://cyperpunk.de/livekit/jwt"
+        						"livekit_service_url":"https://cyperpunk.de/livekit/jwt/"
         				}
         		]
         }';
@@ -116,7 +116,7 @@ in
           };
           "^~ /livekit/jwt/" = {
             priority = 400;
-            proxyPass = "http://127.0.0.1:8080/";
+            proxyPass = "http://${upstream}:8080/";
           };
           "^~ /livekit/sfu/" = {
             priority = 400;

@@ -126,13 +126,13 @@ let
         preferred_domain = "jitsi.cyperpunk.de";
       };
       element_call = {
-        url = "https://element.cyperpunk.de/widgets/element-call";
+        url = "https://element-call.cyperpunk.de";
         use_exclusively = true;
         participant_limit = 8;
         brand = "Cyperpunk Call";
       };
       livekit = {
-        livekit_service_url = "https://cyperpunk.de/livekit/jwt";
+        livekit_service_url = "https://cyperpunk.de/livekit/jwt/";
       };
       setting_defaults = {
         custom_themes = catppuccinThemes;
