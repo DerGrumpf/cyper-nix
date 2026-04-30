@@ -116,7 +116,7 @@ in
           };
           "^~ /livekit/jwt/" = {
             priority = 400;
-            proxyPass = "http://${upstream}:8080/";
+            proxyPass = "http://${upstream}:18080/";
           };
           "^~ /livekit/sfu/" = {
             priority = 400;

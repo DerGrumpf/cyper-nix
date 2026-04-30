@@ -1,11 +1,11 @@
 { config, ... }:
 {
-  sops.secrets.livekit_key = { };
+  sops.secrets.livekit_key_sfu = { };
 
   services.livekit = {
     enable = true;
     openFirewall = true;
-    keyFile = config.sops.secrets.livekit_key.path;
+    keyFile = config.sops.secrets.livekit_key_sfu.path;
     settings = {
       rtc = {
         tcp_port = 7881;
