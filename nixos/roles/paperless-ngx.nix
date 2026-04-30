@@ -9,7 +9,7 @@
     address = "0.0.0.0";
     port = 28101;
     domain = "ngx.cyperpunk.de";
-    consumptionDir = "/var/lib/paperless/consume";
+    consumptionDir = "/storage/fast/paperless/consume";
     dataDir = "/storage/fast/paperless";
     configureTika = true;
     passwordFile = config.sops.secrets.paperless_admin.path;
@@ -22,6 +22,7 @@
         "http://100.109.179.25:28101"
       ];
       PAPERLESS_OCR_LANGUAGE = "deu+eng";
+      PAPERLESS_CONSUMER_POLLING = 60;
     };
 
     exporter = {
