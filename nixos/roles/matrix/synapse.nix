@@ -49,6 +49,7 @@
                 names = [
                   "client"
                   "federation"
+                  "openid"
                 ];
                 compress = false;
               }
