@@ -11,7 +11,7 @@ in
   services.lk-jwt-service = {
     enable = true;
     keyFile = config.sops.secrets.livekit_key_jwt.path;
-    livekitUrl = "ws://100.109.10.91:7880";
+    livekitUrl = "wss://cyperpunk.de/livekit/sfu";
   };
 
   systemd.services.lk-jwt-service = {
