@@ -59,6 +59,18 @@
         "valid users" = primaryUser;
         "force user" = primaryUser;
       };
+
+      paperless-consume = {
+        "path" = "/storage/fast/paperless/consume";
+        "comment" = "Paperless incoming documents";
+        "browseable" = "yes";
+        "read only" = "no";
+        "valid users" = primaryUser;
+        "create mask" = "0664";
+        "directory mask" = "0775";
+        "force user" = "paperless";
+        "force group" = "paperless";
+      };
     };
   };
 

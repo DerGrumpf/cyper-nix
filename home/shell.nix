@@ -16,6 +16,7 @@
     bat # cat alternative
     ripgrep # grep alternative
     doas # sudo alternative
+    dnsutils
 
     # LLM in the Terminal
     (pkgs.llm.withPlugins { llm-groq = true; })
