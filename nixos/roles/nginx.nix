@@ -100,8 +100,46 @@ in
 
       "calvin.cyperpunk.de" = mkWsProxy 15006;
       "cinny.cyperpunk.de" = mkWsProxy 8009;
-      "element.cyperpunk.de" = mkWsProxy 8010;
-      "element-call.cyperpunk.de" = mkWsProxy 8013;
+
+      "element-call.cyperpunk.de" = {
+        forceSSL = true;
+        enableACME = true;
+        locations."/" = {
+          proxyPass = "http://${upstream}:8013";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Cross-Origin-Opener-Policy "same-origin";
+            add_header Cross-Origin-Embedder-Policy "require-corp";
+            add_header Cross-Origin-Resource-Policy "cross-origin";
+          '';
+        };
+      };
+
+      "element.cyperpunk.de" = {
+        forceSSL = true;
+        enableACME = true;
+        locations = {
+          "/" = {
+            proxyPass = "http://${upstream}:8010";
+            proxyWebsockets = true;
+          };
+          "/widgets/element-call/config.json" = {
+            extraConfig = ''
+              	default_type application/json;
+              	add_header Access-Control-Allow-Origin *;
+              	return 200 '{
+              	"livekit_service_url": "https://cyperpunk.de/livekit/jwt/",
+              	"default_server_config": {
+              			"m.homeserver": {
+              					"base_url": "https://matrix.cyperpunk.de",
+              					"server_name":"cyperpunk.de"
+              					}
+              			}
+              	}';
+            '';
+          };
+        };
+      };
 
       "cyperpunk.de" = {
         forceSSL = true;
@@ -130,6 +168,15 @@ in
               proxy_read_timeout 86400s;
               proxy_send_timeout 86400s;
 
+            '';
+          };
+          "/_matrix/client/unstable/org.matrix.msc4143/rtc/transports" = {
+            extraConfig = ''
+              default_type application/json;
+              add_header Access-Control-Allow-Origin *;
+              add_header Access-Control-Allow-Headers "Authorization, Content-Type";
+              add_header Access-Control-Allow-Methods "GET, OPTIONS";
+              return 200 '{"rtc_transports":[{"type":"livekit","livekit_service_url":"https://cyperpunk.de/livekit/jwt/"}]}';
             '';
           };
         };
