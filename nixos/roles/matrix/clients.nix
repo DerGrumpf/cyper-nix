@@ -130,6 +130,7 @@ let
         use_exclusively = true;
         participant_limit = 8;
         brand = "Cyperpunk Call";
+        encryption = "None";
       };
       livekit = {
         livekit_service_url = "https://cyperpunk.de/livekit/jwt/";
@@ -141,6 +142,7 @@ let
       features = {
         feature_group_calls = true;
         "feature_disable_call_per_sender_encryption" = true;
+        "feature_sliding_sync" = true;
       };
     }
   );
@@ -165,6 +167,9 @@ let
               };
             };
             livekit_service_url = "https://cyperpunk.de/livekit/jwt/";
+            e2ee = {
+              default = false;
+            };
           }
         )
       } $out/config.json
