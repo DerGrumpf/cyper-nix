@@ -34,7 +34,17 @@ let
       extraConfig = ''
         default_type application/json;
         add_header Access-Control-Allow-Origin *;
-        return 200 '{"m.homeserver":{"base_url":"https://matrix.cyperpunk.de"},"org.matrix.msc4143.rtc_foci":[{"type":"livekit","livekit_service_url":"https://cyperpunk.de/livekit/jwt"}]}';
+        return 200 '{
+        		"m.homeserver":{
+        				"base_url":"https://matrix.cyperpunk.de"
+        		},
+        		"org.matrix.msc4143.rtc_foci":[
+        				{
+        						"type":"livekit",
+        						"livekit_service_url":"https://cyperpunk.de/livekit/jwt/"
+        				}
+        		]
+        }';
       '';
     };
     "/.well-known/matrix/server" = {
@@ -68,6 +78,7 @@ in
       "git.cyperpunk.de" = mkProxy 9000;
       "search.cyperpunk.de" = mkProxy 11080;
       "file.cyperpunk.de" = mkProxy 10000;
+      "ngx.cyperpunk.de" = mkWsProxy 28101;
 
       "vault.cyperpunk.de" = mkWsProxy 8222;
       "fluffy.cyperpunk.de" = mkWsProxy 8012;
@@ -89,7 +100,46 @@ in
 
       "calvin.cyperpunk.de" = mkWsProxy 15006;
       "cinny.cyperpunk.de" = mkWsProxy 8009;
-      "element.cyperpunk.de" = mkWsProxy 8010;
+
+      "element-call.cyperpunk.de" = {
+        forceSSL = true;
+        enableACME = true;
+        locations."/" = {
+          proxyPass = "http://${upstream}:8013";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Cross-Origin-Opener-Policy "same-origin";
+            add_header Cross-Origin-Embedder-Policy "require-corp";
+            add_header Cross-Origin-Resource-Policy "cross-origin";
+          '';
+        };
+      };
+
+      "element.cyperpunk.de" = {
+        forceSSL = true;
+        enableACME = true;
+        locations = {
+          "/" = {
+            proxyPass = "http://${upstream}:8010";
+            proxyWebsockets = true;
+          };
+          "/widgets/element-call/config.json" = {
+            extraConfig = ''
+              	default_type application/json;
+              	add_header Access-Control-Allow-Origin *;
+              	return 200 '{
+              	"livekit_service_url": "https://cyperpunk.de/livekit/jwt/",
+              	"default_server_config": {
+              			"m.homeserver": {
+              					"base_url": "https://matrix.cyperpunk.de",
+              					"server_name":"cyperpunk.de"
+              					}
+              			}
+              	}';
+            '';
+          };
+        };
+      };
 
       "cyperpunk.de" = {
         forceSSL = true;
@@ -104,12 +154,30 @@ in
           };
           "^~ /livekit/jwt/" = {
             priority = 400;
-            proxyPass = "http://127.0.0.1:8080";
+            proxyPass = "http://${upstream}:18080/";
           };
-          "^~ /livekit/sfu" = {
+          "^~ /livekit/sfu/" = {
             priority = 400;
-            proxyPass = "http://127.0.0.1:7880";
+            proxyPass = "http://127.0.0.1:7880/";
             proxyWebsockets = true;
+            extraConfig = ''
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_read_timeout 86400s;
+              proxy_send_timeout 86400s;
+
+            '';
+          };
+          "/_matrix/client/unstable/org.matrix.msc4143/rtc/transports" = {
+            extraConfig = ''
+              default_type application/json;
+              add_header Access-Control-Allow-Origin *;
+              add_header Access-Control-Allow-Headers "Authorization, Content-Type";
+              add_header Access-Control-Allow-Methods "GET, OPTIONS";
+              return 200 '{"rtc_transports":[{"type":"livekit","livekit_service_url":"https://cyperpunk.de/livekit/jwt/"}]}';
+            '';
           };
         };
       };

@@ -126,8 +126,14 @@ let
         preferred_domain = "jitsi.cyperpunk.de";
       };
       element_call = {
-        url = "https://cyperpunk.de/livekit/jwt";
+        url = "https://element-call.cyperpunk.de";
         use_exclusively = true;
+        participant_limit = 8;
+        brand = "Cyperpunk Call";
+        encryption = "None";
+      };
+      livekit = {
+        livekit_service_url = "https://cyperpunk.de/livekit/jwt/";
       };
       setting_defaults = {
         custom_themes = catppuccinThemes;
@@ -135,6 +141,8 @@ let
       };
       features = {
         feature_group_calls = true;
+        "feature_disable_call_per_sender_encryption" = true;
+        "feature_sliding_sync" = true;
       };
     }
   );
@@ -143,10 +151,30 @@ let
       cp ${elementConfig} $out/config.json
     '';
   });
-  synapseAdmin = pkgs.synapse-admin-etkecc.withConfig {
+  synapseAdmin = pkgs.ketesa.withConfig {
     restrictBaseUrl = [ "https://matrix.cyperpunk.de" ];
     loginFlows = [ "password" ];
   };
+  elementCallConfigured = pkgs.element-call.overrideAttrs (old: {
+    postInstall = (old.postInstall or "") + ''
+      cp ${
+        builtins.toFile "element-call-config.json" (
+          builtins.toJSON {
+            default_server_config = {
+              "m.homeserver" = {
+                base_url = "https://matrix.cyperpunk.de";
+                server_name = "cyperpunk.de";
+              };
+            };
+            livekit_service_url = "https://cyperpunk.de/livekit/jwt/";
+            e2ee = {
+              default = false;
+            };
+          }
+        )
+      } $out/config.json
+    '';
+  });
 in
 {
 
@@ -155,6 +183,7 @@ in
     8010 # Element
     8011 # Synapse Admin
     8012 # FluffyChat
+    8013 # Element Call
   ];
 
   services.nginx.virtualHosts = {
@@ -195,6 +224,15 @@ in
         }
       ];
       root = "${synapseAdmin}";
+    };
+    "element-call.cyperpunk.de" = {
+      listen = [
+        {
+          addr = "0.0.0.0";
+          port = 8013;
+        }
+      ];
+      root = "${elementCallConfigured}";
     };
   };
 

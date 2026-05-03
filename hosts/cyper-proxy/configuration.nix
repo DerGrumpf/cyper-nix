@@ -3,7 +3,8 @@
   imports = [
     ./hardware-configuration.nix
     ../../nixos/roles/nginx.nix
-    ../../nixos/roles/livekit.nix
+    ../../nixos/roles/matrix/livekit.nix
+    #    ../../nixos/roles/jitsi.nix
   ];
 
   networking = {
@@ -27,6 +28,13 @@
       80
       443
     ];
+
+    hosts = {
+      "178.254.8.35" = [
+        "cyperpunk.de"
+        "matrix.cyperpunk.de"
+      ];
+    };
 
   };
 
