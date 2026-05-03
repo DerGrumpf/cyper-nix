@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 {
   sops.secrets.livekit_key_sfu = { };
 
@@ -26,5 +26,16 @@
         enable_remote_unmute = true;
       };
     };
+  };
+  networking.firewall.allowedTCPPorts = [ 7881 ];
+
+  systemd.services.livekit.serviceConfig = {
+    PrivateUsers = lib.mkForce false;
+    RestrictAddressFamilies = lib.mkForce [
+      "AF_INET"
+      "AF_INET6"
+      "AF_NETLINK"
+      "AF_UNIX"
+    ];
   };
 }

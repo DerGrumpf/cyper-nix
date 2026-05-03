@@ -4,7 +4,7 @@
     ./hardware-configuration.nix
     ../../nixos/roles/nginx.nix
     ../../nixos/roles/matrix/livekit.nix
-    ../../nixos/roles/jitsi.nix
+    #    ../../nixos/roles/jitsi.nix
   ];
 
   networking = {
