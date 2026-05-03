@@ -19,6 +19,7 @@ let
     "cyper-desktop" = "192.168.2.40";
     "cyper-node-1" = "192.168.2.30";
     "cyper-node-2" = "192.168.2.31";
+    "cyper-proxy" = "178.254.8.35";
   };
 
   mkWeatherScrapeConfigs =
