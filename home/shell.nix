@@ -15,6 +15,7 @@
     fd # find alternative
     bat # cat alternative
     ripgrep # grep alternative
+    doas # sudo alternative
 
     # LLM in the Terminal
     (pkgs.llm.withPlugins { llm-groq = true; })
