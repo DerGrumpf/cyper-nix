@@ -36,6 +36,7 @@
           "msc3401_enabled" = true;
           "msc4143_enabled" = true;
           "msc4195_enabled" = true;
+          "msc4222_enabled" = true;
         };
         listeners = [
           {
@@ -49,6 +50,7 @@
                 names = [
                   "client"
                   "federation"
+                  "openid"
                 ];
                 compress = false;
               }
@@ -62,7 +64,15 @@
             resources = [ ];
           }
         ];
-
+        matrix_rtc = {
+          enabled = true;
+          transports = [
+            {
+              type = "livekit";
+              livekit_service_url = "https://cyperpunk.de/livekit/jwt/";
+            }
+          ];
+        };
         enable_metrics = true;
       };
     };
