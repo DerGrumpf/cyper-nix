@@ -1,7 +1,7 @@
 { config, lib, ... }:
 let
   domain = "cyperpunk.de";
-  synapseUrl = "http://100.109.179.25:8008";
+  synapseUrl = "http://localhost:8008";
 in
 {
   sops.secrets.livekit_key_jwt = { };
@@ -19,6 +19,7 @@ in
       LIVEKIT_FULL_ACCESS_HOMESERVERS = domain;
       MATRIX_BASE_URL = synapseUrl;
       LIVEKIT_JWT_BIND = lib.mkForce ":18080";
+      LIVEKIT_INSECURE_SKIP_VERIFY_TLS = "YES_I_KNOW_WHAT_I_AM_DOING";
     };
   };
 }
