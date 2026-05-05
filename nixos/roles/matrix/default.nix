@@ -4,8 +4,8 @@
 {
   imports = [
     ./synapse.nix
-    ./clients.nix
     ./lk-jwt.nix
+    ./livekit.nix
   ];
 
   #networking.firewall = {

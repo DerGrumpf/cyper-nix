@@ -16,7 +16,7 @@
         node_ip = "178.254.8.35";
       };
       room = {
-        auto_create = false;
+        auto_create = true;
         enabled_codecs = [
           { mime = "video/VP8"; }
           { mime = "video/VP9"; }
