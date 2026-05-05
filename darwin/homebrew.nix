@@ -1,4 +1,5 @@
-{ ... }: {
+{ ... }:
+{
   homebrew = {
     enable = true;
 
@@ -13,7 +14,11 @@
 
     # homebrew is best for GUI apps
     # nixpkgs is best for CLI tools
-    casks = [ "element" "affinity" "onlyoffice" ];
+    casks = [
+      "element"
+      "affinity"
+      "onlyoffice"
+    ];
     brews = [ ];
     taps = [ ];
   };
