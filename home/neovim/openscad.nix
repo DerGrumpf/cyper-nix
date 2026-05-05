@@ -15,13 +15,13 @@
         help_manual_trig_key = "<A-m>";
         help_trig_key = "<A-o>";
         top_toggle = "<A-c>";
+        viewer_path = "open";
       };
     };
 
     # Install OpenSCAD binary for preview/compilation
     extraPackages = with pkgs; [
       openscad
-      zathura # PDF viewer for manual
       fzf
     ];
   };
