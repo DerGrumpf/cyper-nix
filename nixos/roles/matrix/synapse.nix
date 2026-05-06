@@ -108,7 +108,7 @@ in
           };
           "/admin/" = {
             root = "${synapseAdmin}";
-            tryFiles = "$uri $uri/ /index.html";
+            #tryFiles = "$uri $uri/ /index.html";
           };
         };
       };
