@@ -1,25 +1,25 @@
-{ config, lib, ... }:
+{ config, ... }:
 let
   domain = "cyperpunk.de";
-  synapseUrl = "http://localhost:8008";
+  synapseUrl = "http://127.0.0.1:8008";
+  # Internal LiveKit address — JWT service must NOT go through the TLS proxy.
+  # Using the public wss:// URL caused token rejection because nginx re-wraps
+  # the connection and the JWT service couldn't verify the livekit instance.
+  livekitInternalUrl = "ws://127.0.0.1:7880";
 in
 {
-  sops.secrets.livekit_key_jwt = { };
-
-  networking.firewall.allowedTCPPorts = [ 18080 ];
+  # Same secret as livekit.nix — both services must share the same key pair
+  sops.secrets.livekit_key = { };
 
   services.lk-jwt-service = {
     enable = true;
-    keyFile = config.sops.secrets.livekit_key_jwt.path;
-    livekitUrl = "wss://cyperpunk.de/livekit/sfu";
+    port = 18080;
+    keyFile = config.sops.secrets.livekit_key.path;
+    livekitUrl = livekitInternalUrl;
   };
 
-  systemd.services.lk-jwt-service = {
-    environment = {
-      LIVEKIT_FULL_ACCESS_HOMESERVERS = domain;
-      MATRIX_BASE_URL = synapseUrl;
-      LIVEKIT_JWT_BIND = lib.mkForce ":18080";
-      LIVEKIT_INSECURE_SKIP_VERIFY_TLS = "YES_I_KNOW_WHAT_I_AM_DOING";
-    };
+  systemd.services.lk-jwt-service.environment = {
+    LIVEKIT_FULL_ACCESS_HOMESERVERS = domain;
+    MATRIX_BASE_URL = synapseUrl;
   };
 }

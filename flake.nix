@@ -121,6 +121,8 @@
                 extraSpecialArgs = sharedSpecialArgs;
                 users.${primaryUser} = import ./home;
                 backupFileExtension = "backup";
+                useGlobalPkgs = true;
+                useUserPackages = true;
               };
             }
           ];

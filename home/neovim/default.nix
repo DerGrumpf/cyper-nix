@@ -1,4 +1,5 @@
-{ pkgs, inputs, ... }: {
+{ pkgs, inputs, ... }:
+{
   imports = [
     inputs.nixvim.homeModules.nixvim
     ./treesitter.nix
@@ -11,8 +12,8 @@
     ./telescope.nix
     ./catppuccin.nix
     ./alpha.nix
-    ./avante.nix
-    ./openscad.nix
+    #./avante.nix
+    #./openscad.nix
     ./molten.nix
     ./which-key.nix
   ];
