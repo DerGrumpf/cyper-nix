@@ -12,9 +12,9 @@
     ./telescope.nix
     ./catppuccin.nix
     ./alpha.nix
-    #./avante.nix
+    ./avante.nix
     #./openscad.nix
-    ./molten.nix
+    #./molten.nix
     ./which-key.nix
   ];
 
