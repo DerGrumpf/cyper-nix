@@ -9,7 +9,7 @@ let
       extraConfig = ''
         default_type application/json;
         add_header Access-Control-Allow-Origin *;
-        return 200 '{"m.homeserver":{"base_url":"https://matrix.cyperpunk.de"}}';
+        return 200 '{"m.homeserver":{"base_url":"https://matrix.cyperpunk.de"},"org.matrix.msc4143.rtc_foci":[{"type":"livekit","livekit_service_url":"https://cyperpunk.de/livekit/jwt/"}]}';
       '';
     };
     "= /.well-known/matrix/server" = {
@@ -46,7 +46,15 @@ in
         suppress_key_server_warning = true;
         registration_shared_secret_path = config.sops.secrets.matrix_registration_secret.path;
         macaroon_secret_key = "$__file{${config.sops.secrets.matrix_macaroon_secret.path}}";
-
+        matrix_rtc = {
+          enabled = true;
+          transports = [
+            {
+              type = "livekit";
+              livekit_service_url = "https://cyperpunk.de/livekit/jwt/";
+            }
+          ];
+        };
         #experimental_features = {
         #  msc3266_enabled = true;
         #  msc3779_enabled = true;
@@ -99,6 +107,7 @@ in
         locations = wellKnownMatrix // {
           "/_matrix".proxyPass = "http://127.0.0.1:8008";
           "/_synapse/client".proxyPass = "http://127.0.0.1:8008";
+          "/_synapse/admin".proxyPass = "http://127.0.0.1:8008";
           "/metrics" = {
             proxyPass = "http://127.0.0.1:9009";
             extraConfig = ''
@@ -107,8 +116,25 @@ in
             '';
           };
           "/admin/" = {
-            root = "${synapseAdmin}";
-            #tryFiles = "$uri $uri/ /index.html";
+            alias = "${synapseAdmin}/";
+            tryFiles = "$uri $uri/ /admin/index.html";
+          };
+          "^~ /livekit/jwt/" = {
+            priority = 400;
+            proxyPass = "http://127.0.0.1:${toString config.services.lk-jwt-service.port}/";
+          };
+          "^~ /livekit/sfu/" = {
+            priority = 400;
+            proxyPass = "http://127.0.0.1:${toString config.services.livekit.settings.port}/";
+            proxyWebsockets = true;
+            extraConfig = ''
+              proxy_send_timeout 120;
+              proxy_read_timeout 120;
+              proxy_buffering off;
+              proxy_set_header Accept-Encoding gzip;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection "upgrade";
+            '';
           };
         };
       };
