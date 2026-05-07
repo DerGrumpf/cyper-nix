@@ -189,9 +189,6 @@
 
       # llm | glow
       def l [...args] { llm prompt -m groq/llama-3.3-70b-versatile -t std ...$args | glow }
-
-      # Fastfetch on shell start
-      fastfetch
     '';
 
     extraEnv = ''
@@ -226,12 +223,19 @@
     };
 
     interactiveShellInit = ''
-            starship init fish | source
-            fzf --fish | source
-      	  zoxide init fish --cmd cd | source
-            function fish_greeting
-            		fastfetch
-            end
+      starship init fish | source
+      fzf --fish | source
+      zoxide init fish --cmd cd | source
+      function fish_greeting
+        echo "                                              _         _      ";
+        echo "                                             | |       | |     ";
+        echo "  ___ _   _ _ __   ___ _ __ _ __  _   _ _ __ | | __  __| | ___ ";
+        echo " / __| | | | '_ \\ / _ \\ '__| '_ \\| | | | '_ \\| |/ / / _\` |/ _ \\";
+        echo "| (__| |_| | |_) |  __/ |  | |_) | |_| | | | |   < | (_| |  __/";
+        echo " \\___|\\__, | .__/ \\___|_|  | .__/ \\__,_|_| |_|_|\\_(_)__,_|\\___|";
+        echo "       __/ | |             | |                                 ";
+        echo "      |___/|_|             |_|                                 ";
+      end
     '';
 
     functions.l = {
