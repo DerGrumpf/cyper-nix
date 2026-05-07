@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
 let
@@ -151,4 +152,10 @@ in
       '';
     };
   };
+
+  systemd.services.matrix-synapse.serviceConfig.ReadOnlyPaths = [
+    "/var/lib/mautrix-discord"
+    "/var/lib/mautrix-whatsapp"
+  ];
+
 }
