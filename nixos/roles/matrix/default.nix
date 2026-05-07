@@ -8,6 +8,7 @@
     ./clients.nix
     ./mjolnir.nix
     ./coturn.nix
+    ./maubot.nix
     ./discord-bridge.nix
     ./whatsapp-bridge.nix
   ];

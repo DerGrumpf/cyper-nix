@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, ... }:
 {
   nixpkgs.config.permittedInsecurePackages = [ "olm-3.2.16" ];
 
@@ -61,4 +61,5 @@
       };
     };
   };
+  systemd.services.mautrix-discord-registration.serviceConfig.UMask = lib.mkForce "0022";
 }
