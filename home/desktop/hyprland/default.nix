@@ -66,6 +66,11 @@ in
         "XCURSOR_SIZE,24"
       ];
 
+      debug = {
+        disable_logs = false;
+        enable_stdout_logs = false;
+      };
+
       monitor = [
         "DP-1, 1920x1080@60, 1920x0, 1"
         "HDMI-A-2, 1920x1080@60, 0x0, 1"
@@ -73,8 +78,8 @@ in
 
       input = {
         kb_layout = "de";
-        kb_variant = "mac";
-        kb_options = "apple:fn_lock";
+        kb_variant = "";
+        kb_options = "";
         repeat_rate = 50;
         repeat_delay = 300;
 
@@ -113,7 +118,6 @@ in
           enabled = false;
           range = 16;
           render_power = 4;
-          ignore_window = true;
           color = "$green";
           color_inactive = "$red";
         };
@@ -146,7 +150,6 @@ in
       #   ];
 
       dwindle = {
-        pseudotile = "yes";
         preserve_split = "yes";
       };
 
@@ -169,10 +172,10 @@ in
         vrr = 0;
       };
 
-      device = {
-        name = "usb-optical-mouse-";
-        sensitivity = 0;
-      };
+      #device = {
+      #  name = "usb-optical-mouse-";
+      #  sensitivity = 0;
+      #};
       #deprecated
       #      windowrulev2 = [
       #       "suppressevent maximize, class:.*"

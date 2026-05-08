@@ -18,7 +18,7 @@
     ./regreet.nix
     ./plymouth.nix
     ./audio.nix
-    ./webcam.nix
+    #    ./webcam.nix
     ./virt.nix
     ./catppuccin.nix
   ];
@@ -95,7 +95,7 @@
   // lib.optionalAttrs (!isServer) {
     dconf.enable = true;
     hyprland = {
-      enable = true;
+      enable = false;
       package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     };
     steam.enable = true;
@@ -159,6 +159,7 @@
       "video"
       "audio"
       "libvirtd"
+      "input"
     ];
   };
 }
