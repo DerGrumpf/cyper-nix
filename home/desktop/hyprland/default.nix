@@ -78,8 +78,8 @@ in
 
       input = {
         kb_layout = "de";
-        kb_variant = "";
-        kb_options = "";
+        kb_variant = "mac";
+        kb_options = "apple:fn_lock";
         repeat_rate = 50;
         repeat_delay = 300;
 
@@ -172,10 +172,10 @@ in
         vrr = 0;
       };
 
-      #device = {
-      #  name = "usb-optical-mouse-";
-      #  sensitivity = 0;
-      #};
+      device = {
+        name = "usb-optical-mouse-";
+        sensitivity = 0;
+      };
       #deprecated
       #      windowrulev2 = [
       #       "suppressevent maximize, class:.*"
