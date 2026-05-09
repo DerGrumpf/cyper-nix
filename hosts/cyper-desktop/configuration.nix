@@ -1,3 +1,4 @@
+{ ... }:
 {
   imports = [ ./hardware-configuration.nix ];
 
@@ -31,6 +32,17 @@
     };
     efi.canTouchEfiVariables = true;
   };
+
+  services.desktopManager.plasma6.enable = false;
+  services.displayManager.sddm = {
+    enable = false;
+    wayland.enable = true;
+  };
+
+  environment.pathsToLink = [
+    "/share/applications"
+    "/share/xdg-desktop-portal"
+  ];
 
   system.stateVersion = "26.05";
 }

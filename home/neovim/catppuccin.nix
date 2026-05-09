@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+_: {
   # Catppuccin: Soothing pastel theme for Neovim
   # Provides consistent theming across plugins with transparency support.
   programs.nixvim = {
@@ -20,6 +19,7 @@
           mini = {
             enabled = true;
           };
+          lualine = true;
         };
       };
     };

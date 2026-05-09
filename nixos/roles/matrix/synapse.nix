@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
 let
@@ -33,6 +34,7 @@ in
       owner = "matrix-synapse";
       group = "matrix-synapse";
     };
+    pg_replication_password = { };
   };
 
   services = {
@@ -144,11 +146,34 @@ in
       enable = true;
       initialScript = pkgs.writeText "synapse-init.sql" ''
         CREATE ROLE "matrix-synapse" WITH LOGIN PASSWORD 'synapse';
+        CREATE ROLE replicator WITH REPLICATION LOGIN;
         CREATE DATABASE "matrix-synapse" WITH OWNER "matrix-synapse"
           TEMPLATE template0
           LC_COLLATE = "C"
           LC_CTYPE = "C";
       '';
+
+      settings = {
+        wal_level = "replica";
+        max_wal_senders = 3;
+        wal_keep_size = "512MB";
+      };
+
+      authentication = lib.mkAfter ''
+        host replication replicator 100.0.0.0/8 scram-sha-256
+      '';
     };
+  };
+
+  systemd.services = {
+    matrix-synapse.serviceConfig.ReadOnlyPaths = [
+      "/var/lib/mautrix-discord"
+      "/var/lib/mautrix-whatsapp"
+    ];
+    postgresql.postStart = lib.mkAfter ''
+      PG_PASS=$(cat ${config.sops.secrets.pg_replication_password.path})
+      ${config.services.postgresql.package}/bin/psql -U postgres -c \
+        "ALTER ROLE replicator WITH PASSWORD '$PG_PASS';"
+    '';
   };
 }
