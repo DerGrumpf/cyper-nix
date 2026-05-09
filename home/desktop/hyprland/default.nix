@@ -66,6 +66,11 @@ in
         "XCURSOR_SIZE,24"
       ];
 
+      debug = {
+        disable_logs = false;
+        enable_stdout_logs = false;
+      };
+
       monitor = [
         "DP-1, 1920x1080@60, 1920x0, 1"
         "HDMI-A-2, 1920x1080@60, 0x0, 1"
@@ -113,7 +118,6 @@ in
           enabled = false;
           range = 16;
           render_power = 4;
-          ignore_window = true;
           color = "$green";
           color_inactive = "$red";
         };
@@ -146,7 +150,6 @@ in
       #   ];
 
       dwindle = {
-        pseudotile = "yes";
         preserve_split = "yes";
       };
 

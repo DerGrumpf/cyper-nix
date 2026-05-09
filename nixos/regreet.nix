@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   ...
 }:
 {
@@ -13,7 +14,7 @@
   };
 
   programs.regreet = {
-    enable = true;
+    enable = false;
 
     cageArgs = [
       "-s"
@@ -60,6 +61,20 @@
         resolution = "500ms";
         timezone = "Europe/Berlin";
         label_width = 150;
+      };
+    };
+  };
+
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.tuigreet}/bin/tuigreet --cmd start-hyprland";
+        user = "greeter";
+      };
+      initial_session = {
+        command = "Hyprland";
+        user = "phil";
       };
     };
   };
