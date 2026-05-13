@@ -5,7 +5,7 @@
 
 let
   primaryInterface = config.systemd.network.networks."10-ethernet".matchConfig.Name;
-  adguardPort = 3000;
+  adguardPort = 3010;
 in
 {
   services = {
@@ -50,7 +50,7 @@ in
         };
 
         dhcp = {
-          enabled = true;
+          enabled = false;
           interface_name = primaryInterface;
           local_domain_name = "lan";
           dhcpv4 = {
