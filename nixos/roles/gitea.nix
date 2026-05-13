@@ -79,6 +79,11 @@ in
     user = "gitea";
     group = "gitea";
 
+    lfs = {
+      enable = true;
+      #contentDir = "${config.services.gitea.stateDir}/data/lfs";
+    };
+
     database = {
       type = "postgres";
       host = "127.0.0.1";
@@ -98,6 +103,12 @@ in
         ROOT_URL = "https://${domain}/";
         DISABLE_SSH = false;
         START_SSH_SERVER = true;
+        LFS_START_SERVER = true;
+        LFS_JWT_SECRET_URI = "file://${config.sops.secrets."gitea/lfsJwtSecret".path}";
+      };
+
+      lfs = {
+        PATH = "${config.services.gitea.stateDir}/data/lfs";
       };
 
       metrics = {

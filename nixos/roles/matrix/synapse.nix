@@ -34,7 +34,10 @@ in
       owner = "matrix-synapse";
       group = "matrix-synapse";
     };
-    pg_replication_password = { };
+    pg_replication_password = {
+      owner = "postgres";
+      group = "postgres";
+    };
   };
 
   services = {
@@ -66,6 +69,21 @@ in
         #  msc4222_enabled = true;
         #};
 
+        rc_login = {
+          address = {
+            per_second = 0.17;
+            burst_count = 10;
+          };
+          account = {
+            per_second = 0.17;
+            burst_count = 10;
+          };
+          failed_attempts = {
+            per_second = 0.17;
+            burst_count = 10;
+          };
+        };
+
         listeners = [
           {
             port = 8008;
@@ -91,7 +109,10 @@ in
             port = 9009;
             tls = false;
             type = "metrics";
-            bind_addresses = [ "127.0.0.1" ];
+            bind_addresses = [
+              "127.0.0.1"
+              "100.109.10.91"
+            ];
             resources = [ ];
           }
         ];
@@ -155,13 +176,22 @@ in
 
       settings = {
         wal_level = "replica";
-        max_wal_senders = 3;
+        max_wal_senders = 5;
         wal_keep_size = "512MB";
+        listen_addresses = lib.mkForce "127.0.0.1,100.109.10.91";
       };
 
       authentication = lib.mkAfter ''
         host replication replicator 100.0.0.0/8 scram-sha-256
       '';
+
+    };
+
+    prometheus.exporters.postgres = {
+      enable = true;
+      port = 9188;
+      runAsLocalSuperUser = true;
+      dataSourceName = "postgresql:///postgres?host=/run/postgresql&sslmode=disable";
     };
   };
 
