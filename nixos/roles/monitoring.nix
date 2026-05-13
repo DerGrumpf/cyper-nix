@@ -134,11 +134,33 @@ in
           metrics_path = "/_synapse/metrics";
           static_configs = [
             {
-              targets = [ "127.0.0.1:9009" ];
+              targets = [ "100.109.10.91:9009" ];
               labels = {
                 instance = config.networking.hostName;
                 job = "master";
                 index = "1";
+              };
+            }
+          ];
+        }
+        {
+          job_name = "postgresql-replica";
+          static_configs = [
+            {
+              targets = [ "localhost:9188" ];
+              labels = {
+                instance = config.networking.hostName;
+              };
+            }
+          ];
+        }
+        {
+          job_name = "postgresql-proxy";
+          static_configs = [
+            {
+              targets = [ "100.109.10.91:9188" ];
+              labels = {
+                instance = "cyper-proxy";
               };
             }
           ];

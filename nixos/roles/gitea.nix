@@ -81,7 +81,7 @@ in
 
     lfs = {
       enable = true;
-      #contentDir = "${config.services.gitea.stateDir}/data/lfs";
+      contentDir = "${config.services.gitea.stateDir}/data/lfs";
     };
 
     database = {
@@ -104,11 +104,6 @@ in
         DISABLE_SSH = false;
         START_SSH_SERVER = true;
         LFS_START_SERVER = true;
-        LFS_JWT_SECRET_URI = "file://${config.sops.secrets."gitea/lfsJwtSecret".path}";
-      };
-
-      lfs = {
-        PATH = "${config.services.gitea.stateDir}/data/lfs";
       };
 
       metrics = {

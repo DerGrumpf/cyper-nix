@@ -40,7 +40,11 @@ in
 
     virtualHosts = {
       # controller services (proxied to upstream tailscale node)
-      "git.cyperpunk.de" = mkProxy 9000;
+      "git.cyperpunk.de" = (mkProxy 9000) // {
+        extraConfig = ''
+          client_max_body_size 500m;
+        '';
+      };
       "search.cyperpunk.de" = mkProxy 11080;
       "file.cyperpunk.de" = mkProxy 10000;
       "ngx.cyperpunk.de" = mkWsProxy 28101;
