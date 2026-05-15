@@ -13,7 +13,7 @@ let
     stripRoot = false;
   };
 
-  domain = "git.cyperpunk.de"; # swap to git.cyperpunk.de for prod
+  domain = "git.cyperpunk.de";
   httpPort = 9000;
   sshPort = 12222;
 in
@@ -35,6 +35,11 @@ in
     "gitea/mailerPassword" = {
       owner = "gitea";
       group = "gitea";
+    };
+    "kanidm_gitea_secret" = {
+      owner = "gitea";
+      group = "gitea";
+      mode = "0444";
     };
   };
 
@@ -79,6 +84,11 @@ in
     user = "gitea";
     group = "gitea";
 
+    lfs = {
+      enable = true;
+      contentDir = "/storage/fast/lfs";
+    };
+
     database = {
       type = "postgres";
       host = "127.0.0.1";
@@ -98,6 +108,7 @@ in
         ROOT_URL = "https://${domain}/";
         DISABLE_SSH = false;
         START_SSH_SERVER = true;
+        LFS_START_SERVER = true;
       };
 
       metrics = {

@@ -133,15 +133,31 @@ let
     '';
   });
 
+  cinnyConfigured = pkgs.cinny-unwrapped.overrideAttrs (_: {
+    postInstall = ''
+      cp ${
+        builtins.toFile "cinny-config.json" (
+          builtins.toJSON {
+            defaultHomeserver = 0;
+            homeserverList = [ "cyperpunk.de" ];
+            allowCustomHomeservers = false;
+          }
+        )
+      } $out/config.json
+    '';
+  });
+
 in
 {
   services.nginx.virtualHosts = {
     "cinny.cyperpunk.de" = {
       forceSSL = true;
       enableACME = true;
-      root = "${pkgs.cinny}";
+      root = "${cinnyConfigured}";
+      locations."/" = {
+        tryFiles = "$uri $uri/ /index.html";
+      };
     };
-
     "element.cyperpunk.de" = {
       forceSSL = true;
       enableACME = true;

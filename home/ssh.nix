@@ -26,6 +26,14 @@
 
         user = "git";
       };
+
+      "git.cyperpunk.de" = {
+        hostname = "git.cyperpunk.de";
+        port = 12222;
+        user = "gitea";
+        identityFile =
+          if isDarwin then "/Users/${primaryUser}/.ssh/ssh" else "/home/${primaryUser}/.ssh/ssh";
+      };
     };
   };
 }

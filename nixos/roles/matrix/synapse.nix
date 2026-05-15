@@ -34,7 +34,14 @@ in
       owner = "matrix-synapse";
       group = "matrix-synapse";
     };
-    pg_replication_password = { };
+    pg_replication_password = {
+      owner = "postgres";
+      group = "postgres";
+    };
+    kanidm_synapse_secret = {
+      owner = "matrix-synapse";
+      group = "matrix-synapse";
+    };
   };
 
   services = {
@@ -57,14 +64,21 @@ in
             }
           ];
         };
-        #experimental_features = {
-        #  msc3266_enabled = true;
-        #  msc3779_enabled = true;
-        #  msc3401_enabled = true;
-        #  msc4143_enabled = true;
-        #  msc4195_enabled = true;
-        #  msc4222_enabled = true;
-        #};
+
+        rc_login = {
+          address = {
+            per_second = 0.17;
+            burst_count = 10;
+          };
+          account = {
+            per_second = 0.17;
+            burst_count = 10;
+          };
+          failed_attempts = {
+            per_second = 0.17;
+            burst_count = 10;
+          };
+        };
 
         listeners = [
           {
@@ -91,16 +105,38 @@ in
             port = 9009;
             tls = false;
             type = "metrics";
-            bind_addresses = [ "127.0.0.1" ];
+            bind_addresses = [
+              "127.0.0.1"
+              "100.109.10.91"
+            ];
             resources = [ ];
           }
         ];
         enable_metrics = true;
+
+        oidc_providers = [
+          {
+            idp_id = "kanidm";
+            idp_name = "Kanidm";
+            issuer = "https://auth.cyperpunk.de/oauth2/openid/synapse";
+            client_id = "synapse";
+            client_secret_path = config.sops.secrets.kanidm_synapse_secret.path;
+            scopes = [
+              "openid"
+              "profile"
+              "email"
+            ];
+            allow_existing_users = true;
+            user_mapping_provider.config = {
+              localpart_template = "{{ user.preferred_username.split('@')[0] }}";
+              display_name_template = "{{ user.displayname }}";
+            };
+          }
+        ];
       };
     };
 
     nginx.virtualHosts = {
-      # Matrix homeserver
       "cyperpunk.de" = {
         forceSSL = true;
         enableACME = true;
@@ -155,13 +191,21 @@ in
 
       settings = {
         wal_level = "replica";
-        max_wal_senders = 3;
+        max_wal_senders = 5;
         wal_keep_size = "512MB";
+        listen_addresses = lib.mkForce "127.0.0.1,100.109.10.91";
       };
 
       authentication = lib.mkAfter ''
         host replication replicator 100.0.0.0/8 scram-sha-256
       '';
+    };
+
+    prometheus.exporters.postgres = {
+      enable = true;
+      port = 9188;
+      runAsLocalSuperUser = true;
+      dataSourceName = "postgresql:///postgres?host=/run/postgresql&sslmode=disable";
     };
   };
 

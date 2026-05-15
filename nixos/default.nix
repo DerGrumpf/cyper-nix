@@ -2,6 +2,7 @@
   pkgs,
   inputs,
   lib,
+  config,
   primaryUser,
   isServer,
   ...
@@ -25,6 +26,10 @@
 
   nix = {
     settings = {
+      trusted-users = [
+        "root"
+        primaryUser
+      ];
       experimental-features = [
         "nix-command"
         "flakes"
@@ -37,11 +42,13 @@
         "https://cache.nixos.org"
         "https://hyprland.cachix.org"
         "https://nix-community.cachix.org"
+        "https://cyper-cache.cachix.org"
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "cyper-cache.cachix.org-1:pOpeWFEjGHg9XvqRg+DQpYnGRQNp+z+QEF8Ev2mbSoM="
       ];
     };
     gc = {
@@ -117,29 +124,22 @@
       port = 9002;
     };
 
-    alloy = {
-      enable = true;
-      extraFlags = [ "--stability.level=public-preview" ];
-      configPath = pkgs.writeText "config.alloy" ''
-        loki.write "default" {
-          endpoint {
-            url = "http://192.168.2.2:3100/loki/api/v1/push"
-          }
-        }
-
-        loki.source.journal "journal" {
-          forward_to = [loki.write.default.receiver]
-          labels = {
-            job  = "systemd-journal",
-            host = sys.env("HOSTNAME"),
-          }
-        }
-      '';
-    };
-
     gnome = lib.mkIf (!isServer) {
       tinysparql.enable = true;
       localsearch.enable = true;
+    };
+  };
+
+  sops.secrets.cachix_auth_token = { };
+
+  systemd.services.cachix-push = {
+    description = "Push new store paths to Cachix";
+    after = [ "multi-user.target" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.bash}/bin/bash -c 'CACHIX_AUTH_TOKEN=$(cat ${config.sops.secrets.cachix_auth_token.path}) ${pkgs.nix}/bin/nix path-info --recursive /run/current-system | CACHIX_AUTH_TOKEN=$(cat ${config.sops.secrets.cachix_auth_token.path}) ${pkgs.cachix}/bin/cachix push cyper-cache'";
     };
   };
 

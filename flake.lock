@@ -774,6 +774,22 @@
         "type": "github"
       }
     },
+    "oidcwarden": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1778081807,
+        "narHash": "sha256-tHacn9RtoByWpqnWX2/gWwODDSeXJa4mk4MfxHiiJ8A=",
+        "owner": "Timshel",
+        "repo": "OIDCWarden",
+        "rev": "48edfc7ba54372074befa1d62c63c4babfaadc77",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Timshel",
+        "repo": "OIDCWarden",
+        "type": "github"
+      }
+    },
     "pre-commit-hooks": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -810,6 +826,7 @@
         "nixos-generators": "nixos-generators",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
+        "oidcwarden": "oidcwarden",
         "sops-nix": "sops-nix",
         "spicetify-nix": "spicetify-nix"
       }
