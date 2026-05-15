@@ -36,6 +36,11 @@ in
       owner = "gitea";
       group = "gitea";
     };
+    "kanidm_gitea_secret" = {
+      owner = "gitea";
+      group = "gitea";
+      mode = "0444";
+    };
   };
 
   services.postgresql = {
