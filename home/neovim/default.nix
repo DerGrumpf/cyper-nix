@@ -16,6 +16,7 @@
     #./openscad.nix
     #./molten.nix
     ./which-key.nix
+    ./diffview.nix
   ];
 
   home.packages = with pkgs; [
