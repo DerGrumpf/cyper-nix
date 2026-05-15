@@ -13,7 +13,7 @@ let
     stripRoot = false;
   };
 
-  domain = "git.cyperpunk.de"; # swap to git.cyperpunk.de for prod
+  domain = "git.cyperpunk.de";
   httpPort = 9000;
   sshPort = 12222;
 in
