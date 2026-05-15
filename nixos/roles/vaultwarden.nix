@@ -1,34 +1,42 @@
 {
   config,
   pkgs,
-  lib,
+  inputs,
   ...
 }:
 
 let
-  address = config.systemd.network.networks."10-ethernet".networkConfig.Address;
-  ip = builtins.elemAt (lib.splitString "/" address) 0;
   port = 8222;
+  oidcwarden = import ../packages/oidcwarden.nix {
+    inherit pkgs;
+    oidcwarden-src = inputs.oidcwarden;
+  };
 in
 {
+  sops.secrets.vaultwarden_env = {
+    owner = "vaultwarden";
+    group = "vaultwarden";
+  };
+
   services.vaultwarden = {
     enable = true;
-    environmentFile = config.sops.secrets.vaultwarden_admin_token.path;
+    package = oidcwarden;
+    environmentFile = config.sops.secrets.vaultwarden_env.path;
     backupDir = "/var/local/vaultwarden/backup";
 
     config = {
-      DOMAIN = "https://vault.cyperpunk.de"; # "http://${ip}:${toString port}";
+      DOMAIN = "https://vault.cyperpunk.de";
       ROCKET_ADDRESS = "0.0.0.0";
       ROCKET_PORT = port;
       ROCKET_LOG = "critical";
-      SIGNUPS_ALLOWED = true;
+      SIGNUPS_ALLOWED = false;
       WEBSOCKET_ENABLED = true;
+      SSO_ENABLED = true;
+      SSO_ONLY = false;
+      SSO_AUTHORITY = "https://auth.cyperpunk.de/oauth2/openid/vaultwarden";
+      SSO_SCOPES = "openid profile email";
+      SSO_PKCE = false;
     };
-  };
-
-  sops.secrets.vaultwarden_admin_token = {
-    owner = "vaultwarden";
-    group = "vaultwarden";
   };
 
   networking.firewall.allowedTCPPorts = [ port ];

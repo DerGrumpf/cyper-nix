@@ -56,7 +56,19 @@ in
       };
       "search.cyperpunk.de" = mkProxy 11080;
       "file.cyperpunk.de" = mkProxy 10000;
-      "ngx.cyperpunk.de" = mkWsProxy 28101;
+      "ngx.cyperpunk.de" = {
+        forceSSL = true;
+        enableACME = true;
+        locations."/" = {
+          proxyPass = "http://${upstream}:28101";
+          proxyWebsockets = true;
+          extraConfig = ''
+            sub_filter '</head>' '<link rel="stylesheet" type="text/css" href="https://theme-park.dev/css/base/paperless-ngx/catppuccin-mocha.css"></head>';
+            sub_filter_once on;
+            proxy_set_header Accept-Encoding "";
+          '';
+        };
+      };
       "vault.cyperpunk.de" = mkWsProxy 8222;
       "calvin.cyperpunk.de" = mkWsProxy 15006;
       "auth.cyperpunk.de" = mkHttpsProxy 8444;
