@@ -33,6 +33,7 @@ in
   networking.firewall.allowedTCPPorts = [
     80
     443
+    12222
   ];
 
   security.acme = {
@@ -46,6 +47,14 @@ in
     recommendedTlsSettings = true;
     recommendedOptimisation = true;
     recommendedGzipSettings = true;
+
+    # Git ssh
+    streamConfig = ''
+      server {
+        listen 12222;
+        proxy_pass ${upstream}:12222;
+      }
+    '';
 
     virtualHosts = {
       # controller services (proxied to upstream tailscale node)
