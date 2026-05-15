@@ -59,7 +59,7 @@ in
       "ngx.cyperpunk.de" = mkWsProxy 28101;
       "vault.cyperpunk.de" = mkWsProxy 8222;
       "calvin.cyperpunk.de" = mkWsProxy 15006;
-      "auth.cyperpunk.de" = mkHttpsProxy 8443;
+      "auth.cyperpunk.de" = mkHttpsProxy 8444;
 
       "www.cyperpunk.de" = {
         forceSSL = true;

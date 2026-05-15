@@ -1,11 +1,7 @@
-# FIRST TIME SETUP (after nixos-rebuild switch on cyper-controller):
-#   $ sudo kanidmd recover-account admin
-#   $ sudo kanidmd recover-account idm_admin
-#
 { pkgs, ... }:
 let
   domain = "auth.cyperpunk.de";
-  port = 8443;
+  port = 8444;
   certDir = "/var/lib/kanidm/tls";
 in
 {
@@ -35,23 +31,33 @@ in
   };
 
   services.kanidm = {
-    enableServer = true;
+    package = pkgs.kanidm_1_10;
 
-    serverSettings = {
-      inherit domain;
-      origin = "https://${domain}";
+    server = {
+      enable = true;
+      settings = {
+        inherit domain;
+        origin = "https://${domain}";
 
-      tls_chain = "${certDir}/cert.pem";
-      tls_key = "${certDir}/key.pem";
+        tls_chain = "${certDir}/cert.pem";
+        tls_key = "${certDir}/key.pem";
 
-      bindaddress = "0.0.0.0:${toString port}";
+        bindaddress = "0.0.0.0:${toString port}";
 
-      db_path = "/var/lib/kanidm/kanidm.db";
-      log_level = "info";
+        log_level = "info";
+
+        online_backup = {
+          versions = 7;
+          path = "/var/lib/kanidm/backups";
+          schedule = "00 22 * * *";
+        };
+      };
     };
 
-    enableClient = true;
-    clientSettings.uri = "https://${domain}";
+    client = {
+      enable = true;
+      settings.uri = "https://${domain}";
+    };
   };
 
   networking.firewall.allowedTCPPorts = [ port ];
