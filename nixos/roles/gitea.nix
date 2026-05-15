@@ -81,7 +81,7 @@ in
 
     lfs = {
       enable = true;
-      contentDir = "${config.services.gitea.stateDir}/data/lfs";
+      contentDir = "/storage/fast/lfs";
     };
 
     database = {
