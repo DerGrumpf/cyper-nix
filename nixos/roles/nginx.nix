@@ -19,6 +19,15 @@ let
         proxyWebsockets = true;
       };
     };
+
+  mkHttpsProxy = port: {
+    forceSSL = true;
+    enableACME = true;
+    locations."/" = {
+      proxyPass = "https://${upstream}:${toString port}";
+      extraConfig = "proxy_ssl_verify off;";
+    };
+  };
 in
 {
   networking.firewall.allowedTCPPorts = [
@@ -50,6 +59,7 @@ in
       "ngx.cyperpunk.de" = mkWsProxy 28101;
       "vault.cyperpunk.de" = mkWsProxy 8222;
       "calvin.cyperpunk.de" = mkWsProxy 15006;
+      "auth.cyperpunk.de" = mkHttpsProxy 8443;
 
       "www.cyperpunk.de" = {
         forceSSL = true;
