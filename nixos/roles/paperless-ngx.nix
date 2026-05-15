@@ -1,9 +1,15 @@
 { config, ... }:
 {
 
-  sops.secrets.paperless_admin = {
-    owner = "paperless";
+  sops.secrets = {
+    paperless_admin = {
+      owner = "paperless";
+    };
+    paperless_oidc_secret = {
+      owner = "paperless";
+    };
   };
+
   services.paperless = {
     enable = true;
     address = "0.0.0.0";
@@ -23,6 +29,7 @@
       ];
       PAPERLESS_OCR_LANGUAGE = "deu+eng";
       PAPERLESS_CONSUMER_POLLING = 60;
+      PAPERLESS_APPS = "allauth.socialaccount.providers.openid_connect";
     };
 
     exporter = {
@@ -41,9 +48,14 @@
       "d /storage/backup/paperless 0775 root users -"
     ];
 
-    services.paperless-scheduler = {
-      after = [ "systemd-tmpfiles-setup.service" ];
-      requires = [ "systemd-tmpfiles-setup.service" ];
+    services = {
+      paperless-scheduler = {
+        after = [ "systemd-tmpfiles-setup.service" ];
+        requires = [ "systemd-tmpfiles-setup.service" ];
+      };
+      paperless-web = {
+        serviceConfig.EnvironmentFiles = [ config.sops.secrets.paperless_oidc_secret.path ];
+      };
     };
   };
   networking.firewall.allowedTCPPorts = [ 28101 ];
