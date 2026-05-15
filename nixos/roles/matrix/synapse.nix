@@ -38,6 +38,10 @@ in
       owner = "postgres";
       group = "postgres";
     };
+    kanidm_synapse_secret = {
+      owner = "matrix-synapse";
+      group = "matrix-synapse";
+    };
   };
 
   services = {
@@ -60,14 +64,6 @@ in
             }
           ];
         };
-        #experimental_features = {
-        #  msc3266_enabled = true;
-        #  msc3779_enabled = true;
-        #  msc3401_enabled = true;
-        #  msc4143_enabled = true;
-        #  msc4195_enabled = true;
-        #  msc4222_enabled = true;
-        #};
 
         rc_login = {
           address = {
@@ -117,11 +113,30 @@ in
           }
         ];
         enable_metrics = true;
+
+        oidc_providers = [
+          {
+            idp_id = "kanidm";
+            idp_name = "Kanidm";
+            issuer = "https://auth.cyperpunk.de/oauth2/openid/synapse";
+            client_id = "synapse";
+            client_secret_path = config.sops.secrets.kanidm_synapse_secret.path;
+            scopes = [
+              "openid"
+              "profile"
+              "email"
+            ];
+            allow_existing_users = true;
+            user_mapping_provider.config = {
+              localpart_template = "{{ user.preferred_username }}";
+              display_name_template = "{{ user.displayname }}";
+            };
+          }
+        ];
       };
     };
 
     nginx.virtualHosts = {
-      # Matrix homeserver
       "cyperpunk.de" = {
         forceSSL = true;
         enableACME = true;
@@ -184,7 +199,6 @@ in
       authentication = lib.mkAfter ''
         host replication replicator 100.0.0.0/8 scram-sha-256
       '';
-
     };
 
     prometheus.exporters.postgres = {
