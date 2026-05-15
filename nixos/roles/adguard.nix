@@ -5,19 +5,18 @@
 
 let
   primaryInterface = config.systemd.network.networks."10-ethernet".matchConfig.Name;
-  adguardPort = 3000;
+  adguardPort = 3010;
 in
 {
   services = {
     resolved.enable = false;
     adguardhome = {
       enable = true;
-      mutableSettings = true;
+      mutableSettings = false;
       allowDHCP = true;
+      port = adguardPort;
 
       settings = {
-        http.address = "0.0.0.0:${toString adguardPort}";
-
         users = [
           {
             name = "DerGrumpf";
@@ -50,7 +49,7 @@ in
         };
 
         dhcp = {
-          enabled = true;
+          enabled = false;
           interface_name = primaryInterface;
           local_domain_name = "lan";
           dhcpv4 = {

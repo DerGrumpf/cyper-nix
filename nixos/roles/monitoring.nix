@@ -21,44 +21,6 @@ let
     "cyper-node-2" = "192.168.2.31";
     "cyper-proxy" = "178.254.8.35";
   };
-
-  mkWeatherScrapeConfigs =
-    cities:
-    map (city: {
-      job_name = "weather_${lib.strings.toLower (lib.strings.replaceStrings [ " " ] [ "_" ] city)}";
-      scrape_interval = "5m";
-      scrape_timeout = "30s";
-      metrics_path = "/${city}";
-      params.format = [ "p1" ];
-      static_configs = [ { targets = [ "wttr.in" ]; } ];
-      scheme = "https";
-      metric_relabel_configs = [
-        {
-          target_label = "location";
-          replacement = city;
-        }
-      ];
-    }) cities;
-
-  weatherCities = [
-    # Braunschweig itself
-    "Braunschweig"
-
-    # Immediate surroundings (~15km)
-    "Wolfenbuettel"
-    "Salzgitter"
-    "Peine"
-    "Cremlingen"
-    "Wendeburg"
-    "Sickte"
-
-    # Greater region (~50km)
-    "Wolfsburg"
-    "Gifhorn"
-    "Goslar"
-    "Hildesheim"
-    "Hannover"
-  ];
 in
 {
   sops.secrets = {
@@ -66,7 +28,10 @@ in
       owner = "grafana";
       group = "grafana";
     };
-
+    kanidm_grafana_secret = {
+      owner = "grafana";
+      group = "grafana";
+    };
   };
 
   services = {
@@ -83,12 +48,6 @@ in
               url = "http://127.0.0.1:${toString config.services.prometheus.port}";
               isDefault = true;
             }
-            {
-              name = "Loki";
-              type = "loki";
-              url = "http://127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}";
-              isDefault = false;
-            }
           ];
         };
       };
@@ -97,7 +56,7 @@ in
           domain = "www.cyperpunk.de"; # serverIP; # "grafana.cyperpunk.de";
           http_port = 2342;
           http_addr = "0.0.0.0";
-          root_url = "http://www.cyperpunk.de/grafana/";
+          root_url = "https://www.cyperpunk.de/grafana/";
           serve_from_sub_path = true;
         };
         security = {
@@ -106,6 +65,23 @@ in
         };
         auth = {
           disable_login_form = false;
+          oauth_allow_insecure_email_lookup = true;
+        };
+        "auth.generic_oauth" = {
+          enabled = true;
+          name = "Kanidm";
+          client_id = "grafana";
+          client_secret = "$__file{${config.sops.secrets.kanidm_grafana_secret.path}}";
+          scopes = "openid profile email";
+          auth_url = "https://auth.cyperpunk.de/ui/oauth2";
+          token_url = "https://auth.cyperpunk.de/oauth2/token";
+          api_url = "https://auth.cyperpunk.de/oauth2/openid/grafana/userinfo";
+          use_pkce = false;
+          allow_sign_up = true;
+          auto_assign_org = true;
+          auto_assign_org_id = 1;
+          auto_assign_org_role = "Admin";
+          skip_org_role_sync = true;
         };
       };
     };
@@ -134,60 +110,39 @@ in
           metrics_path = "/_synapse/metrics";
           static_configs = [
             {
-              targets = [ "127.0.0.1:9009" ];
+              targets = [ "100.109.10.91:9009" ];
               labels = {
-                instance = config.networking.hostName;
+                instance = "cyper-proxy";
                 job = "master";
                 index = "1";
               };
             }
           ];
         }
+        {
+          job_name = "postgresql-replica";
+          static_configs = [
+            {
+              targets = [ "localhost:9188" ];
+              labels = {
+                instance = config.networking.hostName;
+              };
+            }
+          ];
+        }
+        {
+          job_name = "postgresql-proxy";
+          static_configs = [
+            {
+              targets = [ "100.109.10.91:9188" ];
+              labels = {
+                instance = "cyper-proxy";
+              };
+            }
+          ];
+        }
       ]
-      ++ (lib.mapAttrsToList mkNodeJob extraNodes)
-      ++ (mkWeatherScrapeConfigs weatherCities);
-    };
-
-    loki = {
-      enable = true;
-      configuration = {
-        auth_enabled = false;
-        server.http_listen_port = 3100;
-        ingester = {
-          lifecycler = {
-            address = "127.0.0.1";
-            ring = {
-              kvstore.store = "inmemory";
-              replication_factor = 1;
-            };
-          };
-          chunk_idle_period = "5m";
-          chunk_retain_period = "30s";
-        };
-        schema_config.configs = [
-          {
-            from = "2024-01-01";
-            store = "tsdb";
-            object_store = "filesystem";
-            schema = "v13";
-            index = {
-              prefix = "index_";
-              period = "24h";
-            };
-          }
-        ];
-        storage_config = {
-          tsdb_shipper = {
-            active_index_directory = "/var/lib/loki/tsdb-index";
-            cache_location = "/var/lib/loki/tsdb-cache";
-          };
-          filesystem.directory = "/var/lib/loki/chunks";
-        };
-        limits_config = {
-          reject_old_samples = true;
-          reject_old_samples_max_age = "168h";
-        };
-      };
+      ++ (lib.mapAttrsToList mkNodeJob extraNodes);
     };
   };
 
@@ -195,9 +150,5 @@ in
     2342
     9001
     3100
-  ];
-
-  systemd.tmpfiles.rules = [
-    "d /var/loki 0700 loki loki -"
   ];
 }

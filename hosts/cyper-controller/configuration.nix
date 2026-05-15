@@ -13,6 +13,8 @@
     ../../nixos/roles/frontpage
     ../../nixos/roles/paperless-ngx.nix
     ../../nixos/roles/octoprint.nix
+    ../../nixos/roles/matrix/postgres-backup.nix
+    ../../nixos/roles/kanidm.nix
   ];
 
   networking = {

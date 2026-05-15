@@ -19,11 +19,21 @@ let
         proxyWebsockets = true;
       };
     };
+
+  mkHttpsProxy = port: {
+    forceSSL = true;
+    enableACME = true;
+    locations."/" = {
+      proxyPass = "https://${upstream}:${toString port}";
+      extraConfig = "proxy_ssl_verify off;";
+    };
+  };
 in
 {
   networking.firewall.allowedTCPPorts = [
     80
     443
+    12222
   ];
 
   security.acme = {
@@ -38,14 +48,27 @@ in
     recommendedOptimisation = true;
     recommendedGzipSettings = true;
 
+    # Git ssh
+    streamConfig = ''
+      server {
+        listen 12222;
+        proxy_pass ${upstream}:12222;
+      }
+    '';
+
     virtualHosts = {
       # controller services (proxied to upstream tailscale node)
-      "git.cyperpunk.de" = mkProxy 9000;
+      "git.cyperpunk.de" = (mkProxy 9000) // {
+        extraConfig = ''
+          client_max_body_size 500m;
+        '';
+      };
       "search.cyperpunk.de" = mkProxy 11080;
       "file.cyperpunk.de" = mkProxy 10000;
       "ngx.cyperpunk.de" = mkWsProxy 28101;
       "vault.cyperpunk.de" = mkWsProxy 8222;
       "calvin.cyperpunk.de" = mkWsProxy 15006;
+      "auth.cyperpunk.de" = mkHttpsProxy 8444;
 
       "www.cyperpunk.de" = {
         forceSSL = true;
