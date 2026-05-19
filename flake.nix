@@ -72,11 +72,6 @@
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    oidcwarden = {
-      url = "github:Timshel/OIDCWarden";
-      flake = false;
-    };
   };
 
   outputs =

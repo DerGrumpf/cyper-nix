@@ -94,7 +94,10 @@
     info.enable = false;
   };
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs = {
+    overlays = [ (import ./packages/overlays.nix) ];
+    config.allowUnfree = true;
+  };
 
   programs = {
     fish.enable = true;
