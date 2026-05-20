@@ -1,9 +1,18 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
+  environment.systemPackages = with pkgs; [
+    maubot
+  ];
+
   services = {
     maubot = {
       enable = true;
-      plugins = [ config.services.maubot.package.plugins.weather ];
+      plugins = with config.services.maubot.package.plugins; [
+        weather
+        rss
+        reminder
+        urban
+      ];
       settings = {
         database = "postgresql:///maubot?host=/run/postgresql";
         homeservers = {
