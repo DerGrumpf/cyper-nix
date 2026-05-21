@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matrix Guide - cyperpunk.de</title>
+    <!-- Favicon Integration -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://img.icons8.com/ios/100/matrix-logo.png"
+    />
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- SEO & Meta -->
+    <meta
+      name="description"
+      content="Einstiegspunkt für den cyperpunk.de Matrix-Server. Hier kannst du einen Account beantragen und erfährst alles über Clients, mobile Apps und Server-Funktionen."
+    />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://matrix.cyperpunk.de/" />
+    <meta property="og:title" content="Matrix Guide - cyperpunk.de" />
+    <meta
+      property="og:description"
+      content="Einstiegspunkt für den cyperpunk.de Matrix-Server. Hier kannst du einen Account beantragen und erfährst alles über Clients, mobile Apps und Server-Funktionen."
+    />
+    <meta property="og:locale" content="de_DE" />
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Zum Inhalt springen</a>
+    <!-- Matrix Code-Regen Hintergrund -->
+    <canvas id="matrix-bg" aria-hidden="true"></canvas>
+
+    <main class="container" id="main-content">
+      <!-- Header -->
+      <header>
+        <h1>Matrix Guide</h1>
+        <p class="subtitle">Systemstatus: Aktiv auf Host cyperpunk.de</p>
+        <p class="admin-tag">Grid-Operator: @dergrumpf:cyperpunk.de</p>
+      </header>
+
+      <!-- Sektion 1: Registrierungs-Widget -->
+      <section id="registration" aria-labelledby="heading-registration">
+        <h2 id="heading-registration">
+          1. Identitäts-Allokation (Registrierung)
+        </h2>
+        <p>
+          Zugangsdaten für diesen Server werden exklusiv durch die
+          Administration autorisiert. Nutze das untenstehende Interface, um eine
+          Verbindung anzufordern. Die Übertragung erfolgt direkt in unseren
+          gesicherten internen Koordinationskanal.
+        </p>
+
+        <!-- REGISTRIERUNGS-WIDGET -->
+        <div class="reg-form">
+          <label for="reg-username">Gewünschter Benutzername</label>
+          <input
+            type="text"
+            id="reg-username"
+            placeholder="z.B. neo"
+            autocomplete="off"
+            spellcheck="false"
+          />
+
+          <label for="reg-email">E-Mail-Adresse (für Login-Daten)</label>
+          <input
+            type="email"
+            id="reg-email"
+            placeholder="z.B. neo@example.com"
+            autocomplete="off"
+          />
+
+          <!-- Honeypot: muss leer bleiben -->
+          <label for="reg-website" style="display: none" aria-hidden="true"
+            >Website</label
+          >
+          <input
+            type="text"
+            id="reg-website"
+            name="website"
+            tabindex="-1"
+            autocomplete="off"
+            style="display: none"
+            aria-hidden="true"
+          />
+
+          <button
+            class="reg-submit"
+            id="reg-btn"
+            onclick="submitRegistration()"
+          >
+            Zugang anfordern
+          </button>
+
+          <div
+            class="reg-status"
+            id="reg-status"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          ></div>
+        </div>
+      </section>
+
+      <!-- Sektion 2: Erster Login & Sicherheit -->
+      <section id="first-login" aria-labelledby="heading-first-login">
+        <h2 id="heading-first-login">
+          2. Protokoll für den initialen Verbindungsaufbau
+        </h2>
+
+        <div class="matrix-alert" role="alert" aria-label="Warnung">
+          <h3>⚠️ WARNUNG: Kryptografische Schlüssel sichern</h3>
+          <p>
+            Dieses Netzwerk erzwingt standardmäßig eine vollständige
+            Ende-zu-Ende-Verschlüsselung (E2EE). Bei der ersten Verbindung
+            generiert dein Terminal eine
+            <strong>Passphrase sowie einen Sicherheitsschlüssel</strong>.
+            Sichere dieses Krypto-Fragment extern! Solltest du dich abmelden
+            oder das Gerät wechseln und diesen Schlüssel verlieren, ist dein
+            dezentraler Datenstrom unwiderruflich verschlüsselt. Die
+            Administration hat keinerlei Backdoors, um deine Daten
+            wiederherzustellen.
+          </p>
+        </div>
+
+        <h3>Schritt-für-Schritt-Protokoll:</h3>
+        <ol>
+          <li>
+            Wähle ein Zugangs-Terminal (Client) aus dem folgenden Abschnitt.
+          </li>
+          <li>
+            Der Zugriff ist entweder über klassische
+            <strong>User-Credentials</strong> oder über das
+            <strong>Single-Sign-On-Protokoll (SSO)</strong> möglich.
+          </li>
+          <li>
+            Bei der Nutzung von SSO wirst du automatisch zum zentralen
+            Identitäts-Node unter
+            <a
+              href="https://auth.cyperpunk.de/"
+              target="_blank"
+              aria-label="auth.cyperpunk.de (öffnet neuen Tab)"
+              ><strong>auth.cyperpunk.de</strong></a
+            >
+            (powered by Kanidm) umgeleitet.
+          </li>
+          <li>
+            Nach erfolgreicher Authentifizierung wird deine Session für das
+            Matrix-Grid freigeschaltet.
+          </li>
+        </ol>
+      </section>
+
+      <!-- Sektion 3: Web-Clients (Linktree) -->
+      <section id="clients" aria-labelledby="heading-clients">
+        <h2 id="heading-clients">3. Zugangs-Terminals initialisieren</h2>
+        <p>
+          Kopple dein System über eine unserer drei gehosteten
+          Web-Schnittstellen. Sobald dein Login-Protokoll abgeschlossen ist,
+          findest du den übergeordneten Hauptbereich (Community Space) im Grid
+          unter der Adresse <code>#cyperpunk:cyperpunk.de</code>.
+        </p>
+
+        <div class="linktree-container">
+          <a
+            href="https://element.cyperpunk.de/"
+            target="_blank"
+            aria-label="Element starten (öffnet neuen Tab)"
+            class="linktree-btn"
+          >
+            <img
+              src="https://img.icons8.com/keek-line/96/physics.png"
+              alt="Element Icon"
+            />
+            Terminal: Element starten
+          </a>
+          <a
+            href="https://cinny.cyperpunk.de/"
+            target="_blank"
+            aria-label="Cinny starten (öffnet neuen Tab)"
+            class="linktree-btn"
+          >
+            <img
+              src="https://img.icons8.com/ios/100/bird--v1.png"
+              alt="Cinny Icon"
+            />
+            Terminal: Cinny starten
+          </a>
+          <a
+            href="https://fluffy.cyperpunk.de/"
+            target="_blank"
+            aria-label="FluffyChat starten (öffnet neuen Tab)"
+            class="linktree-btn"
+          >
+            <img
+              src="https://img.icons8.com/pastel-glyph/64/cat--v3.png"
+              alt="FluffyChat Icon"
+            />
+            Terminal: FluffyChat starten
+          </a>
+        </div>
+
+        <h3>Welches Programm soll ich wählen?</h3>
+        <div class="cards-grid">
+          <div class="card">
+            <h3 class="card-title">Element</h3>
+            <p class="card-text">
+              Der mächtige <strong>Allrounder</strong>. Sieht klassisch aus und
+              bietet absolut jede Funktion, die Matrix kann. Perfekt, wenn du
+              Räume selbst verwalten willst.
+              <strong>Unterstützt Sprach- und Videoanrufe</strong> direkt im
+              Browser.
+            </p>
+          </div>
+          <div class="card">
+            <h3 class="card-title">Cinny</h3>
+            <p class="card-text">
+              Der <strong>moderne Chat</strong>. Ist extrem schnell,
+              übersichtlich und orientiert sich vom Design an Discord oder
+              Slack. Ideal, wenn du einfach nur bequem schreiben willst.
+              <strong>Unterstützt Sprach- und Videoanrufe</strong> direkt im
+              Browser.
+            </p>
+          </div>
+          <div class="card" style="border-color: #00aa41">
+            <h3 class="card-title" style="color: #00aa41">FluffyChat</h3>
+            <p class="card-text">
+              Der <strong>einfache Messenger</strong>. Bunt, super unkompliziert
+              und perfekt für Einsteiger, die den Look von WhatsApp oder Signal
+              bevorzugen.
+              <strong style="color: #ff3333; text-shadow: none"
+                >Achtung:</strong
+              >
+              Diese Web-Version hat <strong>keinen Sprach-Chat</strong>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sektion 4: Mobiler Zugang -->
+      <section id="mobile" aria-labelledby="heading-mobile">
+        <h2 id="heading-mobile">4. Mobile App-Konfiguration</h2>
+        <p>
+          Möchtest du von unterwegs aus auf das Grid zugreifen? Lade dir einfach
+          eine passende App für dein Smartphone herunter:
+        </p>
+
+        <div class="app-download-box">
+          <!-- FluffyChat Download Zeile -->
+          <div class="app-row">
+            <div class="app-info">
+              <span class="app-name">FluffyChat</span>
+              <p style="margin: 5px 0 0 0; font-size: 0.85rem; color: #a3ffa3">
+                Bunt, einsteigerfreundlich und ideal für das Smartphone.
+              </p>
+            </div>
+            <div class="app-buttons">
+              <a
+                href="https://play.google.com/store/apps/details?id=chat.fluffy.fluffychat&hl=de_DE"
+                target="_blank"
+                aria-label="FluffyChat im Google Play Store (öffnet neuen Tab)"
+                class="app-btn"
+                >Google Play</a
+              >
+              <a
+                href="https://apps.apple.com/us/app/fluffychat/id1551469600"
+                target="_blank"
+                aria-label="FluffyChat im App Store (öffnet neuen Tab)"
+                class="app-btn"
+                >App Store</a
+              >
+            </div>
+          </div>
+
+          <!-- Element X Download Zeile -->
+          <div class="app-row">
+            <div class="app-info">
+              <span class="app-name">Element X</span>
+              <p style="margin: 5px 0 0 0; font-size: 0.85rem; color: #a3ffa3">
+                Die App der nächsten Generation: Extrem schnell, modern und
+                sicher.
+              </p>
+            </div>
+            <div class="app-buttons">
+              <a
+                href="https://play.google.com/store/apps/details?id=io.element.android.x&hl=de_DE"
+                target="_blank"
+                aria-label="Element X im Google Play Store (öffnet neuen Tab)"
+                class="app-btn"
+                >Google Play</a
+              >
+              <a
+                href="https://apps.apple.com/us/app/element-x-secure-chat-call/id1631335820"
+                target="_blank"
+                aria-label="Element X im App Store (öffnet neuen Tab)"
+                class="app-btn"
+                >App Store</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <p style="margin-top: 20px">
+          <strong>Wichtig beim ersten App-Start:</strong>
+        </p>
+        <ul>
+          <li>Überspringe die automatische Registrierung in der App.</li>
+          <li>
+            Suche nach der Option <strong>"Heimserver ändern"</strong> (oder
+            Homeserver wechseln).
+          </li>
+          <li>
+            Trage dort manuell unsere Server-Adresse ein:
+            <code style="color: #fff">cyperpunk.de</code>
+          </li>
+          <li>
+            Logge dich erst danach wie gewohnt mit deinen Zugangsdaten oder per
+            SSO ein.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Sektion 5: Telefonie & Serverlimits -->
+      <section id="infrastructure" aria-labelledby="heading-infrastructure">
+        <h2 id="heading-infrastructure">
+          5. Sprachkanäle &amp; Speicherplatz limits
+        </h2>
+        <p>
+          Unser Server stellt Kanäle bereit, mit denen du direkt über das
+          Internet mit anderen Mitgliedern sprechen oder Dateien austauschen
+          kannst.
+        </p>
+
+        <div class="cards-grid">
+          <div class="card">
+            <h3 class="card-title">Anrufe in Gruppen</h3>
+            <p class="card-text">
+              Wenn du mit mehreren Personen in einem Raum telefonierst, sorgt
+              unser Server im Hintergrund automatisch für eine flüssige, stabile
+              Audio- und Bildübertragung.
+            </p>
+          </div>
+          <div class="card">
+            <h3 class="card-title">Direktanrufe (1:1)</h3>
+            <p class="card-text">
+              Telefonate mit nur einer Person werden sicher und direkt
+              aufgebaut. Ein integrierter Hilfsdienst sorgt dafür, dass die
+              Verbindung auch durch Firewalls hinweg klappt.
+            </p>
+          </div>
+          <!-- Volle Breite für die Speicherplatzwarnung -->
+          <div
+            class="card full-width-card"
+            style="border-color: #ff9900; background: rgba(20, 10, 0, 0.6)"
+          >
+            <h3 class="card-title" style="color: #ff9900">
+              Dateigröße &amp; faires Teilen
+            </h3>
+            <p class="card-text">
+              Das Hochladen von Bildern, Videos oder Dokumenten ist auf maximal
+              <strong>50 MB pro Datei</strong> begrenzt. Da unser
+              Festplattenplatz auf dem Server nicht unendlich ist, gehe bitte
+              sparsam mit großen Dateien um.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sektion 6: Server-Strukturen -->
+      <section
+        id="server-structures"
+        aria-labelledby="heading-server-structures"
+      >
+        <h2 id="heading-server-structures">
+          6. Server-Strukturen: Chats und Bereiche
+        </h2>
+        <p>
+          Damit alles ordentlich bleibt und du dich gut zurechtfindest, ist
+          Matrix logisch aufgeteilt. Es gibt im Grunde zwei Ebenen, um Gespräche
+          zu sortieren:
+        </p>
+        <ol>
+          <li>
+            <strong>Spaces (Bereiche / Ordner):</strong> Das ist die
+            übergeordnete Klammer – wie ein kompletter Server bei Discord. Ein
+            Space sammelt verschiedene Chats an einem Ort, damit es
+            übersichtlich bleibt.
+          </li>
+          <li>
+            <strong>Rooms (Räume / Chats):</strong> Das sind die eigentlichen
+            Text- oder Sprachkanäle innerhalb eines Bereichs. Hier wird
+            geschrieben, telefoniert und Material geteilt.
+          </li>
+        </ol>
+
+        <p><strong>Tipps für Admins und Moderatoren:</strong></p>
+        <ul>
+          <li>
+            Wenn du eine neue Gruppe gründest, erstelle am besten
+            <strong>zuerst einen Space (Bereich)</strong>. Danach packst du die
+            einzelnen Chats geordnet dort hinein.
+          </li>
+          <li>
+            Verwende klare, einfache Namen für deine Räume. Das macht es für
+            alle Nutzer leichter, die Übersicht in ihrer Seitenleiste zu
+            behalten.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Sektion 7: Codex Tabelle -->
+      <section id="codex" aria-labelledby="heading-codex">
+        <h2 id="heading-codex">7. Discord-zu-Matrix Referenz-Codex</h2>
+        <p>
+          Verwende diese Referenztabelle, um gewohnte Discord-Strukturen auf den
+          offenen Matrix-Standard zu mappen:
+        </p>
+
+        <table
+          class="codex-table"
+          aria-label="Discord-zu-Matrix Vergleichstabelle"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Discord-Konstrukt</th>
+              <th scope="col">Matrix-Spezifikation</th>
+              <th scope="col">Funktion im Netz</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Server / Gilde</td>
+              <td><strong>Space (Bereich)</strong></td>
+              <td>
+                Ein virtueller Container, der Räume und Entitäten unter einem
+                Thema bündelt.
+              </td>
+            </tr>
+            <tr>
+              <td>Text- / Sprachkanal</td>
+              <td><strong>Room (Raum)</strong></td>
+              <td>
+                Der eigentliche Endpunkt für Textnachrichten, Bilddaten oder
+                Telefonie.
+              </td>
+            </tr>
+            <tr>
+              <td>Direktnachricht (DM)</td>
+              <td><strong>Direkt-Chat</strong></td>
+              <td>
+                Ein kryptografisch isolierter 1:1-Kanal zwischen zwei Accounts.
+              </td>
+            </tr>
+            <tr>
+              <td>Rollen &amp; Rechte</td>
+              <td><strong>Power Levels</strong></td>
+              <td>
+                Ein numerischer Berechtigungswert (0 bis 100) zur Steuerung von
+                Moderations-Rechten.
+              </td>
+            </tr>
+            <tr>
+              <td>Nitro Emojis</td>
+              <td><strong>Emote-Packs</strong></td>
+              <td>
+                Serverweite Sticker- und Emoji-Bibliotheken – dezentral und
+                kostenfrei.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Sektion 8: System-Automatisierungen (Maubots) -->
+      <section id="maubots" aria-labelledby="heading-maubots">
+        <h2 id="heading-maubots">8. Aktive Automatisierungs-Bots (Maubot)</h2>
+        <p>
+          Das <strong>Maubot</strong>-Framework erlaubt das Einbinden von
+          automatisierten Skripten und Funktionen in das Raum-Netzwerk. Unsere
+          Kerninstanz operiert unter der ID:
+          <code style="color: #fff">@maubot:cyperpunk.de</code>.
+        </p>
+        <p>
+          <strong>Bedienung:</strong> Du kannst die Entität
+          <strong>in jeden beliebigen Raum einladen</strong>, um die geladenen
+          Module per Textbefehl zu aktivieren. Aktive Subroutinen:
+        </p>
+
+        <div class="cards-grid">
+          <!-- Bot 1 -->
+          <div class="card">
+            <h3 class="card-title">Urban Dictionary</h3>
+            <p class="card-text">
+              Analysiert Slang-Begriffe, Definitionen und sprachliche Variablen
+              direkt im Raum-Feed.<br /><a
+                href="https://github.com/dvdgsng/UrbanMaubot/blob/master/README.md"
+                target="_blank"
+                aria-label="Urban Dictionary Maubot Dokumentation (öffnet neuen Tab)"
+                >Dokumentation</a
+              >
+            </p>
+          </div>
+          <!-- Bot 2 -->
+          <div class="card">
+            <h3 class="card-title">RSS News-Feeds</h3>
+            <p class="card-text">
+              Abonniert externe Informations-Feeds und speist Updates
+              vollautomatisch in den Chat-Stream ein.<br /><a
+                href="https://github.com/maubot/rss/blob/master/README.md"
+                target="_blank"
+                aria-label="RSS Maubot Dokumentation (öffnet neuen Tab)"
+                >Dokumentation</a
+              >
+            </p>
+          </div>
+          <!-- Bot 3 -->
+          <div class="card">
+            <h3 class="card-title">Erinnerungs-Engine</h3>
+            <p class="card-text">
+              Ermöglicht das Setzen von Timern, Cron-Triggern und
+              zeitgesteuerten Alarmen im Raum.<br /><a
+                href="https://github.com/maubot/reminder/blob/master/README.md"
+                target="_blank"
+                aria-label="Reminder Maubot Dokumentation (öffnet neuen Tab)"
+                >Dokumentation</a
+              >
+            </p>
+          </div>
+          <!-- Bot 4 -->
+          <div class="card">
+            <h3 class="card-title">Wetter-Array</h3>
+            <p class="card-text">
+              Fragt aktuelle Klimadaten und meteorologische Berichte für globale
+              Koordinaten ab.<br /><a
+                href="https://github.com/kellya/maubot-weather/blob/main/README.md"
+                target="_blank"
+                aria-label="Weather Maubot Dokumentation (öffnet neuen Tab)"
+                >Dokumentation</a
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sektion 9: Discord Bridge -->
+      <section id="discord-bridge" aria-labelledby="heading-discord-bridge">
+        <h2 id="heading-discord-bridge">9. Discord Bridge Link</h2>
+        <p>
+          Unsere Brücken-Module spiegeln Daten und Signalkanal-Nachrichten
+          nahtlos zwischen Matrix und externen Discord-Gilden.
+        </p>
+        <p>
+          <strong>Ident-ID der Discord-Bridge:</strong>
+          <code style="color: #fff">@discordbot:cyperpunk.de</code>
+        </p>
+
+        <h3>Befehlssatz:</h3>
+        <ul>
+          <li>
+            Öffne eine Direktverbindung (DM) mit dem Bridge-Bot, um Befehle
+            direkt einzuspeisen.
+          </li>
+          <li>
+            Im privaten Kommunikationskanal versteht der Bot Befehle direkt über
+            das Text-Kommando <code style="color: #fff">help</code>.
+          </li>
+          <li>
+            Innerhalb von geteilten Räumen muss das Präfix vorangestellt werden:
+            <code style="color: #fff">!discord help</code>.
+          </li>
+        </ul>
+      </section>
+      <!-- FAQ -->
+      <section id="faq" aria-labelledby="heading-faq">
+        <h2 id="heading-faq">FAQ – Häufige Fragen</h2>
+
+        <h3>Was ist Matrix?</h3>
+        <p>
+          Matrix ist ein offenes, dezentrales Kommunikationsprotokoll – ähnlich
+          wie E-Mail, aber für Echtzeit-Chat und Anrufe. Jeder kann seinen
+          eigenen Server betreiben, und Server können miteinander kommunizieren.
+        </p>
+
+        <h3>Warum kein Discord?</h3>
+        <p>
+          Discord ist ein zentralisierter Dienst, der Nutzerdaten speichert und
+          auswerten kann. Matrix ist Open Source, selbst gehostet und
+          Ende-zu-Ende-verschlüsselt – du behältst die Kontrolle über deine
+          Daten.
+        </p>
+
+        <h3>Kann ich meinen bestehenden Matrix-Account verwenden?</h3>
+        <p>
+          Ja. Du kannst von jedem Matrix-Server aus unseren Räumen beitreten –
+          einfach die Adresse <code>@deinname:deinserver.de</code> verwenden und
+          den Raum <code>#cyperpunk:cyperpunk.de</code> suchen.
+        </p>
+
+        <h3>Wie bekomme ich einen Account auf diesem Server?</h3>
+        <p>
+          Fülle das Registrierungsformular oben aus. Die Administration prüft
+          deine Anfrage und schickt dir die Zugangsdaten per E-Mail.
+        </p>
+
+        <h3>Sind meine Nachrichten verschlüsselt?</h3>
+        <p>
+          Ja. Dieser Server erzwingt Ende-zu-Ende-Verschlüsselung (E2EE) in
+          allen privaten Chats. Stelle sicher, dass du deinen
+          Sicherheitsschlüssel beim ersten Login sicherst.
+        </p>
+
+        <h3>Was kostet das?</h3>
+        <p>
+          Nichts. Der Server wird privat betrieben und ist kostenlos nutzbar.
+        </p>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      [SYSTEM MESSAGE] // This site was autonomously generated by Gemini //
+      [EOF]
+    </footer>
+    <script src="app.js"></script>
+  </body>
+</html>
