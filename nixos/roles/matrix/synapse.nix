@@ -26,6 +26,11 @@ let
     restrictBaseUrl = [ "https://matrix.cyperpunk.de" ];
     loginFlows = [ "password" ];
   };
+
+  matrixIndexHtml = pkgs.writeText "matrix-index.html" (builtins.readFile ./index.html);
+  matrixRegisterPhp = pkgs.writeText "matrix-register.php" (builtins.readFile ./register.php);
+  matrixStyleCss = pkgs.writeText "matrix-style.css" (builtins.readFile ./style.css);
+  matrixAppJs = pkgs.writeText "matrix-app.js" (builtins.readFile ./app.js);
 in
 {
   sops.secrets = {
@@ -42,6 +47,29 @@ in
       owner = "matrix-synapse";
       group = "matrix-synapse";
     };
+  };
+
+  systemd.tmpfiles.rules = [
+    "d /var/www/matrix            0755 nginx nginx -"
+    "L+ /var/www/matrix/index.html   0644 nginx nginx - ${matrixIndexHtml}"
+    "L+ /var/www/matrix/register.php 0644 nginx nginx - ${matrixRegisterPhp}"
+    "L+ /var/www/matrix/style.css  0644 nginx nginx - ${matrixStyleCss}"
+    "L+ /var/www/matrix/app.js     0644 nginx nginx - ${matrixAppJs}"
+  ];
+
+  services.phpfpm.pools.matrix = {
+    user = "nginx";
+    group = "nginx";
+    settings = {
+      "listen.owner" = "nginx";
+      "listen.group" = "nginx";
+      "pm" = "dynamic";
+      "pm.max_children" = 10;
+      "pm.start_servers" = 2;
+      "pm.min_spare_servers" = 1;
+      "pm.max_spare_servers" = 3;
+    };
+    phpPackage = pkgs.php.withExtensions ({ enabled, all }: enabled ++ [ all.curl ]);
   };
 
   services = {
@@ -174,6 +202,22 @@ in
               proxy_set_header Connection "upgrade";
             '';
           };
+          "/" = {
+            root = "/var/www/matrix";
+            extraConfig = ''
+              index index.html;
+              try_files $uri $uri/ =404;
+            '';
+          };
+          "~ \\.php$" = {
+            root = "/var/www/matrix";
+            extraConfig = ''
+              fastcgi_pass unix:${config.services.phpfpm.pools.matrix.socket};
+              fastcgi_index index.php;
+              include ${pkgs.nginx}/conf/fastcgi_params;
+              fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            '';
+          };
         };
       };
     };
@@ -188,14 +232,12 @@ in
           LC_COLLATE = "C"
           LC_CTYPE = "C";
       '';
-
       settings = {
         wal_level = "replica";
         max_wal_senders = 5;
         wal_keep_size = "512MB";
         listen_addresses = lib.mkForce "127.0.0.1,100.109.10.91";
       };
-
       authentication = lib.mkAfter ''
         host replication replicator 100.0.0.0/8 scram-sha-256
       '';
