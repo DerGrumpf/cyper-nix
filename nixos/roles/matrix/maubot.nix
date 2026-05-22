@@ -12,8 +12,8 @@
         rss
         reminder
         urban
-        llm
         wolframalpha
+        dice
       ];
       settings = {
         database = "postgresql:///maubot?host=/run/postgresql";

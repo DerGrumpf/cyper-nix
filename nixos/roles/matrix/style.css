@@ -100,7 +100,7 @@ section {
   background: rgba(0, 5, 0, 0.85);
   border: 1px solid #00ff41;
   border-radius: 6px;
-  padding: 30px;
+  padding: 20px 30px 30px;
   box-shadow: 0 0 15px rgba(0, 255, 65, 0.1);
 }
 
@@ -291,6 +291,7 @@ a:hover {
   grid-column: 1 / -1;
 }
 
+/* Card title icons */
 .card-title {
   font-size: 1.15rem;
   color: #fff;
@@ -299,6 +300,20 @@ a:hover {
   letter-spacing: 1px;
   border-bottom: 1px dashed #00ff41;
   padding-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-icon {
+  height: 20px;
+  width: auto;
+  object-fit: contain;
+  filter: invert(53%) sepia(93%) saturate(1353%) hue-rotate(87deg)
+    brightness(119%) contrast(119%);
+  flex-shrink: 0;
+}
+.card-title--highlight .card-icon {
+  filter: invert(40%) sepia(80%) saturate(500%) hue-rotate(95deg) brightness(110%);
 }
 
 .card-text {
@@ -434,18 +449,7 @@ a:hover {
 }
 
 /* --- Footer --- */
-footer {
-  text-align: center;
-  padding: 20px;
-  background: rgba(0, 5, 0, 0.9);
-  border-top: 1px dashed #00ff41;
-  font-size: 0.8rem;
-  color: #00ff41;
-  color: rgba(0, 255, 65, 0.7);
-  position: relative;
-  z-index: 1;
-  letter-spacing: 1px;
-}
+/* (styles moved to end of file) */
 
 /* Fokus-Styles für Tastaturnavigation */
 a:focus-visible,
@@ -497,20 +501,43 @@ input:focus-visible {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 14px;
+  }
   h1 {
-    font-size: 2.2rem;
+    font-size: 2rem;
+    letter-spacing: 2px;
   }
   h2 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+  }
+  h3 {
+    font-size: 1rem;
   }
   section {
-    padding: 15px;
+    padding: 14px 16px 20px;
+    margin-bottom: 30px;
+  }
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .linktree-btn {
+    font-size: 0.95rem;
+    padding: 14px 16px;
+    letter-spacing: 1px;
+  }
+  .codex-table {
+    font-size: 0.82rem;
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .codex-table th,
   .codex-table td {
-    padding: 8px;
-    font-size: 0.85rem;
+    padding: 8px 10px;
+    white-space: nowrap;
   }
   .app-row {
     flex-direction: column;
@@ -523,4 +550,127 @@ input:focus-visible {
     flex: 1;
     justify-content: center;
   }
+  .advanced-separator {
+    margin: 30px 0 20px 0;
+    padding: 14px 16px;
+  }
+  .abstract {
+    padding: 12px 14px;
+    margin-bottom: 24px;
+  }
+}
+
+/* --- Abstract Block --- */
+.abstract {
+  border-left: 3px solid #00aa41;
+  padding: 16px 20px;
+  margin: 0 0 40px 0;
+  background: rgba(0, 170, 65, 0.05);
+  border-radius: 0 4px 4px 0;
+}
+.abstract p {
+  margin: 0;
+  color: #a3ffa3;
+  line-height: 1.7;
+}
+
+/* --- Fortgeschrittenen-Trennbereich --- */
+.advanced-separator {
+  border-left: 3px solid #5a7a5a;
+  border-radius: 0 4px 4px 0;
+  background: rgba(0, 170, 65, 0.03);
+  padding: 16px 20px;
+  margin: 48px 0 32px 0;
+}
+.advanced-separator h2 {
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #5a7a5a;
+  border-bottom: none;
+  text-shadow: none;
+  padding-bottom: 0;
+}
+.advanced-separator p {
+  margin: 0;
+  color: #5a7a5a;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* --- Hilfsklassen für inline-style Ersatz --- */
+.card--highlight {
+  border-color: #00aa41;
+}
+.card-title--highlight {
+  color: #00aa41;
+}
+.card--warning {
+  border-color: #ff9900;
+  background: rgba(20, 10, 0, 0.6);
+}
+.card-title--warning {
+  color: #ff9900;
+}
+.text--danger {
+  color: #ff3333;
+  text-shadow: none;
+}
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+.code--white {
+  color: #fff;
+}
+.mt-20 {
+  margin-top: 20px;
+}
+.mt-28 {
+  margin-top: 28px;
+}
+
+/* App store button icons */
+.app-btn img {
+  height: 18px;
+  width: auto;
+  object-fit: contain;
+  filter: invert(53%) sepia(93%) saturate(1353%) hue-rotate(87deg)
+    brightness(119%) contrast(119%);
+  transition: filter 0.2s ease;
+  flex-shrink: 0;
+}
+.app-btn:hover img {
+  filter: invert(100%) brightness(200%);
+}
+
+/* Footer matrix style */
+footer {
+  text-align: center;
+  padding: 20px;
+  background: rgba(0, 5, 0, 0.9);
+  border-top: 1px dashed #00ff41;
+  font-size: 0.8rem;
+  color: rgba(0, 255, 65, 0.7);
+  position: relative;
+  z-index: 1;
+  letter-spacing: 1px;
+}
+.footer-line {
+  color: rgba(0, 255, 65, 0.35);
+  margin-bottom: 4px;
+}
+.footer-credit {
+  color: rgba(0, 255, 65, 0.7);
+  letter-spacing: 0.15em;
+}
+.footer-credit span {
+  color: #00ff41;
+  text-shadow: 0 0 6px #00ff41;
 }
