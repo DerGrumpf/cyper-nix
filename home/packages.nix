@@ -65,7 +65,6 @@
         irssi
         blender
         cinny-desktop
-        newelle
       ]
       ++ lib.optionals pkgs.stdenv.isDarwin [ graphite-cli ];
   };
