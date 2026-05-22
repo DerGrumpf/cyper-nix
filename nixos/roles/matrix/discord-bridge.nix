@@ -54,6 +54,19 @@
           "cyperpunk.de" = "user";
           "@dergrumpf:cyperpunk.de" = "admin";
         };
+
+        backfill = {
+          limits = {
+            initial = {
+              channel = 10000;
+              thread = 500;
+            };
+            missed = {
+              channel = 500;
+            };
+          };
+        };
+
       };
       discord = {
         client_id = "$DISCORD_CLIENT_ID";
