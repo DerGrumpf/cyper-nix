@@ -1,5 +1,6 @@
 {
-  pkgs,
+  vaultwarden,
+  rustPlatform,
   fetchFromGitHub,
   ...
 }:
@@ -11,10 +12,10 @@ let
     hash = "sha256-tHacn9RtoByWpqnWX2/gWwODDSeXJa4mk4MfxHiiJ8A=";
   };
 in
-pkgs.vaultwarden.overrideAttrs (old: {
+vaultwarden.overrideAttrs (old: {
   pname = "oidcwarden";
   inherit src;
-  cargoDeps = pkgs.rustPlatform.importCargoLock {
+  cargoDeps = rustPlatform.importCargoLock {
     lockFile = "${src}/Cargo.lock";
   };
   postInstall = (old.postInstall or "") + ''
