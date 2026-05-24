@@ -31,7 +31,7 @@
       enable = true;
       accent = "sapphire";
     };
-    hyprland = lib.mkIf (!isDarwin) { enable = true; };
+    hyprland = lib.mkIf (!isDarwin) { enable = false; };
     hyprlock = lib.mkIf (!isDarwin) {
       enable = true;
       useDefaultConfig = false;

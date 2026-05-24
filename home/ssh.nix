@@ -3,35 +3,34 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks = {
+    settings = {
       "*" = {
-        addKeysToAgent = "yes";
+        AddKeysToAgent = "yes";
       };
 
       "*.cyperpunk.de" = {
-        identityFile =
+        IdentityFile =
           if isDarwin then "/Users/${primaryUser}/.ssh/ssh" else "/home/${primaryUser}/.ssh/ssh";
-        user = primaryUser;
+        User = primaryUser;
       };
 
       "github.com" = {
-        identityFile =
+        IdentityFile =
           if isDarwin then "/Users/${primaryUser}/.ssh/github" else "/home/${primaryUser}/.ssh/github";
-        user = "git";
+        User = "git";
       };
 
       "git.rz.tu-bs.de" = {
-        identityFile =
+        IdentityFile =
           if isDarwin then "/Users/${primaryUser}/.ssh/github" else "/home/${primaryUser}/.ssh/github";
-
-        user = "git";
+        User = "git";
       };
 
       "git.cyperpunk.de" = {
-        hostname = "git.cyperpunk.de";
-        port = 12222;
-        user = "gitea";
-        identityFile =
+        HostName = "git.cyperpunk.de";
+        Port = 12222;
+        User = "gitea";
+        IdentityFile =
           if isDarwin then "/Users/${primaryUser}/.ssh/ssh" else "/home/${primaryUser}/.ssh/ssh";
       };
     };

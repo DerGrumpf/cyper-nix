@@ -104,14 +104,14 @@
   }
   // lib.optionalAttrs (!isServer) {
     dconf.enable = true;
-    hyprland = {
-      enable = false;
-      package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    };
     steam.enable = true;
     appimage = {
       enable = true;
       binfmt = true;
+    };
+    hyprland = {
+      enable = true;
+      package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     };
   };
 
