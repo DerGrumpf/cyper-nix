@@ -19,7 +19,6 @@
     # declarative Hyprland
     hyprland = {
       url = "github:hyprwm/Hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     hyprland-plugins = {

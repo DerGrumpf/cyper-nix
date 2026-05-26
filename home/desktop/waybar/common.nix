@@ -150,11 +150,11 @@
       format = "{}";
       return-type = "json";
       exec = ''
-        curl -s -X GET "https://api.openweathermap.org/data/2.5/weather?lat=52.281311&lon=10.527029&appid=$(cat $OPENWEATHER_API_KEY)&units=metric&lang=en" | jq -c '{text: "\(.name) \(.main.temp)C°"}'
+        curl -sf --max-time 10 "https://api.openweathermap.org/data/2.5/weather?lat=52.281311&lon=10.527029&appid=$(cat ~/.config/sops-nix/secrets/OPENWEATHER_API_KEY)&units=metric&lang=en" | jq -c '{text: "\(.name) \(.main.temp)C°"}'
       '';
       interval = 120;
       on-click = ''
-        data=$(curl -s -X GET "https://api.openweathermap.org/data/2.5/weather?lat=52.281311&lon=10.527029&appid=$(cat $OPENWEATHER_API_KEY)&units=metric&lang=en")
+        data=$(curl -sf --max-time 10 "https://api.openweathermap.org/data/2.5/weather?lat=52.281311&lon=10.527029&appid=$(cat ~/.config/sops-nix/secrets/OPENWEATHER_API_KEY)&units=metric&lang=en")
         city=$(echo "$data" | jq -r '.name')
         temp=$(echo "$data" | jq -r '.main.temp')
         feels=$(echo "$data" | jq -r '.main.feels_like')
