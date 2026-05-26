@@ -1,4 +1,4 @@
-{ inputs, pkgs, ... }:
+{ pkgs, ... }:
 {
   imports = [
     ./hypridle.nix
@@ -19,6 +19,8 @@
 
   systemd.user.targets.hyprland-session.Unit.Wants = [ "xdg-desktop-autostart.target" ];
 
+  services.awww.enable = true;
+
   wayland.windowManager.hyprland = {
     package = null;
     enable = true;
@@ -31,6 +33,6 @@
       enableXdgAutostart = false;
     };
 
-    extraConfig = builtins.readFile ./hyprland.lua;
+    extraConfig = builtins.readFile ./hyprland-scrolling.lua;
   };
 }

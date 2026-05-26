@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+_: {
   imports = [
     ./hyprland
     ./rofi
@@ -10,11 +9,6 @@
 
   _module.args.compositor = "hyprland";
 
-  home.packages = with pkgs; [
-    waypaper
-    awww
-    onlyoffice-desktopeditors
-  ];
   home.file.".config/waypaper/config.ini".source = ./waypaper.ini;
 
   programs = {

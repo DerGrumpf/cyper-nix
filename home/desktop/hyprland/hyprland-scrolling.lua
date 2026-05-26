@@ -29,7 +29,7 @@ local function bind_exec(list)
 	end
 end
 
--- Bind a list of { key, layout_cmd } entries as layout actions
+-- Bind a list of { key, layout_msg } entries as layout actions
 local function bind_layout(list)
 	for _, b in ipairs(list) do
 		hl.bind(b[1], hl.dsp.layout(b[2]))
@@ -72,10 +72,10 @@ end
 
 -- ── Autostart ────────────────────────────────────────────────────────────────
 
+local wallpaper = "$HOME/Pictures/Wallpapers/Ghost_in_the_Shell.png"
+
 local autostart = {
-	"awww-daemon --no-cache & disown",
-	"awww img ~/Pictures/Wallpapers/Ghost_in_the_Shell.png",
-	"waybar &",
+	"sleep 2 && waybar & disown",
 }
 
 hl.on("hyprland.start", function()
@@ -117,7 +117,7 @@ hl.config({
 			active_border = "rgba(a6e3a1ff)",
 			inactive_border = "rgba(f38ba8ff)",
 		},
-		layout = "master",
+		layout = "scrolling",
 		allow_tearing = false,
 	},
 
@@ -143,16 +143,16 @@ hl.config({
 		enabled = true,
 	},
 
-	master = {
-		new_status = "slave",
-		new_on_top = false,
-		new_on_active = "after",
-		orientation = "left",
-		mfact = 0.55,
-		allow_small_split = false,
-		smart_resizing = true,
-		drop_at_cursor = true,
-		focus_master_on_close = false,
+	scrolling = {
+		column_width = 0.5,
+		fullscreen_on_one_column = true,
+		focus_fit_method = 1,
+		follow_focus = true,
+		follow_min_visible = 0.4,
+		explicit_column_widths = "0.333, 0.5, 0.667, 1.0",
+		wrap_focus = true,
+		wrap_swapcol = true,
+		direction = "right",
 	},
 
 	misc = {
@@ -168,14 +168,15 @@ hl.config({
 -- ── Animations ───────────────────────────────────────────────────────────────
 
 hl.curve("myBezier", { type = "bezier", points = { { 0.05, 0.9 }, { 0.1, 1.05 } } })
+hl.curve("mySpring", { type = "spring", mass = 0.6, stiffness = 70.00, dampening = 10.00 })
 
 local animations = {
-	{ leaf = "windows", enabled = true, speed = 7, bezier = "myBezier" },
-	{ leaf = "windowsOut", enabled = true, speed = 7, bezier = "default", style = "popin 80%" },
-	{ leaf = "border", enabled = true, speed = 10, bezier = "default" },
-	{ leaf = "borderangle", enabled = true, speed = 8, bezier = "default" },
-	{ leaf = "fade", enabled = true, speed = 7, bezier = "default" },
-	{ leaf = "workspaces", enabled = true, speed = 6, bezier = "default" },
+	{ leaf = "windows", enabled = true, speed = 10, spring = "mySpring" },
+	{ leaf = "windowsOut", enabled = true, speed = 10, spring = "mySpring", style = "popin 80%" },
+	{ leaf = "border", enabled = true, speed = 10, spring = "mySpring" },
+	{ leaf = "borderangle", enabled = true, speed = 10, spring = "mySpring" },
+	{ leaf = "fade", enabled = true, speed = 10, spring = "mySpring" },
+	{ leaf = "workspaces", enabled = true, speed = 10, spring = "mySpring" },
 }
 
 for _, anim in ipairs(animations) do
@@ -190,6 +191,20 @@ local devices = {
 
 for _, d in ipairs(devices) do
 	hl.device(d)
+end
+
+-- ── Window Rules ─────────────────────────────────────────────────────────────
+
+local window_rules = {
+	{ name = "kitty_width", match = { class = "kitty" }, scrolling_width = 0.5 },
+	{ name = "browser_width", match = { class = "floorp" }, scrolling_width = 0.667 },
+	{ name = "obsidian_width", match = { class = "obsidian" }, scrolling_width = 0.5 },
+	{ name = "nautilus_width", match = { class = "nautilus" }, scrolling_width = 0.333 },
+	{ name = "thunderbird_width", match = { class = "thunderbird" }, scrolling_width = 0.667 },
+}
+
+for _, rule in ipairs(window_rules) do
+	hl.window_rule(rule)
 end
 
 -- ── Binds ────────────────────────────────────────────────────────────────────
@@ -229,35 +244,47 @@ bind_exec({
 -- Window actions
 bind_all({
 	{ super .. " + M", hl.dsp.exit() },
-	{ super .. " + P", hl.dsp.window.pseudo() },
 	{ super .. " + V", hl.dsp.window.float({ action = "toggle" }) },
 	{ super .. " + C", hl.dsp.window.close() },
 	-- Mouse move/resize
 	{ super .. " + mouse:272", hl.dsp.window.drag() },
 	{ super .. " + mouse:273", hl.dsp.window.drag({ resize = true }) },
-	-- Scroll through workspaces
+	-- Switch workspaces with mouse wheel
 	{ super .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }) },
 	{ super .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }) },
 })
 
--- Directional focus
+-- Directional focus (up/down move within a column; left/right scroll between columns)
 for _, dir in ipairs({ "left", "right", "up", "down" }) do
-	hl.bind(super .. " + " .. dir, hl.dsp.focus({ direction = dir }))
+	hl.bind(super .. " + " .. dir, hl.dsp.layout("focus " .. dir))
 end
 
--- Master layout commands
+-- Scrolling layout commands
 bind_layout({
-	{ super .. " + RETURN", "swapwithmaster auto" },
-	{ super .. " + SHIFT + RETURN", "focusmaster auto" },
-	{ super .. " + TAB", "cyclenext" },
-	{ super .. " + SHIFT + TAB", "cycleprev" },
-	{ super .. " + bracketright", "swapnext" },
-	{ super .. " + bracketleft", "swapprev" },
-	{ super .. " + period", "addmaster" },
-	{ super .. " + comma", "removemaster" },
-	{ super .. " + SHIFT + O", "orientationcycle left top right bottom" },
-	{ super .. " + equal", "mfact +0.05" },
-	{ super .. " + minus", "mfact -0.05" },
+	-- Column navigation
+	{ super .. " + period", "move +col" },
+	{ super .. " + comma", "move -col" },
+	-- Column swap
+	{ super .. " + SHIFT + period", "swapcol r" },
+	{ super .. " + SHIFT + comma", "swapcol l" },
+	-- Column resize (cycle through explicit_column_widths)
+	{ super .. " + equal", "colresize +conf" },
+	{ super .. " + minus", "colresize -conf" },
+	-- Fine-grained resize
+	{ super .. " + SHIFT + equal", "colresize +0.05" },
+	{ super .. " + SHIFT + minus", "colresize -0.05" },
+	-- Fit operations
+	{ super .. " + F1", "fit active" },
+	{ super .. " + F2", "fit visible" },
+	{ super .. " + F3", "fit all" },
+	-- Promote window to its own column / consume into previous
+	{ super .. " + RETURN", "promote" },
+	{ super .. " + SHIFT + RETURN", "consume_or_expel prev" },
+	-- Expel/consume explicitly
+	{ super .. " + bracketright", "expel" },
+	{ super .. " + bracketleft", "consume" },
+	-- Toggle scroll lock for active workspace
+	{ super .. " + SHIFT + S", "inhibit_scroll" },
 })
 
 -- Workspaces 1–10 (key 0 maps to workspace 10)
@@ -268,13 +295,14 @@ for i = 1, 10 do
 end
 
 -- Special workspace (scratchpad)
-hl.bind(super .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
+hl.bind(super .. " + grave", hl.dsp.window.move({ workspace = "special:magic" }))
 
 -- ── Workspace Rules ───────────────────────────────────────────────────────────
 
 local workspace_rules = {
-	{ workspace = "1", layout_opts = { orientation = "left" } },
-	{ workspace = "2", layout_opts = { orientation = "top" } },
+	{ workspace = "1", layout_opts = { direction = "right" } },
+	{ workspace = "2", layout_opts = { direction = "right" } },
+	{ workspace = "3", layout_opts = { direction = "right" } },
 }
 
 for _, rule in ipairs(workspace_rules) do
