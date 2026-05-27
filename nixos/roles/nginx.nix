@@ -81,6 +81,10 @@ in
           "/grafana" = {
             proxyPass = "http://${upstream}:2342";
             proxyWebsockets = true;
+            extraConfig = ''
+              add_header X-Frame-Options "";
+              add_header Content-Security-Policy "frame-ancestors *";
+            '';
           };
         };
       };
