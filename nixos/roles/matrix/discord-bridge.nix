@@ -2,13 +2,19 @@
 {
   nixpkgs.config.permittedInsecurePackages = [ "olm-3.2.16" ];
 
-  sops.secrets.discord_bot_token = {
-    owner = "mautrix-discord";
-    group = "mautrix-discord";
-  };
-  sops.secrets.discord_client_id = {
-    owner = "mautrix-discord";
-    group = "mautrix-discord";
+  sops.secrets = {
+    discord_bot_token = {
+      owner = "mautrix-discord";
+      group = "mautrix-discord";
+    };
+    discord_client_id = {
+      owner = "mautrix-discord";
+      group = "mautrix-discord";
+    };
+    discord_pickle_key = {
+      owner = "mautrix-discord";
+      group = "mautrix-discord";
+    };
   };
 
   systemd.services.mautrix-discord-env = {
@@ -22,6 +28,7 @@
       mkdir -p /run/mautrix-discord
       echo "DISCORD_BOT_TOKEN=$(cat ${config.sops.secrets.discord_bot_token.path})" > /run/mautrix-discord/env
       echo "DISCORD_CLIENT_ID=$(cat ${config.sops.secrets.discord_client_id.path})" >> /run/mautrix-discord/env
+      echo "DISCORD_PICKLE_KEY=$(cat ${config.sops.secrets.discord_pickle_key.path})" >> /run/mautrix-discord/env
       chmod 600 /run/mautrix-discord/env
       chown mautrix-discord:mautrix-discord /run/mautrix-discord/env
     '';
@@ -66,7 +73,16 @@
             };
           };
         };
-
+        encryption = {
+          allow = true;
+          default = true;
+          pickle_key = "$DISCORD_PICKLE_KEY";
+          verification_levels = {
+            receive = "unverified";
+            send = "unverified";
+            share = "cross-signed-tofu";
+          };
+        };
       };
       discord = {
         client_id = "$DISCORD_CLIENT_ID";
