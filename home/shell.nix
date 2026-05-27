@@ -15,7 +15,6 @@
     fd # find alternative
     bat # cat alternative
     ripgrep # grep alternative
-    doas # sudo alternative
     dnsutils
 
     # LLM in the Terminal
