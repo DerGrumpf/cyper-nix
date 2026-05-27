@@ -11,5 +11,6 @@
     ./maubot.nix
     ./discord-bridge.nix
     ./whatsapp-bridge.nix
+    ./meta-bridge.nix
   ];
 }
