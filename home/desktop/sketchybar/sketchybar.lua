@@ -125,7 +125,7 @@ sbar.add("item", "apple.lock", {
 })
 
 -- Spaces
-local space_icons = { "󰖟 ", " ", " ", " ", " ", " ", "7", "8", "9", "10" }
+local space_icons = { "󰖟 ", " ", "󰭻 ", " ", " ", " ", "7", "8", "9", "10" }
 for i = 1, #space_icons do
 	local space = sbar.add("space", "space." .. i, {
 		space = i,
