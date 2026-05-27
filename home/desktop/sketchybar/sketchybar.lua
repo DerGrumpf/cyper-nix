@@ -2,7 +2,7 @@
 -- Save this in ~/.config/sketchybar/
 
 -- SketchyBar Lua API
-sbar = require("sketchybar")
+local sbar = require("sketchybar")
 
 -- Colors (Catppuccin Mocha theme)
 local colors = {
@@ -52,8 +52,8 @@ sbar.default({
 		background = {
 			border_width = 2,
 			corner_radius = 9,
-			border_color = colors.accent,
-			color = colors.bg,
+			border_color = colors.pink,
+			color = colors.base,
 			padding_right = 12,
 		},
 	},
@@ -67,14 +67,14 @@ sbar.bar({
 	padding_left = 12,
 	padding_right = 12,
 	margin = 12,
-	color = colors.bg,
-	border_color = colors.accent,
+	color = colors.base,
+	border_color = colors.pink,
 	border_width = 2,
 	corner_radius = 60,
 })
 
 -- Apple logo menu
-local apple_logo = sbar.add("item", "apple.logo", {
+sbar.add("item", "apple.logo", {
 	icon = {
 		string = " ",
 		padding_left = 6,
@@ -133,7 +133,7 @@ for i = 1, #space_icons do
 			string = space_icons[i],
 			padding_left = 2,
 			padding_right = 2,
-			highlight_color = colors.green,
+			highlight_color = colors.red,
 		},
 		label = { drawing = false },
 		padding_right = 4,
