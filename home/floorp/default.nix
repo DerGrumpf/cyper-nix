@@ -104,4 +104,6 @@ in
       ];
     };
   };
+
+  home.file.".floorp/default/containers.json".source = ./sideberry.json;
 }
