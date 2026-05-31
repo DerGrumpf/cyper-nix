@@ -22,6 +22,7 @@ let
     };
 in
 {
+  # TODO: Built in every Plugin and enable them by default
   programs.floorp = {
     enable = true;
 

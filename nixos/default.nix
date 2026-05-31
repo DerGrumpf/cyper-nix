@@ -18,7 +18,6 @@
     ./regreet.nix
     ./plymouth.nix
     ./audio.nix
-    #    ./webcam.nix
     ./virt.nix
     ./catppuccin.nix
   ];
