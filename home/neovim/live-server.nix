@@ -13,6 +13,6 @@
       }
     ];
 
-    extraPackages = with pkgs; [ nodePackages.browser-sync ];
+    extraPackages = with pkgs; [ browser-sync ];
   };
 }
