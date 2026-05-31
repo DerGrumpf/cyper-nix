@@ -5,6 +5,7 @@
 }:
 let
   port = 8222;
+  userScss = builtins.readFile ./user.vaultwarden.scss.hbs;
 in
 {
   sops.secrets.vaultwarden_env = {
@@ -39,6 +40,7 @@ in
         ExecStart = "${pkgs.findutils}/bin/find /var/lib/vaultwarden/backup -mtime +30 -delete";
       };
     };
+
     timers.vaultwarden-backup-rotate = {
       wantedBy = [ "timers.target" ];
       timerConfig = {
@@ -46,5 +48,10 @@ in
         Persistent = true;
       };
     };
+
+    tmpfiles.rules = [
+      "d /var/lib/vaultwarden/templates/scss 0750 vaultwarden vaultwarden -"
+      "C /var/lib/vaultwarden/templates/scss/user.vaultwarden.scss.hbs 0640 vaultwarden vaultwarden - ${pkgs.writeText "user.vaultwarden.scss.hbs" userScss}"
+    ];
   };
 }
