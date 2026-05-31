@@ -5,10 +5,7 @@
     plugins = {
       markdown-preview.enable = true;
       render-markdown.enable = true;
-      #extraConfigLuaPre = ''
-      #  vim.env.GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-      #'';
-      # TODO: Integrate CoPilot https://github.com/settings/copilot/features
+
       avante = {
         enable = true;
         autoLoad = true;
@@ -30,8 +27,6 @@
               };
             };
           };
-
-          #        auto_suggestions_provider = "copilot";
 
           render = {
             markdown = true;
