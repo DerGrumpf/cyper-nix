@@ -17,6 +17,7 @@
     #./molten.nix
     ./which-key.nix
     ./diffview.nix
+    ./live-server.nix
   ];
 
   home.packages = with pkgs; [
