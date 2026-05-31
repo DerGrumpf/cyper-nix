@@ -22,12 +22,45 @@ let
     };
 in
 {
-  # TODO: Built in every Plugin and enable them by default
   programs.floorp = {
     enable = true;
 
+    policies.ExtensionSettings = {
+      "adguardadblocker@adguard.com" = {
+        installation_mode = "force_installed";
+        install_url = "https://addons.mozilla.org/firefox/downloads/file/4805625/adguard_adblocker-5.4.3.1.xpi";
+        default_area = "navbar";
+      };
+      "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
+        installation_mode = "force_installed";
+        default_area = "navbar";
+      }; # Bitwarden
+      "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}" = {
+        installation_mode = "force_installed";
+        default_area = "navbar";
+      }; # Stylus
+      "newtaboverride@agenedia.com" = {
+        installation_mode = "force_installed";
+      };
+      "{3c078156-979c-498b-8990-85f7987dd929}" = {
+        installation_mode = "force_installed";
+      };
+      "firefox@tampermonkey.net" = {
+        installation_mode = "force_installed";
+      };
+      "{7aa7c68a-141f-45c9-a1c6-6e7382debbe1}" = {
+        installation_mode = "force_installed";
+        install_url = "https://addons.mozilla.org/firefox/downloads/file/4147586/catppuccin_mocha-1.0.xpi";
+      };
+    };
+
     profiles.default = {
       isDefault = true;
+
+      extraConfig = ''
+        user_pref("extensions.activeThemeID", "{7aa7c68a-141f-45c9-a1c6-6e7382debbe1}");
+      '';
+
       settings = {
         # Startup
         "browser.startup.homepage" = "https://www.cyperpunk.de";
@@ -68,6 +101,9 @@ in
         "browser.urlbar.shortcuts.history" = false;
         "browser.urlbar.suggest.bookmark" = false;
 
+        # Extensions — skip manual enable prompt on fresh install
+        "extensions.autoDisableScopes" = 0;
+
         # Floorp specific
         "floorp.browser.tabs.openNewTabPosition" = -1;
         "floorp.commandPalette.enabled" = true;
@@ -80,31 +116,53 @@ in
         "floorp.panelSidebar.data" = readJson ./panel-sidebar-data.json;
         "floorp.tabs.sleep.exclusion" = readJson ./tabs-sleep-exclusion.json;
       };
-      extensions.packages = [
-        addons.bitwarden
-        addons.sidebery
-        addons.tampermonkey
-        addons.stylus
-        addons.new-tab-override
 
-        (buildXpi {
-          name = "adguard-adblocker";
-          addonId = "adguardadblocker@adguard.com";
-          version = "5.4.3.1";
-          url = "https://addons.mozilla.org/firefox/downloads/file/4805625/adguard_adblocker-5.4.3.1.xpi";
-          sha256 = "1rqp8qcc0p6qgqfgpshiqnll5mrl9jyfnks4zygzim436k0k781l";
-        })
+      search = {
+        force = true;
+        default = "SearXNG";
+        engines = {
+          "SearXNG" = {
+            urls = [ { template = "https://search.cyperpunk.de/search?q={searchTerms}"; } ];
+            definedAliases = [ "@sx" ];
+          };
+        };
+      };
 
-        (buildXpi {
-          name = "catppuccin-mocha";
-          addonId = "{7aa7c68a-141f-45c9-a1c6-6e7382debbe1}";
-          version = "1.0";
-          url = "https://addons.mozilla.org/firefox/downloads/file/4147586/catppuccin_mocha-1.0.xpi";
-          sha256 = "04lw5dirdv5636i52gfgyd5l0mkd74qjs2p23mimga3xv8hk1dzl";
-        })
-      ];
+      extensions = {
+        force = true;
+        packages = [
+          addons.bitwarden
+          addons.sidebery
+          addons.tampermonkey
+          addons.stylus
+          addons.new-tab-override
+
+          (buildXpi {
+            name = "adguard-adblocker";
+            addonId = "adguardadblocker@adguard.com";
+            version = "5.4.3.1";
+            url = "https://addons.mozilla.org/firefox/downloads/file/4805625/adguard_adblocker-5.4.3.1.xpi";
+            sha256 = "1rqp8qcc0p6qgqfgpshiqnll5mrl9jyfnks4zygzim436k0k781l";
+          })
+
+          (buildXpi {
+            name = "catppuccin-mocha";
+            addonId = "{7aa7c68a-141f-45c9-a1c6-6e7382debbe1}";
+            version = "1.0";
+            url = "https://addons.mozilla.org/firefox/downloads/file/4147586/catppuccin_mocha-1.0.xpi";
+            sha256 = "04lw5dirdv5636i52gfgyd5l0mkd74qjs2p23mimga3xv8hk1dzl";
+          })
+        ];
+        settings = {
+          "{3c078156-979c-498b-8990-85f7987dd929}".settings = builtins.fromJSON (
+            builtins.readFile ./sidebery.json
+          );
+          "newtaboverride@agenedia.com".settings = {
+            type = "custom_url";
+            url = "https://www.cyperpunk.de/";
+          };
+        };
+      };
     };
   };
-
-  home.file.".floorp/default/containers.json".source = ./sideberry.json;
 }

@@ -125,7 +125,7 @@
               home-manager = {
                 extraSpecialArgs = sharedSpecialArgs;
                 users.${primaryUser} = import ./home;
-                backupFileExtension = "backup";
+                backupFileExtension = "hm-backup";
                 useGlobalPkgs = true;
                 useUserPackages = true;
               };

@@ -33,8 +33,10 @@
         gnutar
         unrar
         sops
+        age
         # Nix tools
         nix-index
+        ncdu
       ]
       ++ lib.optionals (!pkgs.stdenv.isDarwin) [
         # dev tools
@@ -48,7 +50,6 @@
         which
         libnotify
         # encryption
-        age
         ssh-to-age
       ]
       ++ lib.optionals (!pkgs.stdenv.isDarwin && !isServer) [
