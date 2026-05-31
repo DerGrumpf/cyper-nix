@@ -1,0 +1,374 @@
+/* ===== Catppuccin for Vaultwarden ===== */
+/* Light: Latte | Dark: Mocha */
+
+:root {
+  /* ---------- Palette ---------- */
+  --ctp-rosewater: #dc8a78;
+  --ctp-flamingo: #dd7878;
+  --ctp-pink: #ea76cb;
+  --ctp-mauve: #8839ef;
+  --ctp-red: #d20f39;
+  --ctp-maroon: #e64553;
+  --ctp-peach: #fe640b;
+  --ctp-yellow: #df8e1d;
+  --ctp-green: #40a02b;
+  --ctp-teal: #179299;
+  --ctp-sky: #04a5e5;
+  --ctp-sapphire: #209fb5;
+  --ctp-blue: #1e66f5;
+  --ctp-lavender: #7287fd;
+  --ctp-text: #4c4f69;
+  --ctp-subtext1: #5c5f77;
+  --ctp-subtext0: #6c6f85;
+  --ctp-overlay2: #7c7f93;
+  --ctp-overlay1: #8c8fa1;
+  --ctp-overlay0: #9ca0b0;
+  --ctp-surface2: #acb0be;
+  --ctp-surface1: #bcc0cc;
+  --ctp-surface0: #ccd0da;
+  --ctp-base: #eff1f5;
+  --ctp-mantle: #e6e9ef;
+  --ctp-crust: #dce0e8;
+
+  /* ---------- Semantic mappings ---------- */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-white-rgb: 255, 255, 255;
+  --color-black-rgb: 0, 0, 0;
+
+  /* Grays (using Catppuccin surface hierarchy) */
+  --color-gray-050: var(--ctp-base);
+  --color-gray-100: var(--ctp-mantle);
+  --color-gray-200: var(--ctp-crust);
+  --color-gray-300: var(--ctp-surface0);
+  --color-gray-400: var(--ctp-surface1);
+  --color-gray-400-rgb: 188, 192, 204; /* approx surface1 */
+  --color-gray-500: var(--ctp-surface2);
+  --color-gray-600: var(--ctp-overlay0);
+  --color-gray-700: var(--ctp-overlay1);
+  --color-gray-800: var(--ctp-overlay2);
+  --color-gray-900: var(--ctp-text);
+  --color-gray-950: var(--ctp-subtext0);
+  --color-gray-950-rgb: 108, 111, 133; /* subtext0 */
+
+  /* Brand / Primary (using Blue) */
+  --color-brand-050: #eef6ff; /* keep similar, but we’ll use surface tints? We'll just leave as is or tint */
+  --color-brand-100: var(--ctp-surface0);
+  --color-brand-200: var(--ctp-surface1);
+  --color-brand-300: #8ec5ff;
+  --color-brand-400: #6baefa;
+  --color-brand-500: var(--ctp-blue);
+  --color-brand-600: var(--ctp-blue);
+  --color-brand-700: var(--ctp-blue);
+  --color-brand-800: #0d43af; /* keep a dark blue for contrast */
+  --color-brand-900: #0c3276;
+  --color-brand-950: #162455;
+  --color-brand-950-rgb: 22, 36, 85;
+
+  /* Red */
+  --color-red-050: var(--ctp-surface0);
+  --color-red-100: var(--ctp-mantle);
+  --color-red-200: var(--ctp-crust);
+  --color-red-300: var(--ctp-red);
+  --color-red-400: var(--ctp-red);
+  --color-red-500: var(--ctp-red);
+  --color-red-600: var(--ctp-red);
+  --color-red-700: var(--ctp-red);
+  --color-red-800: var(--ctp-maroon);
+  --color-red-900: var(--ctp-maroon);
+  --color-red-950: var(--ctp-maroon);
+
+  /* Orange / Warning */
+  --color-orange-050: var(--ctp-surface0);
+  --color-orange-100: var(--ctp-mantle);
+  --color-orange-200: var(--ctp-crust);
+  --color-orange-300: var(--ctp-peach);
+  --color-orange-400: var(--ctp-peach);
+  --color-orange-500: var(--ctp-peach);
+  --color-orange-600: var(--ctp-peach);
+  --color-orange-700: var(--ctp-peach);
+  --color-orange-800: var(--ctp-yellow);
+  --color-orange-900: var(--ctp-yellow);
+  --color-orange-950: var(--ctp-yellow);
+
+  /* Yellow */
+  --color-yellow-050: var(--ctp-surface0);
+  --color-yellow-100: var(--ctp-mantle);
+  --color-yellow-200: var(--ctp-crust);
+  --color-yellow-300: var(--ctp-yellow);
+  --color-yellow-400: var(--ctp-yellow);
+  --color-yellow-500: var(--ctp-yellow);
+  --color-yellow-600: var(--ctp-yellow);
+  --color-yellow-700: var(--ctp-yellow);
+  --color-yellow-800: var(--ctp-yellow);
+  --color-yellow-900: var(--ctp-yellow);
+  --color-yellow-950: var(--ctp-yellow);
+
+  /* Green / Success */
+  --color-green-050: var(--ctp-surface0);
+  --color-green-100: var(--ctp-mantle);
+  --color-green-200: var(--ctp-crust);
+  --color-green-300: var(--ctp-green);
+  --color-green-400: var(--ctp-green);
+  --color-green-500: var(--ctp-green);
+  --color-green-600: var(--ctp-green);
+  --color-green-700: var(--ctp-green);
+  --color-green-800: var(--ctp-teal);
+  --color-green-900: var(--ctp-teal);
+  --color-green-950: var(--ctp-teal);
+
+  /* Pink */
+  --color-pink-050: var(--ctp-surface0);
+  --color-pink-100: var(--ctp-mantle);
+  --color-pink-200: var(--ctp-crust);
+  --color-pink-300: var(--ctp-pink);
+  --color-pink-400: var(--ctp-pink);
+  --color-pink-500: var(--ctp-pink);
+  --color-pink-600: var(--ctp-pink);
+  --color-pink-700: var(--ctp-mauve);
+  --color-pink-800: var(--ctp-mauve);
+  --color-pink-900: var(--ctp-mauve);
+  --color-pink-950: var(--ctp-mauve);
+
+  /* Coral (use Peach) */
+  --color-coral-050: var(--ctp-surface0);
+  --color-coral-100: var(--ctp-mantle);
+  --color-coral-200: var(--ctp-crust);
+  --color-coral-300: var(--ctp-peach);
+  --color-coral-400: var(--ctp-peach);
+  --color-coral-500: var(--ctp-peach);
+  --color-coral-600: var(--ctp-peach);
+  --color-coral-700: var(--ctp-peach);
+  --color-coral-800: var(--ctp-peach);
+  --color-coral-900: var(--ctp-peach);
+  --color-coral-950: var(--ctp-peach);
+
+  /* Teal */
+  --color-teal-050: var(--ctp-surface0);
+  --color-teal-100: var(--ctp-mantle);
+  --color-teal-200: var(--ctp-crust);
+  --color-teal-300: var(--ctp-teal);
+  --color-teal-400: var(--ctp-teal);
+  --color-teal-500: var(--ctp-teal);
+  --color-teal-600: var(--ctp-teal);
+  --color-teal-700: var(--ctp-teal);
+  --color-teal-800: var(--ctp-sky);
+  --color-teal-900: var(--ctp-sky);
+  --color-teal-950: var(--ctp-sky);
+
+  /* Purple (use Mauve) */
+  --color-purple-050: var(--ctp-surface0);
+  --color-purple-100: var(--ctp-mantle);
+  --color-purple-200: var(--ctp-crust);
+  --color-purple-300: var(--ctp-mauve);
+  --color-purple-400: var(--ctp-mauve);
+  --color-purple-500: var(--ctp-mauve);
+  --color-purple-600: var(--ctp-mauve);
+  --color-purple-700: var(--ctp-mauve);
+  --color-purple-800: var(--ctp-mauve);
+  --color-purple-900: var(--ctp-mauve);
+  --color-purple-950: var(--ctp-mauve);
+
+  /* Semantic foreground / background aliases */
+  --color-fg-heading: var(--ctp-text);
+  --color-fg-body: var(--ctp-text);
+  --color-fg-body-subtle: var(--ctp-subtext1);
+  --color-fg-disabled: var(--ctp-overlay0);
+  --color-fg-brand: var(--ctp-blue);
+  --color-fg-success: var(--ctp-green);
+  --color-fg-danger: var(--ctp-red);
+  --color-fg-warning: var(--ctp-peach);
+  --color-fg-sensitive: var(--ctp-pink);
+
+  --color-bg-primary: var(--ctp-base);
+  --color-bg-secondary: var(--ctp-mantle);
+  --color-bg-tertiary: var(--ctp-crust);
+  --color-bg-quaternary: var(--ctp-surface0);
+  --color-bg-disabled: var(--ctp-surface0);
+  --color-bg-gray: var(--ctp-surface1);
+  --color-bg-gray-strong: var(--ctp-surface2);
+  --color-bg-contrast-soft: var(--ctp-overlay1);
+  --color-bg-contrast: var(--ctp-overlay2);
+  --color-bg-contrast-strong: var(--ctp-text);
+
+  --color-border-muted: var(--ctp-mantle);
+  --color-border-light: var(--ctp-crust);
+  --color-border-base: var(--ctp-surface0);
+  --color-border-strong: var(--ctp-surface1);
+  --color-border-stronger: var(--ctp-overlay0);
+
+  --color-bg-hover: rgba(var(--color-gray-950-rgb), 0.05);
+  --color-bg-hover-contrast: rgba(255, 255, 255, 0.05);
+  --color-bg-overlay: rgba(2, 6, 24, 0.3); /* keep dark overlay */
+
+  /* Navigation (primary sidebar) */
+  --color-nav-fg-primary: var(--ctp-text);
+  --color-nav-bg-primary: var(--ctp-mantle);
+  --color-nav-bg-primary-strong: var(--ctp-crust);
+  --color-nav-bg-primary-hover: rgba(0,0,0,0.05);
+  --color-nav-bg-primary-hover-strong: rgba(0,0,0,0.1);
+  --color-nav-border-primary: var(--ctp-blue);
+  --color-nav-border-primary-focus: var(--ctp-text);
+
+  /* Misc */
+  --color-transparent-hover: rgb(0 0 0 / 0.02);
+  --color-shadow: 108 111 133; /* subtext0 */
+  --color-background: 239 241 245; /* base */
+  --color-background-alt: 230 233 239; /* mantle */
+  --color-background-alt2: 23 92 219; /* keep as original? We'll set to blue */
+  --color-background-alt3: 33 37 41; /* we map to crust rgb */
+  --color-background-alt4: 16 18 21;
+  --color-primary-100: 219 229 246; /* we map to surface0 */
+  --color-primary-300: 108 117 125;
+  --color-primary-600: 30 102 245; /* blue */
+  --color-primary-700: 13 60 119;
+  --color-secondary-100: 188 192 204;
+  --color-secondary-300: 156 160 176;
+  --color-secondary-500: 124 127 147;
+  --color-secondary-600: 108 111 133;
+  --color-secondary-700: 92 95 119;
+  --color-info-100: 219 229 246;
+  --color-info-600: 30 102 245;
+  --color-info-700: 13 36 123;
+  --color-warning-100: 255 244 212;
+  --color-warning-600: 254 100 11; /* peach */
+  --color-warning-700: 223 142 29; /* yellow */
+  --color-danger-100: 255 236 239;
+  --color-danger-600: 210 15 57; /* red */
+  --color-danger-700: 149 27 42;
+  --color-success-100: 213 243 216;
+  --color-success-600: 64 160 43; /* green */
+  --color-success-700: 8 81 15;
+  --color-notification-100: 255 225 247;
+  --color-notification-600: 192 17 118;
+  --color-text-main: 27 32 41; /* will be overridden by CT-Text */
+  --color-text-muted: 108 111 133;
+  --color-text-contrast: 255 255 255;
+  --color-text-alt2: 255 255 255;
+  --color-text-code: 234 118 203; /* pink */
+  --color-hover-default: rgba(30 102 245 / 0.1);
+  --color-hover-contrast: rgba(255 255 255 / 0.15);
+}
+
+/* ===== Dark Theme (Mocha) ===== */
+[data-theme="dark"] {
+  --ctp-rosewater: #f5e0dc;
+  --ctp-flamingo: #f2cdcd;
+  --ctp-pink: #f5c2e7;
+  --ctp-mauve: #cba6f7;
+  --ctp-red: #f38ba8;
+  --ctp-maroon: #eba0ac;
+  --ctp-peach: #fab387;
+  --ctp-yellow: #f9e2af;
+  --ctp-green: #a6e3a1;
+  --ctp-teal: #94e2d5;
+  --ctp-sky: #89dceb;
+  --ctp-sapphire: #74c7ec;
+  --ctp-blue: #89b4fa;
+  --ctp-lavender: #b4befe;
+  --ctp-text: #cdd6f4;
+  --ctp-subtext1: #bac2de;
+  --ctp-subtext0: #a6adc8;
+  --ctp-overlay2: #9399b2;
+  --ctp-overlay1: #7f849c;
+  --ctp-overlay0: #6c7086;
+  --ctp-surface2: #585b70;
+  --ctp-surface1: #45475a;
+  --ctp-surface0: #313244;
+  --ctp-base: #1e1e2e;
+  --ctp-mantle: #181825;
+  --ctp-crust: #11111b;
+
+  /* Grays */
+  --color-gray-050: var(--ctp-base);
+  --color-gray-100: var(--ctp-mantle);
+  --color-gray-200: var(--ctp-crust);
+  --color-gray-300: var(--ctp-surface0);
+  --color-gray-400: var(--ctp-surface1);
+  --color-gray-500: var(--ctp-surface2);
+  --color-gray-600: var(--ctp-overlay0);
+  --color-gray-700: var(--ctp-overlay1);
+  --color-gray-800: var(--ctp-overlay2);
+  --color-gray-900: var(--ctp-text);
+  --color-gray-950: var(--ctp-subtext0);
+  --color-gray-400-rgb: 69, 71, 90; /* surface1 */
+  --color-gray-950-rgb: 166, 173, 200; /* subtext0 */
+
+  /* Adjust semantic mappings for dark */
+  --color-fg-heading: var(--ctp-text);
+  --color-fg-body: var(--ctp-text);
+  --color-fg-body-subtle: var(--ctp-subtext1);
+  --color-fg-disabled: var(--ctp-overlay0);
+  --color-fg-brand: var(--ctp-blue);
+  --color-fg-success: var(--ctp-green);
+  --color-fg-danger: var(--ctp-red);
+  --color-fg-warning: var(--ctp-peach);
+  --color-fg-sensitive: var(--ctp-pink);
+
+  --color-bg-primary: var(--ctp-base);
+  --color-bg-secondary: var(--ctp-mantle);
+  --color-bg-tertiary: var(--ctp-crust);
+  --color-bg-quaternary: var(--ctp-surface0);
+  --color-bg-disabled: var(--ctp-surface0);
+  --color-bg-gray: var(--ctp-surface1);
+  --color-bg-gray-strong: var(--ctp-surface2);
+  --color-bg-contrast-soft: var(--ctp-overlay1);
+  --color-bg-contrast: var(--ctp-overlay2);
+  --color-bg-contrast-strong: var(--ctp-text);
+
+  --color-border-muted: var(--ctp-mantle);
+  --color-border-light: var(--ctp-crust);
+  --color-border-base: var(--ctp-surface0);
+  --color-border-strong: var(--ctp-surface1);
+  --color-border-stronger: var(--ctp-overlay0);
+
+  --color-bg-hover: rgba(166, 173, 200, 0.1);
+  --color-bg-hover-contrast: rgba(255, 255, 255, 0.05);
+  --color-bg-overlay: rgba(17, 17, 27, 0.7); /* crust with opacity */
+
+  --color-nav-fg-primary: var(--ctp-text);
+  --color-nav-bg-primary: var(--ctp-mantle);
+  --color-nav-bg-primary-strong: var(--ctp-crust);
+  --color-nav-bg-primary-hover: rgba(255,255,255,0.05);
+  --color-nav-bg-primary-hover-strong: rgba(255,255,255,0.1);
+  --color-nav-border-primary: var(--ctp-blue);
+  --color-nav-border-primary-focus: var(--ctp-text);
+
+  /* Misc rgb values */
+  --color-shadow: 166 173 200;
+  --color-background: 30 30 46; /* base */
+  --color-background-alt: 24 24 37; /* mantle */
+  --color-background-alt2: 137 180 250; /* blue */
+  --color-background-alt3: 17 17 27; /* crust */
+  --color-background-alt4: 17 17 27;
+  --color-primary-100: 49 50 68;
+  --color-primary-300: 69 71 90;
+  --color-primary-600: 137 180 250; /* blue */
+  --color-primary-700: 137 180 250;
+  --color-secondary-100: 69 71 90;
+  --color-secondary-300: 88 91 112;
+  --color-secondary-500: 108 112 134;
+  --color-secondary-600: 124 128 150;
+  --color-secondary-700: 147 153 178;
+  --color-info-100: 49 50 68;
+  --color-info-600: 137 180 250;
+  --color-info-700: 137 180 250;
+  --color-warning-100: 49 50 68;
+  --color-warning-600: 250 179 135; /* peach */
+  --color-warning-700: 249 226 175; /* yellow */
+  --color-danger-100: 49 50 68;
+  --color-danger-600: 243 139 168; /* red */
+  --color-danger-700: 235 160 172; /* maroon */
+  --color-success-100: 49 50 68;
+  --color-success-600: 166 227 161; /* green */
+  --color-success-700: 148 226 213; /* teal */
+  --color-notification-100: 49 50 68;
+  --color-notification-600: 245 194 231; /* pink */
+  --color-text-main: 205 214 244; /* text */
+  --color-text-muted: 166 173 200;
+  --color-text-contrast: 30 30 46;
+  --color-text-alt2: 30 30 46;
+  --color-text-code: 245 194 231;
+  --color-hover-default: rgba(137 180 250 / 0.1);
+  --color-hover-contrast: rgba(30 30 46 / 0.15);
+}

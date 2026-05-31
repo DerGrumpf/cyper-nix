@@ -8,7 +8,8 @@
   imports = [ inputs.catppuccin.homeModules.catppuccin ];
 
   catppuccin = {
-    enable = false;
+    enable = true;
+    autoEnable = false;
     accent = "sky";
     flavor = "mocha";
     eza.enable = true;

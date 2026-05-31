@@ -80,6 +80,7 @@
         networkConfig = {
           Address = "10.0.2.15/24";
           Gateway = "10.0.2.2";
+
           DNS = "8.8.8.8";
           DHCP = "no";
         };
@@ -95,7 +96,7 @@
   };
 
   nixpkgs = {
-    overlays = [ (import ./packages/overlays.nix) ];
+    overlays = [ (import ./packages/overlays.nix { inherit (inputs) nur; }) ];
     config.allowUnfree = true;
   };
 
