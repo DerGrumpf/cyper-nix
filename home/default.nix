@@ -17,6 +17,7 @@
     ./xdg.nix
     ./neovim
     ./python.nix
+    ./fonts.nix
     inputs.sops-nix.homeManagerModules.sops
   ]
   ++ lib.optionals (!isDarwin && !isServer) [

@@ -1,4 +1,3 @@
-# TODO: Remove; nodePackages is unmaintained inside nixpkgs
 { pkgs, ... }:
 {
   # Live Server: Auto-reload browser for web development

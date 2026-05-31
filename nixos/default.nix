@@ -9,7 +9,6 @@
 }:
 {
   imports = [
-    ./fonts.nix
     ./sops.nix
     ./locale.nix
     ./tailscale.nix
