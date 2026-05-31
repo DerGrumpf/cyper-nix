@@ -38,7 +38,6 @@
       ];
     };
 
-    # TODO: Add External Devices as by-label with no necessity for boot
     "/storage/internal" = {
       device = "/dev/disk/by-label/STORAGE";
       fsType = "btrfs";
