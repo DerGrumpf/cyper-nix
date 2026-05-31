@@ -8,7 +8,6 @@
     ./settings.nix
     ./homebrew.nix
     ./yabai.nix
-    ./fonts.nix
   ];
 
   home-manager.users.${primaryUser}.targets.darwin = {

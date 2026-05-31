@@ -160,7 +160,6 @@
     ];
   };
 
-  # TODO: Install OpenCode
   programs.nushell = {
     enable = true;
 
