@@ -15,8 +15,9 @@ in
 vaultwarden.overrideAttrs (old: {
   pname = "oidcwarden";
   inherit src;
-  cargoDeps = rustPlatform.importCargoLock {
-    lockFile = "${src}/Cargo.lock";
+  cargoDeps = rustPlatform.fetchCargoVendor {
+    inherit src;
+    hash = "sha256-eGsYNaLYRCrTRaoyfhxnoeA2ytYeyGGvHnAbpEIayzs=";
   };
   postInstall = (old.postInstall or "") + ''
     mv $out/bin/oidcwarden $out/bin/vaultwarden

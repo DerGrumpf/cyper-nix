@@ -62,7 +62,7 @@ in
       };
       settings = {
         server = {
-          domain = "www.cyperpunk.de"; # serverIP; # "grafana.cyperpunk.de";
+          domain = "www.cyperpunk.de";
           http_port = 2342;
           http_addr = "0.0.0.0";
           root_url = "https://www.cyperpunk.de/grafana/";
@@ -71,6 +71,8 @@ in
         security = {
           secret_key = "$__file{${config.sops.secrets.grafana_secret_key.path}}";
           allow_embedding = true;
+          cookie_samesite = "none";
+          cookie_secure = true;
         };
         auth = {
           disable_login_form = false;
@@ -91,6 +93,10 @@ in
           auto_assign_org_id = 1;
           auto_assign_org_role = "Admin";
           skip_org_role_sync = true;
+        };
+        "auth.anonymous" = {
+          enabled = true;
+          org_role = "Viewer";
         };
       };
     };
