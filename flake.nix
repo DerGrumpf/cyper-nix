@@ -16,6 +16,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # NIX User Repositorys
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # declarative Hyprland
     hyprland = {
       url = "github:hyprwm/Hyprland";
@@ -83,6 +89,7 @@
       hyprland,
       sops-nix,
       nixos-generators,
+      nur,
       ...
     }@inputs:
     let
