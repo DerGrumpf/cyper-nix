@@ -30,12 +30,13 @@
   ++ lib.optionals (!isServer) [
     ./nixcord.nix
     ./spicetify.nix
-    ./floorp.nix
+    ./floorp
     ./obsidian.nix
   ];
 
   home = {
     username = primaryUser;
+    enableNixpkgsReleaseCheck = false;
     stateVersion = "26.05";
     sessionVariables = lib.mkIf (!isDarwin && !isServer) {
       GROQ_API_KEY = config.sops.secrets.GROQ_API_KEY.path;
