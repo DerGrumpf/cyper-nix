@@ -48,6 +48,7 @@
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "cyper-cache.cachix.org-1:pOpeWFEjGHg9XvqRg+DQpYnGRQNp+z+QEF8Ev2mbSoM="
       ];
+      auto-optimise-store = true;
     };
     gc = {
       automatic = true;
