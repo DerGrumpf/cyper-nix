@@ -50,8 +50,9 @@ in
     };
 
     tmpfiles.rules = [
+      "d /var/lib/vaultwarden/templates 0750 vaultwarden vaultwarden -"
       "d /var/lib/vaultwarden/templates/scss 0750 vaultwarden vaultwarden -"
-      "C /var/lib/vaultwarden/templates/scss/user.vaultwarden.scss.hbs 0640 vaultwarden vaultwarden - ${pkgs.writeText "user.vaultwarden.scss.hbs" userScss}"
+      "L+ /var/lib/vaultwarden/templates/scss/user.vaultwarden.scss.hbs 0640 vaultwarden vaultwarden - ${pkgs.writeText "user.vaultwarden.scss.hbs" userScss}"
     ];
   };
 }
