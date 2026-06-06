@@ -37,6 +37,7 @@
         # Nix tools
         nix-index
         ncdu
+        tty-solitaire
       ]
       ++ lib.optionals (!pkgs.stdenv.isDarwin) [
         # dev tools

@@ -64,11 +64,6 @@
     info.enable = false;
   };
 
-  nixpkgs = {
-    overlays = [ (import ./packages/overlays.nix { inherit (inputs) nur; }) ];
-    config.allowUnfree = true;
-  };
-
   programs = {
     fish.enable = true;
   }

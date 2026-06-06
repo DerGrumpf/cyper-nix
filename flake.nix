@@ -118,6 +118,12 @@
 
           sharedModules = [
             { networking.hostName = hostName; }
+            {
+              nixpkgs = {
+                overlays = [ (import ./overlays { inherit (inputs) nur; }) ];
+                config.allowUnfree = true;
+              };
+            }
             ./hosts/${hostName}/configuration.nix
             inputs.sops-nix.${platformModuleSet}.sops
             inputs.home-manager.${platformModuleSet}.home-manager

@@ -10,11 +10,6 @@
     ./yabai.nix
   ];
 
-  home-manager.users.${primaryUser}.targets.darwin = {
-    linkApps.enable = true;
-    copyApps.enable = false;
-  };
-
   # nix config
   nix = {
     settings = {
@@ -55,9 +50,6 @@
     info.enable = false; # Skip info pages
   };
 
-  nixpkgs.config = {
-    allowUnfree = true;
-  };
   # homebrew installation manager
   nix-homebrew = {
     user = primaryUser;
