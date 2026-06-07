@@ -48,6 +48,7 @@ in
           (hmApps "OpenSCAD")
           (apps "okular")
           (apps "Affinity")
+          (apps "Element")
           (sysApps "Mail")
           (sysApps "Launchpad")
         ];
