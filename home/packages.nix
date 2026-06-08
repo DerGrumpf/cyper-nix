@@ -65,6 +65,7 @@
         xonotic
         irssi
         blender
+        nixpkgs-review
       ]
       ++ lib.optionals pkgs.stdenv.isDarwin [ graphite-cli ];
   };
