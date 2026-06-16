@@ -36,6 +36,10 @@ in
     12222
   ];
 
+  systemd.tmpfiles.rules = [
+    "d /var/www/home.cyperpunk.de 0755 nginx nginx -"
+  ];
+
   security.acme = {
     acceptTerms = true;
     defaults.email = "phil.keier@hotmail.com";
@@ -69,6 +73,17 @@ in
       "vault.cyperpunk.de" = mkWsProxy 8222;
       "calvin.cyperpunk.de" = mkWsProxy 15006;
       "auth.cyperpunk.de" = mkHttpsProxy 8444;
+
+      "home.cyperpunk.de" = {
+        forceSSL = true;
+        enableACME = true;
+        locations."/" = {
+          root = "/var/www/home.cyperpunk.de";
+          extraConfig = ''
+            try_files $uri $uri/ =404;
+          '';
+        };
+      };
 
       "www.cyperpunk.de" = {
         forceSSL = true;
