@@ -74,16 +74,16 @@ in
       "calvin.cyperpunk.de" = mkWsProxy 15006;
       "auth.cyperpunk.de" = mkHttpsProxy 8444;
 
-      "home.cyperpunk.de" = {
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = {
-          root = "/var/www/home.cyperpunk.de";
-          extraConfig = ''
-            try_files $uri $uri/ =404;
-          '';
-        };
-      };
+      #"home.cyperpunk.de" = {
+      #  forceSSL = true;
+      #  enableACME = true;
+      #  locations."/" = {
+      #    root = "/var/www/home.cyperpunk.de";
+      #    extraConfig = ''
+      #      try_files $uri $uri/ =404;
+      #    '';
+      #  };
+      #};
 
       "www.cyperpunk.de" = {
         forceSSL = true;
