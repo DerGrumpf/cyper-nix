@@ -6,4 +6,5 @@ final: prev:
   oidcwarden = final.callPackage ./oidcwarden.nix {
     inherit (prev) vaultwarden;
   };
+  netradiant-custom = final.callPackage ./netradiant-custom.nix { };
 }
