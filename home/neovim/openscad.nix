@@ -4,7 +4,7 @@
   # cheatsheet, snippets, offline manual and fuzzy help
   programs.nixvim = {
     plugins.openscad = {
-      enable = true;
+      enable = false;
       autoLoad = true;
       settings = {
         fuzzy_finder = "fzf";

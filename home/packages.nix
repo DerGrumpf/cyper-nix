@@ -18,7 +18,7 @@
         jq
         yq-go
         # GUI
-        openscad
+        #        openscad
         fstl
         # PDF Tools
         pandoc
