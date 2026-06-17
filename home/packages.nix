@@ -67,6 +67,7 @@
         irssi
         blender
         nixpkgs-review
+        netradiant-custom
       ]
       ++ lib.optionals pkgs.stdenv.isDarwin [ graphite-cli ];
   };
