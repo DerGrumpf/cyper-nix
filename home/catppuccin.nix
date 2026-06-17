@@ -50,5 +50,6 @@
       enable = true;
       apply = true;
     };
+    opencode.enable = true;
   };
 }
