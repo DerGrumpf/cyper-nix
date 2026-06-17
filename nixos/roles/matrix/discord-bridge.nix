@@ -52,51 +52,51 @@
         }
       ];
       ensureDatabases = [ "mautrix-discord" ];
+    };
 
-      mautrix-discord = {
-        enable = true;
-        environmentFile = "/run/mautrix-discord/env";
-        settings = {
-          homeserver = {
-            address = "http://127.0.0.1:8008";
-            domain = "cyperpunk.de";
+    mautrix-discord = {
+      enable = true;
+      environmentFile = "/run/mautrix-discord/env";
+      settings = {
+        homeserver = {
+          address = "http://127.0.0.1:8008";
+          domain = "cyperpunk.de";
+        };
+        appservice.database = {
+          type = "postgres";
+          uri = "postgres:///mautrix-discord?host=/run/postgresql&sslmode=disable";
+        };
+        bridge = {
+          permissions = {
+            "cyperpunk.de" = "user";
+            "@dergrumpf:cyperpunk.de" = "admin";
           };
-          appservice.database = {
-            type = "postgres";
-            uri = "postgres:///mautrix-discord?host=/run/postgresql&sslmode=disable";
-          };
-          bridge = {
-            permissions = {
-              "cyperpunk.de" = "user";
-              "@dergrumpf:cyperpunk.de" = "admin";
-            };
 
-            backfill = {
-              limits = {
-                initial = {
-                  channel = 10000;
-                  thread = 500;
-                };
-                missed = {
-                  channel = 500;
-                };
+          backfill = {
+            limits = {
+              initial = {
+                channel = 10000;
+                thread = 500;
               };
-            };
-            encryption = {
-              allow = true;
-              default = true;
-              pickle_key = "$DISCORD_PICKLE_KEY";
-              verification_levels = {
-                receive = "unverified";
-                send = "unverified";
-                share = "cross-signed-tofu";
+              missed = {
+                channel = 500;
               };
             };
           };
-          discord = {
-            client_id = "$DISCORD_CLIENT_ID";
-            bot_token = "$DISCORD_BOT_TOKEN";
+          encryption = {
+            allow = true;
+            default = true;
+            pickle_key = "$DISCORD_PICKLE_KEY";
+            verification_levels = {
+              receive = "unverified";
+              send = "unverified";
+              share = "cross-signed-tofu";
+            };
           };
+        };
+        discord = {
+          client_id = "$DISCORD_CLIENT_ID";
+          bot_token = "$DISCORD_BOT_TOKEN";
         };
       };
     };

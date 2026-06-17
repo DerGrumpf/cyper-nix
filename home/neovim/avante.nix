@@ -108,7 +108,7 @@
         };
       };
 
-      extraPackages = with pkgs; [ curl ];
+      #extraPackages = with pkgs; [ curl ];
     };
   };
 }
