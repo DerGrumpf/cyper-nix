@@ -14,5 +14,9 @@ _: {
     ];
 
     syncModels = true;
+
+    environmentVariables = {
+      OLLAMA_CONTEXT_LENGTH = "16384";
+    };
   };
 }
