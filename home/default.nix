@@ -18,6 +18,7 @@
     ./neovim
     ./python.nix
     ./fonts.nix
+    ./opencode.nix
     inputs.sops-nix.homeManagerModules.sops
   ]
   ++ lib.optionals (!isDarwin && !isServer) [
