@@ -184,7 +184,7 @@
         # llm | glow — ollama (local/tailscale)
         def l [...args] { llm prompt -m llama3.2:3b -t std ...$args | glow }
         # llm | glow — groq (cloud)
-        def lg [...args] { llm prompt -m groq/llama-3.3-70b-versatile -t std ...$args | glow }
+        def lgroq [...args] { llm prompt -m groq/llama-3.3-70b-versatile -t std ...$args | glow }
       '';
       extraEnv = ''
         starship init nu | save -f ~/.cache/starship/init.nu
@@ -239,7 +239,7 @@
             llm prompt -m llama3.2:3b -t std $argv | glow
           '';
         };
-        lg = {
+        lgroq = {
           body = ''
             if test -f "$GROQ_API_KEY"
               set -x GROQ_API_KEY (cat $GROQ_API_KEY)
