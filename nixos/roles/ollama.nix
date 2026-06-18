@@ -11,6 +11,7 @@ _: {
       "llama3.2:3b"
       "qwen2.5:3b"
       "deepseek-r1:1.5b"
+      "gemma4:e2b"
     ];
 
     syncModels = true;
