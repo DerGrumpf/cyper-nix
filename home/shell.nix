@@ -17,12 +17,6 @@
     ripgrep # grep alternative
     dnsutils
 
-    # LLM in the Terminal
-    (pkgs.llm.withPlugins {
-      llm-groq = true;
-      llm-ollama = true;
-    })
-
     # Fun stuff
     zoxide
     lolcat
@@ -181,10 +175,6 @@
         starship init nu | save -f ~/.cache/starship/init.nu
         # fzf picker for nvim
         def f [] { nvim (fzf) }
-        # llm | glow — ollama (local/tailscale)
-        def l [...args] { llm prompt -m llama3.2:3b -t std ...$args | glow }
-        # llm | glow — groq (cloud)
-        def lgroq [...args] { llm prompt -m groq/llama-3.3-70b-versatile -t std ...$args | glow }
       '';
       extraEnv = ''
         starship init nu | save -f ~/.cache/starship/init.nu
@@ -232,22 +222,6 @@
           echo "      |___/|_|             |_|                                 ";
         end
       '';
-
-      functions = {
-        l = {
-          body = ''
-            llm prompt -m llama3.2:3b -t std $argv | glow
-          '';
-        };
-        lgroq = {
-          body = ''
-            if test -f "$GROQ_API_KEY"
-              set -x GROQ_API_KEY (cat $GROQ_API_KEY)
-            end
-            llm prompt -m groq/llama-3.3-70b-versatile -t std $argv | glow
-          '';
-        };
-      };
     };
 
     starship = {
@@ -321,7 +295,6 @@
   };
 
   home = {
-    sessionVariables.OLLAMA_HOST = "http://100.109.179.25:11434";
     file = {
       ".config/fastfetch/config.jsonc".source = ./fastfetch.jsonc;
       ".config/tabiew/theme.toml".source = ./tabiew.toml;

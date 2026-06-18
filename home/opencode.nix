@@ -24,6 +24,9 @@ _: {
             "deepseek-r1:1.5b" = {
               name = "DeepSeek-R1 1.5B";
             };
+            "gemma4:e2b" = {
+              name = "Gemma 4 2B Edge";
+            };
           };
         };
       };
