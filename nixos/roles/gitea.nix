@@ -217,13 +217,21 @@ in
           PATH = "/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:$PATH";
         };
       };
+      hostPackages = with pkgs; [
+        nodejs
+        git
+      ];
     };
   };
 
   system.activationScripts.gitea-runner-age-key = {
+    deps = [
+      "users"
+      "groups"
+    ];
     text = ''
       mkdir -p /var/lib/gitea-runner/.config/sops/age
-      cp /home/${primaryUser}/.config/nix/secrets/keys.txt /var/lib/gitea-runner/.config/sops/age/keys.txt
+      cp /home/phil/.config/nix/secrets/keys.txt /var/lib/gitea-runner/.config/sops/age/keys.txt
       chmod 600 /var/lib/gitea-runner/.config/sops/age/keys.txt
       chown -R gitea-runner:gitea-runner /var/lib/gitea-runner/.config
     '';
