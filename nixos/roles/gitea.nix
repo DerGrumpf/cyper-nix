@@ -224,19 +224,6 @@ in
     };
   };
 
-  system.activationScripts.gitea-runner-age-key = {
-    deps = [
-      "users"
-      "groups"
-    ];
-    text = ''
-      mkdir -p /var/lib/gitea-runner/.config/sops/age
-      chown -R gitea-runner:gitea-runner /var/lib/gitea-runner
-      cp /home/${primaryUser}/.config/nix/secrets/keys.txt /var/lib/gitea-runner/.config/sops/age/keys.txt
-      chmod 600 /var/lib/gitea-runner/.config/sops/age/keys.txt
-    '';
-  };
-
   users = {
     users = {
       gitea = {
@@ -245,18 +232,11 @@ in
         home = "/var/lib/gitea";
         createHome = true;
       };
-      gitea-runner = {
-        isSystemUser = true;
-        group = "gitea-runner";
-        home = "/var/lib/gitea-runner";
-        createHome = true;
-        homeMode = "750";
-      };
+
       postgres.extraGroups = [ "gitea" ];
     };
     groups = {
       gitea = { };
-      gitea-runner = { };
     };
   };
 
