@@ -33,10 +33,12 @@
     efi.canTouchEfiVariables = true;
   };
 
-  services.desktopManager.plasma6.enable = false;
-  services.displayManager.sddm = {
-    enable = false;
-    wayland.enable = true;
+  services = {
+    desktopManager.plasma6.enable = false;
+    displayManager.sddm = {
+      enable = false;
+      wayland.enable = true;
+    };
   };
 
   environment.pathsToLink = [
@@ -45,4 +47,7 @@
   ];
 
   system.stateVersion = "26.11";
+
+  virtualisation.docker.enable = true;
+  users.users.phil.extraGroups = [ "docker" ];
 }
