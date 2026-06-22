@@ -231,9 +231,9 @@ in
     ];
     text = ''
       mkdir -p /var/lib/gitea-runner/.config/sops/age
-      cp /home/phil/.config/nix/secrets/keys.txt /var/lib/gitea-runner/.config/sops/age/keys.txt
+      chown -R gitea-runner:gitea-runner /var/lib/gitea-runner
+      cp /home/${primaryUser}/.config/nix/secrets/keys.txt /var/lib/gitea-runner/.config/sops/age/keys.txt
       chmod 600 /var/lib/gitea-runner/.config/sops/age/keys.txt
-      chown -R gitea-runner:gitea-runner /var/lib/gitea-runner/.config
     '';
   };
 
@@ -250,6 +250,7 @@ in
         group = "gitea-runner";
         home = "/var/lib/gitea-runner";
         createHome = true;
+        homeMode = "750";
       };
       postgres.extraGroups = [ "gitea" ];
     };
