@@ -15,11 +15,11 @@ jobs:
       - name: Checkout
         run: git clone https://git.cyperpunk.de/DerGrumpf/cyper-nix.git .
 
+      - name: Format check
+        run: nix fmt -- --ci
+      
       - name: Nix flake check
         run: nix flake check --impure
-
-      - name: Format check
-        run: nix fmt -- --check .
 
       - name: Build NixOS configs (dry-run)
         run: |

@@ -210,17 +210,18 @@ in
       tokenFile = config.sops.secrets."gitea/runnerToken".path;
       name = "cyper-controller";
       labels = [ "nix:host" ];
+
       hostPackages = with pkgs; [
-        nodejs
-        git
-        nix
         bash
+        coreutils
+        curl
+        gawk
+        gitMinimal
+        gnused
+        nodejs
+        wget
+        nix
       ];
-      settings = {
-        runner.env_vars = {
-          PATH = "/run/wrappers/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/bin:/bin";
-        };
-      };
     };
   };
 

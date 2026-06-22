@@ -1,6 +1,11 @@
 { pkgs, lib, ... }: {
-  home.packages =
-    lib.mkIf (!pkgs.stdenv.isDarwin) (with pkgs; [ rofi-power-menu rofi-calc ]);
+  home.packages = lib.mkIf (!pkgs.stdenv.isDarwin) (
+    with pkgs;
+    [
+      rofi-power-menu
+      rofi-calc
+    ]
+  );
 
   programs.rofi = lib.mkIf (!pkgs.stdenv.isDarwin) {
     enable = true;

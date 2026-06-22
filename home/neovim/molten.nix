@@ -2,8 +2,8 @@
   programs.nixvim = lib.mkIf (!isDarwin) {
     plugins.molten = {
       enable = true;
-      python3Dependencies = p:
-        with p; [
+      python3Dependencies =
+        p: with p; [
           pynvim
           jupyter-client
           cairosvg

@@ -85,6 +85,8 @@
     };
   };
 
+  environment.systemPackages = with pkgs; [ git ];
+
   security = lib.mkIf (!isServer) {
     pam.services.swaylock = { };
     polkit.enable = true;

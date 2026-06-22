@@ -12,9 +12,5 @@
       enable = true;
       accent = "sapphire";
     };
-    fcitx5.enable = false;
-    forgejo.enable = false;
-    gitea.enable = false;
-    sddm.enable = false;
   };
 }

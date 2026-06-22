@@ -46,10 +46,14 @@
           {
             type = "button";
             val = "[+] New file";
-            on_press.__raw =
-              "function() vim.cmd[[ene]] vim.cmd[[startinsert]] end";
+            on_press.__raw = "function() vim.cmd[[ene]] vim.cmd[[startinsert]] end";
             opts = {
-              keymap = [ "n" "e" ":ene <BAR> startinsert <CR>" { } ];
+              keymap = [
+                "n"
+                "e"
+                ":ene <BAR> startinsert <CR>"
+                { }
+              ];
               shortcut = "e";
               position = "center";
               cursor = 3;
@@ -63,7 +67,12 @@
             val = "[?] Find file";
             on_press.__raw = "function() vim.cmd[[Telescope find_files]] end";
             opts = {
-              keymap = [ "n" "f" ":Telescope find_files <CR>" { } ];
+              keymap = [
+                "n"
+                "f"
+                ":Telescope find_files <CR>"
+                { }
+              ];
               shortcut = "f";
               position = "center";
               cursor = 3;
@@ -77,7 +86,12 @@
             val = "[~] Recent files";
             on_press.__raw = "function() vim.cmd[[Telescope oldfiles]] end";
             opts = {
-              keymap = [ "n" "r" ":Telescope oldfiles <CR>" { } ];
+              keymap = [
+                "n"
+                "r"
+                ":Telescope oldfiles <CR>"
+                { }
+              ];
               shortcut = "r";
               position = "center";
               cursor = 3;
@@ -91,7 +105,12 @@
             val = "[Y] Yazi";
             on_press.__raw = "function() require('yazi').yazi() end";
             opts = {
-              keymap = [ "n" "y" ":Yazi<CR>" { } ];
+              keymap = [
+                "n"
+                "y"
+                ":Yazi<CR>"
+                { }
+              ];
               shortcut = "y";
               position = "center";
               cursor = 3;
@@ -105,7 +124,12 @@
             val = "[A] Open Prompt";
             #on_press.__raw = "function() require('yazi').yazi() end";
             opts = {
-              keymap = [ "n" "a" ":AvanteChatNew<CR>" { } ];
+              keymap = [
+                "n"
+                "a"
+                ":AvanteChatNew<CR>"
+                { }
+              ];
               shortcut = "a";
               position = "center";
               cursor = 3;
@@ -119,7 +143,12 @@
             val = "[X] Quit";
             on_press.__raw = "function() vim.cmd[[qa]] end";
             opts = {
-              keymap = [ "n" "q" ":qa<CR>" { } ];
+              keymap = [
+                "n"
+                "q"
+                ":qa<CR>"
+                { }
+              ];
               shortcut = "q";
               position = "center";
               cursor = 3;

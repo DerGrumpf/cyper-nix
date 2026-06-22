@@ -1,4 +1,10 @@
-{ pkgs, lib, isDarwin, ... }: {
+{
+  pkgs,
+  lib,
+  isDarwin,
+  ...
+}:
+{
   programs.sketchybar = lib.mkIf isDarwin {
     enable = true;
     configType = "lua";
