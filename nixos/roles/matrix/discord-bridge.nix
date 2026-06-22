@@ -1,7 +1,5 @@
 { config, lib, ... }:
 {
-  nixpkgs.config.permittedInsecurePackages = [ "olm-3.2.16" ];
-
   sops.secrets = {
     discord_bot_token = {
       owner = "mautrix-discord";

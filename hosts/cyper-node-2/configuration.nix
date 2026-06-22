@@ -1,8 +1,6 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../nixos/roles/gitea.nix
-    ../../nixos/roles/filebrowser.nix
   ];
 
   networking = {

@@ -1,11 +1,6 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../nixos/roles/monitoring.nix
-    ../../nixos/roles/matrix.nix
-    ../../nixos/roles/postgresql.nix
-    ../../nixos/roles/wyl.nix
-    ../../nixos/roles/adguard.nix
   ];
 
   networking = {

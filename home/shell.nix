@@ -74,57 +74,6 @@
       };
     };
 
-    # Doenst work
-    iamb = {
-      enable = false;
-      settings = {
-        default_profile = "personal";
-        settings = {
-          notifications.enabled = true;
-          image_preview.protocol = {
-            type = "kitty";
-            size = {
-              height = 10;
-              width = 66;
-            };
-          };
-        };
-      };
-    };
-
-    newsboat = {
-      enable = true;
-      autoReload = true;
-      browser = if isDarwin then "open" else "xdg-open";
-      urls = [
-        {
-          url = "https://www.tagesschau.de/xml/rss2";
-          tags = [
-            "news"
-            "de"
-          ];
-        }
-        {
-          url = "https://www.spiegel.de/schlagzeilen/index.rss";
-          tags = [
-            "news"
-            "de"
-          ];
-        }
-        {
-          url = "https://www.focus.de/rss";
-          tags = [
-            "news"
-            "de"
-          ];
-        }
-        {
-          url = "https://feeds.feedburner.com/blogspot/rkEL";
-          tags = [ "blog" ];
-        }
-      ];
-    };
-
     cava = lib.mkIf (!isDarwin) { enable = true; };
 
     yazi = {

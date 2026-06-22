@@ -95,6 +95,61 @@
     }@inputs:
     let
       primaryUser = "phil";
+
+      mkIso =
+        {
+          hostName,
+          isDarwin ? false,
+          isServer ? false,
+        }:
+        nixos-generators.nixosGenerate {
+          system = "x86_64-linux";
+          format = "iso";
+          specialArgs = {
+            inherit
+              inputs
+              primaryUser
+              self
+              hostName
+              isDarwin
+              isServer
+              ;
+          };
+          modules = [
+            {
+              nixpkgs.overlays = [
+                inputs.nur.overlays.default
+                (import ./overlays { inherit (inputs) nur; })
+              ];
+            }
+            { nixpkgs.config.allowUnfree = true; }
+            { nixpkgs.hostPlatform = "x86_64-linux"; }
+            { networking.hostName = hostName; }
+            ./hosts/${hostName}/configuration.nix
+            ./nixos
+            inputs.sops-nix.nixosModules.sops
+            inputs.home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                extraSpecialArgs = {
+                  inherit
+                    inputs
+                    primaryUser
+                    self
+                    hostName
+                    isDarwin
+                    isServer
+                    ;
+                };
+                users.${primaryUser} = import ./home;
+                backupFileExtension = "backup";
+                useGlobalPkgs = true;
+                useUserPackages = true;
+              };
+            }
+          ];
+        };
+
       mkSystem =
         {
           hostName,
@@ -196,36 +251,24 @@
         isDarwin = true;
       };
 
-      # NEW: flashable image for cyper-controller
-      packages.x86_64-linux.cyper-controller-image = nixos-generators.nixosGenerate {
-        system = "x86_64-linux";
-        format = "raw-efi";
-        specialArgs = {
-          inherit inputs primaryUser self;
+      packages.x86_64-linux = {
+        cyper-desktop-iso = mkIso { hostName = "cyper-desktop"; };
+        cyper-controller-iso = mkIso {
           hostName = "cyper-controller";
-          isDarwin = false;
           isServer = true;
         };
-        modules = [
-          { nixpkgs.hostPlatform = "x86_64-linux"; }
-          { networking.hostName = "cyper-controller"; }
-          ./hosts/cyper-controller/configuration.nix
-          ./nixos
-          inputs.sops-nix.nixosModules.sops
-          inputs.home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              extraSpecialArgs = {
-                inherit inputs primaryUser self;
-                hostName = "cyper-controller";
-                isDarwin = false;
-                isServer = true;
-              };
-              users.${primaryUser} = import ./home;
-              backupFileExtension = "backup";
-            };
-          }
-        ];
+        cyper-proxy-iso = mkIso {
+          hostName = "cyper-proxy";
+          isServer = true;
+        };
+        cyper-node-1-iso = mkIso {
+          hostName = "cyper-node-1";
+          isServer = true;
+        };
+        cyper-node-2-iso = mkIso {
+          hostName = "cyper-node-2";
+          isServer = true;
+        };
       };
 
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;

@@ -8,12 +8,15 @@ on:
 jobs:
   check:
     runs-on: nix
+    env:
+      PATH: "/run/wrappers/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/bin:/bin"
+      NIXPKGS_ALLOW_UNFREE: "1"
     steps:
       - name: Checkout
         run: git clone https://git.cyperpunk.de/DerGrumpf/cyper-nix.git .
 
       - name: Nix flake check
-        run: nix flake check --no-build
+        run: nix flake check --impure
 
       - name: Format check
         run: nix fmt -- --check .
