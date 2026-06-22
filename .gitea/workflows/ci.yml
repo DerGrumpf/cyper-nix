@@ -8,14 +8,10 @@ on:
 jobs:
   check:
     runs-on: nix
+    env:
+      PATH: "/nix/var/nix/profiles/default/bin:/nix/var/nix/profiles/default/sbin:/run/current-system/sw/bin:/usr/bin:/bin"
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup age key
-        run: |
-          mkdir -p ~/.config/sops/age
-          echo "${{ secrets.AGE_KEY }}" > ~/.config/sops/age/keys.txt
-          chmod 600 ~/.config/sops/age/keys.txt
 
       - name: Nix flake check
         run: nix flake check --no-build
