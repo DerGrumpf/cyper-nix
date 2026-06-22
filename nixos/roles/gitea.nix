@@ -209,18 +209,18 @@ in
       url = "https://git.cyperpunk.de";
       tokenFile = config.sops.secrets."gitea/runnerToken".path;
       name = "cyper-controller";
-      labels = [
-        "nix:host"
-      ];
-      settings = {
-        runner.env_vars = {
-          PATH = "/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:$PATH";
-        };
-      };
+      labels = [ "nix:host" ];
       hostPackages = with pkgs; [
         nodejs
         git
+        nix
+        bash
       ];
+      settings = {
+        runner.env_vars = {
+          PATH = "/run/wrappers/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/bin:/bin";
+        };
+      };
     };
   };
 
@@ -245,9 +245,18 @@ in
         home = "/var/lib/gitea";
         createHome = true;
       };
+      gitea-runner = {
+        isSystemUser = true;
+        group = "gitea-runner";
+        home = "/var/lib/gitea-runner";
+        createHome = true;
+      };
       postgres.extraGroups = [ "gitea" ];
     };
-    groups.gitea = { };
+    groups = {
+      gitea = { };
+      gitea-runner = { };
+    };
   };
 
   networking.firewall.allowedTCPPorts = [
