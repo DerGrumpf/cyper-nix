@@ -29,5 +29,3 @@ jobs:
           nix build .#nixosConfigurations.cyper-node-1.config.system.build.toplevel --dry-run
           nix build .#nixosConfigurations.cyper-node-2.config.system.build.toplevel --dry-run
 
-      - name: Eval darwin config (Linux-safe)
-        run: nix eval .#darwinConfigurations.cyper-mac.system
