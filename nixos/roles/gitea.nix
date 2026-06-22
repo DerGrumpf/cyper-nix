@@ -37,8 +37,7 @@ in
       group = "gitea";
     };
     "gitea/runnerToken" = {
-      owner = "gitea";
-      group = "gitea";
+      mode = "0444";
     };
     "kanidm_gitea_secret" = {
       owner = "gitea";
@@ -204,7 +203,7 @@ in
       };
     };
 
-    gitea-actions-runner.instances."cyper-nix" = {
+    gitea-actions-runner.instances."cyper_nix" = {
       enable = true;
       url = "https://git.cyperpunk.de";
       tokenFile = config.sops.secrets."gitea/runnerToken".path;
@@ -212,6 +211,11 @@ in
       labels = [
         "nix:host"
       ];
+      settings = {
+        runner.env_vars = {
+          PATH = "/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:$PATH";
+        };
+      };
     };
   };
 
