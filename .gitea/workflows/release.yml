@@ -1,7 +1,7 @@
 name: Release ISOs
 
 on:
-  workflow_run:
+  workflow_dispatch:
     workflows: ["CI"]
     types:
       - completed
@@ -10,7 +10,6 @@ on:
 jobs:
   build-isos:
     runs-on: nix
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     env:
       NIXPKGS_ALLOW_UNFREE: "1"
     steps:
@@ -39,7 +38,7 @@ jobs:
           RELEASE_ID=$(echo $RELEASE | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)
 
           for result in result-desktop result-controller result-proxy result-node-1 result-node-2; do
-            iso=$(find $result -name "*.iso" | head -1)
+            iso=$(find $result/iso -name "*.iso" | head -1)
             curl -s -X POST \
               -H "Authorization: token ${{ secrets.CI_TOKEN }}" \
               -F "attachment=@${iso};filename=${result}.iso" \
