@@ -222,7 +222,14 @@ in
         wget
         nix
         openssh
+        nixos-rebuild
       ];
+
+      settings = {
+        runner.env_vars = {
+          PATH = "/run/wrappers/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/bin:/bin";
+        };
+      };
     };
   };
 
