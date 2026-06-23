@@ -13,6 +13,7 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     env:
       NIXPKGS_ALLOW_UNFREE: "1"
+      HOME: /var/lib/gitea-runner
     steps:
       - name: Checkout
         run: git clone https://git.cyperpunk.de/DerGrumpf/cyper-nix.git .
