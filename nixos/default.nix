@@ -22,6 +22,11 @@
     ./catppuccin.nix
   ];
 
+  sops.secrets."nix_cache_priv_key" = {
+
+    mode = "0400";
+  };
+
   nix = {
     settings = {
       trusted-users = [
@@ -42,11 +47,13 @@
         "https://nix-community.cachix.org"
         "https://cyper-cache.cachix.org"
       ];
+      secret-key-files = [ config.sops.secrets."nix_cache_priv_key".path ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "cyper-cache.cachix.org-1:pOpeWFEjGHg9XvqRg+DQpYnGRQNp+z+QEF8Ev2mbSoM="
+        "cyper-nix:+YuG586UwrtNkXeGiivcr5GTCbZK70ILU2YqOxUoIWw="
       ];
       auto-optimise-store = true;
     };
