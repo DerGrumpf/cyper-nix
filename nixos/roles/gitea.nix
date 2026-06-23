@@ -221,6 +221,7 @@ in
         nodejs
         wget
         nix
+        openssh
       ];
     };
   };
