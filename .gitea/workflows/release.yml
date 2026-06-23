@@ -16,13 +16,20 @@ jobs:
       - name: Checkout
         run: git clone https://git.cyperpunk.de/DerGrumpf/cyper-nix.git .
 
-      - name: Build ISOs
-        run: |
-          nix build .#packages.x86_64-linux.cyper-desktop-iso --out-link result-desktop
-          nix build .#packages.x86_64-linux.cyper-controller-iso --out-link result-controller
-          nix build .#packages.x86_64-linux.cyper-proxy-iso --out-link result-proxy
-          nix build .#packages.x86_64-linux.cyper-node-1-iso --out-link result-node-1
-          nix build .#packages.x86_64-linux.cyper-node-2-iso --out-link result-node-2
+      - name: Build Cyper-Desktop 
+        run: nix build .#packages.x86_64-linux.cyper-desktop-iso --out-link result-desktop
+
+      - name: Build Cyper-Controller
+        run: nix build .#packages.x86_64-linux.cyper-controller-iso --out-link result-controller
+      
+      - name: Build Cyper-Proxy 
+        run: nix build .#packages.x86_64-linux.cyper-proxy-iso --out-link result-proxy
+
+      - name: Build Cyper-Node-1
+        run: nix build .#packages.x86_64-linux.cyper-node-1-iso --out-link result-node-1
+      
+      - name: Build Cyper-Node-2 
+        run: nix build .#packages.x86_64-linux.cyper-node-2-iso --out-link result-node-2
 
       - name: Create release and upload ISOs
         run: |
