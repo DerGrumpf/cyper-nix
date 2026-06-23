@@ -10,8 +10,14 @@
   };
   users.users.${primaryUser}.openssh.authorizedKeys.keyFiles = [ ../secrets/ssh-key ];
   programs.ssh.startAgent = true;
-  security.doas = {
-    enable = true;
-    wheelNeedsPassword = false;
+  security = {
+    sudo = {
+      enable = true;
+      wheelNeedsPassword = false;
+    };
+    doas = {
+      enable = true;
+      wheelNeedsPassword = false;
+    };
   };
 }
