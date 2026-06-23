@@ -38,6 +38,7 @@
         nix-index
         ncdu
         tty-solitaire
+        cowsay
       ]
       ++ lib.optionals (!pkgs.stdenv.isDarwin) [
         # dev tools
