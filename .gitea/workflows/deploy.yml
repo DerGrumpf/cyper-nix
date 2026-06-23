@@ -1,0 +1,66 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: nix
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    env:
+      NIXPKGS_ALLOW_UNFREE: "1"
+    steps:
+      - name: Checkout
+        run: git clone https://git.cyperpunk.de/DerGrumpf/cyper-nix.git .
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H 192.168.2.2 192.168.2.40 192.168.2.30 192.168.2.31 >> ~/.ssh/known_hosts
+          ssh-keyscan -H proxy.cyperpunk.de >> ~/.ssh/known_hosts
+
+      - name: Deploy cyper-controller
+        continue-on-error: true
+        run: |
+          nixos-rebuild switch --flake .#cyper-controller \
+            --target-host phil@192.168.2.2 \
+            --build-host localhost \
+            --elevate=sudo
+
+      - name: Deploy cyper-desktop
+        continue-on-error: true
+        run: |
+          nixos-rebuild switch --flake .#cyper-desktop \
+            --target-host phil@192.168.2.40 \
+            --build-host localhost \
+            --elevate=sudo
+
+      - name: Deploy cyper-proxy
+        continue-on-error: true
+        run: |
+          nixos-rebuild switch --flake .#cyper-proxy \
+            --target-host phil@proxy.cyperpunk.de \
+            --build-host localhost \
+            --elevate=sudo
+
+      - name: Deploy cyper-node-1
+        continue-on-error: true
+        run: |
+          nixos-rebuild switch --flake .#cyper-node-1 \
+            --target-host phil@192.168.2.30 \
+            --build-host localhost \
+            --elevate=sudo
+
+      - name: Deploy cyper-node-2
+        continue-on-error: true
+        run: |
+          nixos-rebuild switch --flake .#cyper-node-2 \
+            --target-host phil@192.168.2.31 \
+            --build-host localhost \
+            --elevate=sudo
