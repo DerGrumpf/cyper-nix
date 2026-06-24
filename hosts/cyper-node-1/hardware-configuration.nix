@@ -4,7 +4,6 @@
   modulesPath,
   ...
 }:
-
 {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -21,12 +20,17 @@
     kernelModules = [ "kvm-intel" ];
     extraModulePackages = [ ];
   };
+
   fileSystems = {
     "/" = {
-      device = "/dev/disk/by-label/NIXROOT";
-      fsType = "ext4";
+      device = "none";
+      fsType = "tmpfs";
+      options = [
+        "defaults"
+        "size=2G"
+        "mode=755"
+      ];
     };
-
     "/boot" = {
       device = "/dev/disk/by-label/NIXBOOT";
       fsType = "vfat";
@@ -35,17 +39,24 @@
         "dmask=0022"
       ];
     };
+    "/nix" = {
+      device = "/dev/disk/by-label/NIXSTORE";
+      fsType = "ext4";
+      neededForBoot = true;
+    };
+    "/persist" = {
+      device = "/dev/disk/by-label/NIXPERSIST";
+      fsType = "ext4";
+      neededForBoot = true;
+    };
   };
 
   swapDevices = [
     {
-      device = "/swapfile";
+      device = "/persist/swapfile";
       size = 4096;
     }
   ];
 
-  networking.useDHCP = lib.mkDefault true;
-
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

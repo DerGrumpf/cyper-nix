@@ -5,6 +5,9 @@
     directories = [
       ".config/nix"
       ".local/share/zoxide"
+      "Documents"
+      "Downloads"
+      "Pictures"
     ];
     files = [
       ".local/share/fish/fish_history"
