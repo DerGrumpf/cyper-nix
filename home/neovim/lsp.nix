@@ -29,6 +29,7 @@
             installRustc = true;
           };
           pylsp.enable = true; # Python language server
+          clangd.enable = true;
         };
 
         # Keymaps for LSP actions
@@ -85,6 +86,7 @@
       lua-language-server
       nil
       rust-analyzer
+      clang-tools
     ];
   };
 }

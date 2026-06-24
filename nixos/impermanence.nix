@@ -1,0 +1,18 @@
+_: {
+  environment.persistence."/persist" = {
+    hideMounts = true;
+    files = [
+      "/etc/machine-id"
+      "/etc/ssh/ssh_host_ed25519_key"
+      "/etc/ssh/ssh_host_ed25519_key.pub"
+      "/etc/ssh/ssh_host_rsa_key"
+      "/etc/ssh/ssh_host_rsa_key.pub"
+    ];
+    directories = [
+      "/var/lib/nixos"
+      "/var/lib/systemd"
+      "/var/log"
+      "/var/lib/tailscale"
+    ];
+  };
+}

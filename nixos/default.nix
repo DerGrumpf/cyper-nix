@@ -13,6 +13,7 @@
     ./locale.nix
     ./tailscale.nix
     ./ssh.nix
+    ./impermanence.nix
   ]
   ++ lib.optionals (!isServer) [
     ./regreet.nix

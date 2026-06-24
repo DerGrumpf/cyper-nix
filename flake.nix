@@ -210,6 +210,7 @@
               [
                 { nixpkgs.hostPlatform = system; }
                 ./nixos
+                inputs.impermanence.nixosModules.impermanence
               ];
 
         in
