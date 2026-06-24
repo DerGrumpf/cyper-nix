@@ -10,6 +10,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # declarative impermanence
+    impermanence = {
+      url = "github:nix-community/impermanence";
+    };
+
     # declarative Configs
     home-manager = {
       url = "github:nix-community/home-manager/master";
@@ -91,6 +96,7 @@
       sops-nix,
       nixos-generators,
       nur,
+      impermanence,
       ...
     }@inputs:
     let
