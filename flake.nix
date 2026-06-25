@@ -5,11 +5,6 @@
     # monorepo w/ recipes ("derivations")
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    nixos-generators = {
-      url = "github:nix-community/nixos-generators";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # declarative Configs
     home-manager = {
       url = "github:nix-community/home-manager/master";
@@ -51,7 +46,6 @@
     # declarative Neovim
     nixvim = {
       url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # declarative Discord
@@ -89,22 +83,37 @@
       nixvim,
       hyprland,
       sops-nix,
-      nixos-generators,
       nur,
       ...
     }@inputs:
     let
       primaryUser = "phil";
 
+      /*
+        mkIso - Build a NixOS image for a given target.
+
+        Available targets (imageModule → imageBuildAttr):
+        		ISO (minimal)  : "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"         → "isoImage"
+        		ISO (graphical): "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-gnome.nix" → "isoImage"
+        		Amazon EC2     : "${nixpkgs}/nixos/modules/virtualisation/amazon-image.nix"                       → "amazonImage"
+        		Linode         : "${nixpkgs}/nixos/modules/virtualisation/linode-image.nix"                       → "linodeImage"
+        		Proxmox LXC    : "${nixpkgs}/nixos/modules/virtualisation/proxmox-lxc.nix"                       → "tarball"
+        		Google Cloud   : "${nixpkgs}/nixos/modules/virtualisation/google-compute-image.nix"               → "googleComputeImage"
+        		Azure          : "${nixpkgs}/nixos/modules/virtualisation/azure-image.nix"                        → "azureImage"
+        		QEMU (runnable): "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix"                            → "vm"
+        		QEMU (headless): "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix"                            → "vmWithBootLoader"
+        - Claude Sonnet 4.6
+      */
       mkIso =
         {
           hostName,
           isDarwin ? false,
           isServer ? false,
+          imageModule ? "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix",
+          imageBuildAttr ? "isoImage",
         }:
-        nixos-generators.nixosGenerate {
+        (nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          format = "iso";
           specialArgs = {
             inherit
               inputs
@@ -116,6 +125,7 @@
               ;
           };
           modules = [
+            imageModule
             {
               nixpkgs.overlays = [
                 inputs.nur.overlays.default
@@ -145,10 +155,15 @@
                 backupFileExtension = "backup";
                 useGlobalPkgs = true;
                 useUserPackages = true;
+                sharedModules = [
+                  {
+                    programs.nixvim.nixpkgs.source = inputs.nixpkgs;
+                  }
+                ];
               };
             }
           ];
-        };
+        }).config.system.build.${imageBuildAttr};
 
       mkSystem =
         {
@@ -190,6 +205,11 @@
                 backupFileExtension = "hm-backup";
                 useGlobalPkgs = true;
                 useUserPackages = true;
+                sharedModules = [
+                  {
+                    programs.nixvim.nixpkgs.source = inputs.nixpkgs;
+                  }
+                ];
               };
             }
           ];

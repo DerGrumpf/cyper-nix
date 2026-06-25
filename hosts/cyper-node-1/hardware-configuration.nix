@@ -20,7 +20,9 @@
     initrd.kernelModules = [ ];
     kernelModules = [ "kvm-intel" ];
     extraModulePackages = [ ];
+    zfs.forceImportRoot = false;
   };
+
   fileSystems = {
     "/" = {
       device = "/dev/disk/by-label/NIXROOT";

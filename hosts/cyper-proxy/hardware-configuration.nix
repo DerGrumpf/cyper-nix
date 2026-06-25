@@ -23,6 +23,7 @@
     };
     kernelModules = [ ];
     extraModulePackages = [ ];
+    zfs.forceImportRoot = false;
   };
 
   fileSystems = {
@@ -42,6 +43,4 @@
   };
 
   swapDevices = [ ];
-
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }
