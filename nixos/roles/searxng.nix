@@ -11,6 +11,8 @@ let
   port = 11080;
 in
 {
+  boot.kernel.sysctl."vm.overcommit_memory" = lib.mkForce "1";
+
   services.searx = {
     enable = true;
     package = pkgs.searxng;
