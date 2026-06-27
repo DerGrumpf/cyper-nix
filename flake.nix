@@ -16,6 +16,12 @@
       url = "github:nix-community/impermanence";
     };
 
+    # declarative installer
+    nixos-anywhere = {
+      url = "github:nix-community/nixos-anywhere";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # declarative Configs
     home-manager = {
       url = "github:nix-community/home-manager/master";
@@ -98,6 +104,7 @@
       nur,
       impermanence,
       disko,
+      nixos-anywhere,
       ...
     }@inputs:
     let
@@ -116,6 +123,33 @@
           ./hosts/installer/configuration.nix
         ];
       };
+
+      mkInstall =
+        {
+          hostName,
+          target ? "192.168.2.99",
+        }:
+        let
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        in
+        {
+          type = "app";
+          program = "${
+            pkgs.writeShellApplication {
+              name = "install-${hostName}";
+              runtimeInputs = [ nixos-anywhere.packages.x86_64-linux.nixos-anywhere ];
+              text = ''
+                EXTRA_FILES="''${1:-./extra-files}"
+                TARGET="''${2:-${target}}"
+                nixos-anywhere \
+                  --flake .#${hostName} \
+                  --extra-files "$EXTRA_FILES" \
+                  --chown /persist/secrets/age-key.txt "$(id -u ${primaryUser})":100 \
+                  root@"$TARGET"
+              '';
+            }
+          }/bin/install-${hostName}";
+        };
 
       mkSystem =
         {
@@ -227,5 +261,14 @@
       };
 
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-tree;
+
+      apps.x86_64-linux = {
+        install-cyper-node-1 = mkInstall {
+          hostName = "cyper-node-1";
+        };
+        install-cyper-node-2 = mkInstall {
+          hostName = "cyper-node-2";
+        };
+      };
     };
 }
