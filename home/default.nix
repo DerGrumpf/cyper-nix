@@ -65,7 +65,7 @@
       if isDarwin then
         "/Users/${primaryUser}/.config/nix/secrets/keys.txt"
       else
-        "/persist/secrets/keys.txt";
+        "/persist/secrets/age-key.txt";
     secrets = {
       GROQ_API_KEY = { };
       OPENWEATHER_API_KEY = { };
