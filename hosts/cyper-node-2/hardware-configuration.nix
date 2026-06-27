@@ -31,32 +31,10 @@
         "mode=755"
       ];
     };
-    "/boot" = {
-      device = "/dev/disk/by-label/NIXBOOT";
-      fsType = "vfat";
-      options = [
-        "fmask=0022"
-        "dmask=0022"
-      ];
-    };
-    "/nix" = {
-      device = "/dev/disk/by-label/NIXSTORE";
-      fsType = "ext4";
-      neededForBoot = true;
-    };
-    "/persist" = {
-      device = "/dev/disk/by-label/NIXPERSIST";
-      fsType = "ext4";
-      neededForBoot = true;
-    };
-  };
 
-  swapDevices = [
-    {
-      device = "/persist/swapfile";
-      size = 4096;
-    }
-  ];
+    "/nix".neededForBoot = true;
+    "/persist".neededForBoot = true;
+  };
 
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

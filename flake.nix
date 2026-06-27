@@ -5,11 +5,7 @@
     # monorepo w/ recipes ("derivations")
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    nixos-generators = {
-      url = "github:nix-community/nixos-generators";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
+    # declarative disk layout
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -99,7 +95,6 @@
       nixvim,
       hyprland,
       sops-nix,
-      nixos-generators,
       nur,
       impermanence,
       disko,
@@ -108,59 +103,19 @@
     let
       primaryUser = "phil";
 
-      mkIso =
-        {
-          hostName,
-          isDarwin ? false,
-          isServer ? false,
-        }:
-        nixos-generators.nixosGenerate {
-          system = "x86_64-linux";
-          format = "iso";
-          specialArgs = {
-            inherit
-              inputs
-              primaryUser
-              self
-              hostName
-              isDarwin
-              isServer
-              ;
-          };
-          modules = [
-            {
-              nixpkgs.overlays = [
-                inputs.nur.overlays.default
-                (import ./overlays { inherit (inputs) nur; })
-              ];
-            }
-            { nixpkgs.config.allowUnfree = true; }
-            { nixpkgs.hostPlatform = "x86_64-linux"; }
-            { networking.hostName = hostName; }
-            ./hosts/${hostName}/configuration.nix
-            ./nixos
-            inputs.sops-nix.nixosModules.sops
-            inputs.home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                extraSpecialArgs = {
-                  inherit
-                    inputs
-                    primaryUser
-                    self
-                    hostName
-                    isDarwin
-                    isServer
-                    ;
-                };
-                users.${primaryUser} = import ./home;
-                backupFileExtension = "backup";
-                useGlobalPkgs = true;
-                useUserPackages = true;
-              };
-            }
-          ];
-        };
+      installer = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
+        modules = [
+          {
+            nixpkgs = {
+              config.allowUnfree = true;
+              hostPlatform = "x86_64-linux";
+            };
+          }
+          ./hosts/installer/configuration.nix
+        ];
+      };
 
       mkSystem =
         {
@@ -229,6 +184,8 @@
     in
     {
       nixosConfigurations = {
+        "installer" = installer;
+
         "cyper-desktop" = mkSystem {
           hostName = "cyper-desktop";
           system = "x86_64-linux";
@@ -266,23 +223,7 @@
       };
 
       packages.x86_64-linux = {
-        cyper-desktop-iso = mkIso { hostName = "cyper-desktop"; };
-        cyper-controller-iso = mkIso {
-          hostName = "cyper-controller";
-          isServer = true;
-        };
-        cyper-proxy-iso = mkIso {
-          hostName = "cyper-proxy";
-          isServer = true;
-        };
-        cyper-node-1-iso = mkIso {
-          hostName = "cyper-node-1";
-          isServer = true;
-        };
-        cyper-node-2-iso = mkIso {
-          hostName = "cyper-node-2";
-          isServer = true;
-        };
+        installer = self.nixosConfigurations.installer.config.system.build.isoImage;
       };
 
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-tree;
