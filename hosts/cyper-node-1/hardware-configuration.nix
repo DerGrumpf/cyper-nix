@@ -52,10 +52,7 @@
   };
 
   swapDevices = [
-    {
-      device = "/persist/swapfile";
-      size = 4096;
-    }
+    { device = "/dev/disk/by-label/NIXSWAP"; }
   ];
 
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;

@@ -10,6 +10,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # declarative impermanence
     impermanence = {
       url = "github:nix-community/impermanence";
@@ -97,6 +102,7 @@
       nixos-generators,
       nur,
       impermanence,
+      disko,
       ...
     }@inputs:
     let
@@ -211,6 +217,7 @@
                 { nixpkgs.hostPlatform = system; }
                 ./nixos
                 inputs.impermanence.nixosModules.impermanence
+                inputs.disko.nixosModules.disko
               ];
 
         in
