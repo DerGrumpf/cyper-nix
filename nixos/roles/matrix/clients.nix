@@ -149,6 +149,15 @@ let
 
 in
 {
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/containers";
+      user = "root";
+      group = "root";
+      mode = "0700";
+    }
+  ];
+
   services.nginx.virtualHosts = {
     "cinny.cyperpunk.de" = {
       forceSSL = true;

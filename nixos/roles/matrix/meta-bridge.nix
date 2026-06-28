@@ -19,6 +19,21 @@
     };
   };
 
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/mautrix-meta-facebook";
+      user = "mautrix-meta-facebook";
+      group = "mautrix-meta";
+      mode = "0750";
+    }
+    {
+      directory = "/var/lib/mautrix-meta-instagram";
+      user = "mautrix-meta-instagram";
+      group = "mautrix-meta";
+      mode = "0750";
+    }
+  ];
+
   systemd.services = {
     mautrix-meta-facebook-env = {
       before = [ "mautrix-meta-facebook-registration.service" ];

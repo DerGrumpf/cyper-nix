@@ -15,6 +15,15 @@
     };
   };
 
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/mautrix-discord";
+      user = "mautrix-discord";
+      group = "mautrix-discord";
+      mode = "0750";
+    }
+  ];
+
   systemd = {
     services = {
       mautrix-discord-env = {

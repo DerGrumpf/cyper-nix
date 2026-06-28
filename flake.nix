@@ -271,6 +271,10 @@
         install-cyper-controller = mkInstall {
           hostName = "cyper-controller";
         };
+        install-cyper-proxy = mkInstall {
+          hostName = "cyper-proxy";
+          target = ""; # KVM console IP
+        };
       };
     };
 }

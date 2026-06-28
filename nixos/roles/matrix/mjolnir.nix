@@ -2,6 +2,15 @@
 {
   sops.secrets.mjolnir_access_token = { };
 
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/private";
+      user = "root";
+      group = "root";
+      mode = "0700";
+    }
+  ];
+
   services.draupnir = {
     enable = true;
     secrets.accessToken = config.sops.secrets.mjolnir_access_token.path;
@@ -11,7 +20,3 @@
     };
   };
 }
-
-#curl -X POST https://matrix.cyperpunk.de/_matrix/client/v3/login \
-#  -H "Content-Type: application/json" \
-#  -d '{"type":"m.login.password ","user":"mjolnir","password":"i318HXBRkt)Lh$nOPwq#6n9z&<W[XJ&2c4$Zf>7jV}-uQCE{<plwk;LZ)10*N<~1"}'

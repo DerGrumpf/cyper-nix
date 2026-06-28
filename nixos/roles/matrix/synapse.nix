@@ -49,30 +49,44 @@ in
     };
   };
 
-  systemd.tmpfiles.rules = [
-    "d /var/www/matrix            0755 nginx nginx -"
-    "L+ /var/www/matrix/index.html   0644 nginx nginx - ${matrixIndexHtml}"
-    "L+ /var/www/matrix/register.php 0644 nginx nginx - ${matrixRegisterPhp}"
-    "L+ /var/www/matrix/style.css  0644 nginx nginx - ${matrixStyleCss}"
-    "L+ /var/www/matrix/app.js     0644 nginx nginx - ${matrixAppJs}"
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/matrix-synapse";
+      user = "matrix-synapse";
+      group = "matrix-synapse";
+      mode = "0700";
+    }
+    {
+      directory = "/var/lib/postgresql";
+      user = "postgres";
+      group = "postgres";
+      mode = "0750";
+    }
+    {
+      directory = "/var/lib/acme";
+      user = "acme";
+      group = "acme";
+      mode = "0755";
+    }
   ];
 
-  services.phpfpm.pools.matrix = {
-    user = "nginx";
-    group = "nginx";
-    settings = {
-      "listen.owner" = "nginx";
-      "listen.group" = "nginx";
-      "pm" = "dynamic";
-      "pm.max_children" = 10;
-      "pm.start_servers" = 2;
-      "pm.min_spare_servers" = 1;
-      "pm.max_spare_servers" = 3;
-    };
-    phpPackage = pkgs.php.withExtensions ({ enabled, all }: enabled ++ [ all.curl ]);
-  };
-
   services = {
+
+    phpfpm.pools.matrix = {
+      user = "nginx";
+      group = "nginx";
+      settings = {
+        "listen.owner" = "nginx";
+        "listen.group" = "nginx";
+        "pm" = "dynamic";
+        "pm.max_children" = 10;
+        "pm.start_servers" = 2;
+        "pm.min_spare_servers" = 1;
+        "pm.max_spare_servers" = 3;
+      };
+      phpPackage = pkgs.php.withExtensions ({ enabled, all }: enabled ++ [ all.curl ]);
+    };
+
     matrix-synapse = {
       enable = true;
       settings = {
@@ -237,9 +251,10 @@ in
         max_wal_senders = 5;
         wal_keep_size = "512MB";
         listen_addresses = lib.mkForce "127.0.0.1,100.109.10.91";
+        ssl = true;
       };
       authentication = lib.mkAfter ''
-        host replication replicator 100.0.0.0/8 scram-sha-256
+        hostssl replication replicator 100.0.0.0/8 scram-sha-256
       '';
     };
 
@@ -251,15 +266,26 @@ in
     };
   };
 
-  systemd.services = {
-    matrix-synapse.serviceConfig.ReadOnlyPaths = [
-      "/var/lib/mautrix-discord"
-      "/var/lib/mautrix-whatsapp"
+  systemd = {
+    services = {
+      matrix-synapse.serviceConfig.ReadOnlyPaths = [
+        "/var/lib/mautrix-discord"
+        "/var/lib/mautrix-whatsapp"
+      ];
+      postgresql.postStart = lib.mkAfter ''
+        PG_PASS=$(cat ${config.sops.secrets.pg_replication_password.path})
+        ${config.services.postgresql.package}/bin/psql -U postgres -c \
+          "ALTER ROLE replicator WITH PASSWORD '$PG_PASS';"
+      '';
+    };
+
+    tmpfiles.rules = [
+      "d /var/www/matrix            0755 nginx nginx -"
+      "L+ /var/www/matrix/index.html   0644 nginx nginx - ${matrixIndexHtml}"
+      "L+ /var/www/matrix/register.php 0644 nginx nginx - ${matrixRegisterPhp}"
+      "L+ /var/www/matrix/style.css  0644 nginx nginx - ${matrixStyleCss}"
+      "L+ /var/www/matrix/app.js     0644 nginx nginx - ${matrixAppJs}"
     ];
-    postgresql.postStart = lib.mkAfter ''
-      PG_PASS=$(cat ${config.sops.secrets.pg_replication_password.path})
-      ${config.services.postgresql.package}/bin/psql -U postgres -c \
-        "ALTER ROLE replicator WITH PASSWORD '$PG_PASS';"
-    '';
   };
+
 }

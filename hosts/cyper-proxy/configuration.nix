@@ -1,6 +1,7 @@
 { ... }:
 {
   imports = [
+    ./disko.nix
     ./hardware-configuration.nix
     ../../nixos/roles/nginx.nix
     #    ../../nixos/roles/jitsi.nix
