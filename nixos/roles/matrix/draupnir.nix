@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  sops.secrets.mjolnir_access_token = { };
+  sops.secrets.draupnir_access_token = { };
 
   environment.persistence."/persist".directories = [
     {
@@ -13,7 +13,7 @@
 
   services.draupnir = {
     enable = true;
-    secrets.accessToken = config.sops.secrets.mjolnir_access_token.path;
+    secrets.accessToken = config.sops.secrets.draupnir_access_token.path;
     settings = {
       homeserverUrl = "https://matrix.cyperpunk.de";
       managementRoom = "!eErCimyDjLSebHjpJA:cyperpunk.de";
