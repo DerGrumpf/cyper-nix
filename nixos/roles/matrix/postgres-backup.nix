@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }:
 {
@@ -32,6 +31,7 @@
       Type = "simple";
       Restart = "on-failure";
       RestartSec = "10s";
+      TimeoutStartSec = "0";
     };
 
     preStart = ''
@@ -64,7 +64,7 @@
 
               # primary conninfo
               cat > "$DATADIR/postgresql.auto.conf" <<EOF
-      primary_conninfo = 'host=100.109.10.91 port=5432 user=replicator password=$PG_PASS application_name=cyper-controller sslmode=require'
+      primary_conninfo = 'host=100.109.10.91 port=5432 user=replicator password=$PG_PASS application_name=cyper-controller sslmode=disable'
       EOF
 
               # minimal postgresql.conf
