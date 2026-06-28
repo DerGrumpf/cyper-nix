@@ -41,6 +41,15 @@ in
     };
   };
 
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/grafana";
+      user = "grafana";
+      group = "grafana";
+      mode = "0750";
+    }
+  ];
+
   users.groups.gs1200-exporter = { };
 
   services = {

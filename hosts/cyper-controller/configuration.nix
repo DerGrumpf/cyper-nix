@@ -1,5 +1,6 @@
 {
   imports = [
+    ./disko.nix
     ./hardware-configuration.nix
     ./smb.nix
     ../../nixos/roles/monitoring.nix
@@ -11,7 +12,6 @@
     ../../nixos/roles/gitea.nix
     ../../nixos/roles/vaultwarden.nix
     ../../nixos/roles/frontpage
-    #../../nixos/roles/paperless-ngx.nix
     ../../nixos/roles/octoprint.nix
     ../../nixos/roles/matrix/postgres-backup.nix
     ../../nixos/roles/kanidm.nix
@@ -45,5 +45,6 @@
     };
     efi.canTouchEfiVariables = true;
   };
+
   system.stateVersion = "26.05";
 }

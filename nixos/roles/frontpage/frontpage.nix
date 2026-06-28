@@ -29,6 +29,33 @@ let
   ];
 in
 {
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/flame-phil";
+      user = "root";
+      group = "root";
+      mode = "0755";
+    }
+    {
+      directory = "/var/lib/flame-calvin";
+      user = "root";
+      group = "root";
+      mode = "0755";
+    }
+    {
+      directory = "/var/lib/docker";
+      user = "root";
+      group = "root";
+      mode = "0710";
+    }
+    {
+      directory = "/var/lib/private";
+      user = "root";
+      group = "root";
+      mode = "0700";
+    }
+  ];
+
   sops.secrets = lib.listToAttrs (
     map ({ name, ... }: lib.nameValuePair "flame_${name}_password" { }) instances
   );

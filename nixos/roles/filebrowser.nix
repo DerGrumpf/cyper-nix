@@ -1,5 +1,13 @@
-{ ... }:
 {
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/filebrowser";
+      user = "filebrowser";
+      group = "filebrowser";
+      mode = "0750";
+    }
+  ];
+
   services.filebrowser = {
     enable = true;
 

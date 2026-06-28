@@ -5,7 +5,6 @@
   primaryUser,
   ...
 }:
-
 {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -17,6 +16,7 @@
       "ahci"
       "usb_storage"
       "sd_mod"
+      "nvme"
     ];
     initrd.kernelModules = [ ];
     kernelModules = [ "kvm-intel" ];
@@ -24,17 +24,13 @@
   };
 
   fileSystems = {
-    "/" = lib.mkForce {
-      device = "/dev/disk/by-label/NIXROOT";
-      fsType = "ext4";
-    };
-
-    "/boot" = lib.mkForce {
-      device = "/dev/disk/by-label/NIXBOOT";
-      fsType = "vfat";
+    "/" = {
+      device = "none";
+      fsType = "tmpfs";
       options = [
-        "fmask=0022"
-        "dmask=0022"
+        "defaults"
+        "size=2G"
+        "mode=755"
       ];
     };
 
@@ -70,6 +66,8 @@
       ];
     };
 
+    "/nix".neededForBoot = true;
+    "/persist".neededForBoot = true;
   };
 
   systemd.tmpfiles.rules = [
@@ -79,15 +77,7 @@
     "d /storage/backup 0755 ${primaryUser} users -"
   ];
 
-  swapDevices = [
-    {
-      device = "/swapfile";
-      size = 4096;
-    }
-  ];
-
   networking.useDHCP = lib.mkDefault true;
-
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

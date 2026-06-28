@@ -47,6 +47,21 @@ in
     };
   };
 
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/gitea";
+      user = "gitea";
+      group = "gitea";
+      mode = "0750";
+    }
+    {
+      directory = "/var/lib/postgresql";
+      user = "postgres";
+      group = "postgres";
+      mode = "0750";
+    }
+  ];
+
   systemd.services = {
     gitea-db-password = {
       description = "Set gitea postgres user password";

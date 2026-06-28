@@ -48,6 +48,16 @@ let
 in
 {
   nixpkgs.overlays = [ octoprint-overlay ];
+
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/octoprint";
+      user = "octoprint";
+      group = "octoprint";
+      mode = "0750";
+    }
+  ];
+
   services.octoprint = {
     enable = true;
     host = "0.0.0.0";

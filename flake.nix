@@ -63,7 +63,6 @@
     # declarative Neovim
     nixvim = {
       url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # declarative Discord
@@ -268,6 +267,9 @@
         };
         install-cyper-node-2 = mkInstall {
           hostName = "cyper-node-2";
+        };
+        install-cyper-controller = mkInstall {
+          hostName = "cyper-controller";
         };
       };
     };
