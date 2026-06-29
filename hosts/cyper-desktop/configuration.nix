@@ -63,4 +63,6 @@
 
   virtualisation.docker.enable = true;
   users.users.phil.extraGroups = [ "docker" ];
+
+  programs.fuse.userAllowOther = true;
 }

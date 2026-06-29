@@ -1,7 +1,6 @@
 {
   lib,
   inputs,
-  primaryUser,
   ...
 }:
 {
@@ -9,7 +8,7 @@
     inputs.nixcord.homeModules.nixcord
   ];
 
-  home.persistence."/persist/home/${primaryUser}".directories = [
+  home.persistence."/persist/home".directories = [
     ".config/vesktop"
   ];
 

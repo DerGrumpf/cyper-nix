@@ -1,7 +1,6 @@
 {
   pkgs,
   inputs,
-  primaryUser,
   ...
 }:
 {
@@ -9,7 +8,7 @@
     inputs.spicetify-nix.homeManagerModules.default
   ];
 
-  home.persistence."/persist/home/${primaryUser}".directories = [
+  home.persistence."/persist/home".directories = [
     ".config/spotify"
   ];
 

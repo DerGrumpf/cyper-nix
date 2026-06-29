@@ -28,7 +28,7 @@ in
       openssh
     ];
 
-    persistence."/persist/home/${primaryUser}".directories = [
+    persistence."/persist/home".directories = [
       "Notes"
     ];
 

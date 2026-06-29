@@ -1,6 +1,5 @@
-{ primaryUser, ... }:
 {
-  home.persistence."/persist/home/${primaryUser}" = {
+  home.persistence."/persist/home" = {
     hideMounts = true;
     directories = [
       ".config/nix"
@@ -8,6 +7,5 @@
       "Downloads"
       "Pictures"
     ];
-
   };
 }
