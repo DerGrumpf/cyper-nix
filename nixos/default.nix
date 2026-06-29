@@ -130,10 +130,20 @@
     };
   };
 
-  networking.firewall.allowedTCPPorts = [
-    9002
-    3100
-  ];
+  networking = {
+    hosts = {
+      "10.10.0.1" = [ "proxy.cyperpunk.de" ];
+      "10.10.0.2" = [ "controller.cyperpunk.de" ];
+      "10.10.0.3" = [ "mac.cyperpunk.de" ];
+      "10.10.0.30" = [ "node1.cyperpunk.de" ];
+      "10.10.0.31" = [ "node2.cyperpunk.de" ];
+      "10.10.0.40" = [ "desktop.cyperpunk.de" ];
+    };
+    firewall.allowedTCPPorts = [
+      9002
+      3100
+    ];
+  };
 
   users.users.${primaryUser} = {
     home = "/home/${primaryUser}";

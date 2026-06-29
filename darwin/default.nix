@@ -1,6 +1,7 @@
 {
   pkgs,
   primaryUser,
+  lib,
   ...
 }:
 {
@@ -51,6 +52,12 @@
     info.enable = false; # Skip info pages
   };
 
+  # Mirrored Network conf
+  networking.knownNetworkServices = [
+    "Wi-Fi"
+    "Ethernet"
+  ];
+
   # homebrew installation manager
   nix-homebrew = {
     user = primaryUser;
@@ -60,15 +67,24 @@
 
   # macOS-specific settings
   programs.fish.enable = true;
-  environment.shells = [ pkgs.fish ];
   system.primaryUser = primaryUser;
   users.users.${primaryUser} = {
     home = "/Users/${primaryUser}";
     shell = pkgs.fish;
     openssh.authorizedKeys.keyFiles = [ ../secrets/ssh-key ];
   };
+
   environment = {
+    shells = [ pkgs.fish ];
     systemPath = [ "/opt/homebrew/bin" ];
     pathsToLink = [ "/Applications" ];
+    etc."hosts".text = lib.mkAfter ''
+      10.10.0.1  proxy.cyperpunk.de
+      10.10.0.2  controller.cyperpunk.de
+      10.10.0.3  mac.cyperpunk.de
+      10.10.0.30 node1.cyperpunk.de
+      10.10.0.31 node2.cyperpunk.de
+      10.10.0.40 desktop.cyperpunk.de
+    '';
   };
 }

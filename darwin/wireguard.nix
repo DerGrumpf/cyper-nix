@@ -5,7 +5,7 @@
   ...
 }:
 {
-  sops.secrets."wireguard/${hostName}" = {
+  sops.secrets."network/wireguard/${hostName}" = {
     mode = "0400";
   };
 
@@ -13,7 +13,7 @@
     script = ''
       set -e
       mkdir -p /etc/wireguard
-      PRIVATE_KEY=$(cat ${config.sops.secrets."wireguard/${hostName}".path})
+      PRIVATE_KEY=$(cat ${config.sops.secrets."network/wireguard/${hostName}".path})
       cat > /etc/wireguard/wg0.conf << EOF
       [Interface]
       Address = $WG_IP
