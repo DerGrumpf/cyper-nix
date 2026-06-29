@@ -8,12 +8,6 @@ in
     packages = with pkgs; [
       adwaita-icon-theme
     ];
-    #pointerCursor = {
-    #  gtk.enable = true;
-    #  name = "catppuccin-mocha-sapphire-cursors";
-    #  package = pkgs.catppuccin-cursors.mochaSapphire;
-    #  size = 24;
-    #};
     file = {
       ".config/gtk-4.0/gtk.css".source = "${theme}/share/themes/${theme_name}/gtk-4.0/gtk.css";
       ".config/gtk-4.0/gtk-dark.css".source = "${theme}/share/themes/${theme_name}/gtk-4.0/gtk-dark.css";

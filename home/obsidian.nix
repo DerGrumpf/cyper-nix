@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  primaryUser,
   ...
 }:
 let
@@ -20,26 +21,32 @@ in
     };
   };
 
-  home.packages = with pkgs; [
-    git
-    git-lfs
-    openssh
-  ];
+  home = {
+    packages = with pkgs; [
+      git
+      git-lfs
+      openssh
+    ];
 
-  home.activation.obsidianVault = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    export PATH="${gitBin}:${gitLfsBin}:$PATH"
-    export GIT_SSH_COMMAND="${sshBinary} -o StrictHostKeyChecking=accept-new"
-    export GIT_LFS_SKIP_SMUDGE=1
+    persistence."/persist/home/${primaryUser}".directories = [
+      "Notes"
+    ];
 
-    if [ ! -d "${vaultPath}/.git" ]; then
-    		echo "Cloning Obsidian vault (LFS objects will be pulled separately)..."
-    		${gitBin}/git clone "${vaultRepo}" "${vaultPath}"
-    		${gitLfsBin}/git-lfs install --local "${vaultPath}"
-    		${gitBin}/git -C "${vaultPath}" lfs pull
-    else
-    		echo "Pulling latest changes for Obsidian vault..."
-    		${gitBin}/git -C "${vaultPath}" pull
-    		${gitBin}/git -C "${vaultPath}" lfs pull
-    fi
-  '';
+    activation.obsidianVault = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      export PATH="${gitBin}:${gitLfsBin}:$PATH"
+      export GIT_SSH_COMMAND="${sshBinary} -o StrictHostKeyChecking=accept-new"
+      export GIT_LFS_SKIP_SMUDGE=1
+
+      if [ ! -d "${vaultPath}/.git" ]; then
+      		echo "Cloning Obsidian vault (LFS objects will be pulled separately)..."
+      		${gitBin}/git clone "${vaultRepo}" "${vaultPath}"
+      		${gitLfsBin}/git-lfs install --local "${vaultPath}"
+      		${gitBin}/git -C "${vaultPath}" lfs pull
+      else
+      		echo "Pulling latest changes for Obsidian vault..."
+      		${gitBin}/git -C "${vaultPath}" pull
+      		${gitBin}/git -C "${vaultPath}" lfs pull
+      fi
+    '';
+  };
 }

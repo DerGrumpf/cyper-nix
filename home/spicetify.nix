@@ -1,7 +1,16 @@
-{ pkgs, inputs, ... }:
+{
+  pkgs,
+  inputs,
+  primaryUser,
+  ...
+}:
 {
   imports = [
     inputs.spicetify-nix.homeManagerModules.default
+  ];
+
+  home.persistence."/persist/home/${primaryUser}".directories = [
+    ".config/spotify"
   ];
 
   programs.spicetify =

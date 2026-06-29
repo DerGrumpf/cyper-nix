@@ -13,12 +13,14 @@
     // (import ./dual.nix { inherit compositor; })
   );
 
-  home.packages = lib.mkIf (!pkgs.stdenv.isDarwin) (with pkgs; [ cava ]);
+  home = {
+    packages = lib.mkIf (!pkgs.stdenv.isDarwin) (with pkgs; [ cava ]);
 
-  home.file = lib.mkIf (!pkgs.stdenv.isDarwin) {
-    ".config/waybar" = {
-      source = ./configs;
-      recursive = true;
+    file = lib.mkIf (!pkgs.stdenv.isDarwin) {
+      ".config/waybar" = {
+        source = ./configs;
+        recursive = true;
+      };
     };
   };
 }
