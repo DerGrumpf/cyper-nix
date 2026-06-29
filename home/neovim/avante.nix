@@ -1,5 +1,4 @@
 {
-  # Avante: AI-powered coding assistant (Cursor-like experience in Neovim)
   programs.nixvim = {
     plugins = {
       markdown-preview.enable = true;
@@ -13,7 +12,7 @@
           providers = {
             groq = {
               __inherited_from = "openai";
-              api_key_name = "cmd:cat /home/phil/.config/sops-nix/secrets/GROQ_API_KEY";
+              api_key_name = "cmd:cat /home/phil/.config/sops-nix/secrets/api_keys/groq";
               endpoint = "https://api.groq.com/openai/v1/";
               model = "qwen/qwen3-32b";
               system_promt = "You are a helpful coding assistant. Always respond in plain markdown format without using tool calls or JSON structures.";
@@ -29,9 +28,9 @@
 
             ollama = {
               endpoint = "http://10.10.0.2:11434";
-              model = "qwen2.5:3b"; # swap for "llama3.2:3b" or "deepseek-r1:1.5b"
-              timeout = 60000; # local + small model can be slow on first load
-              disable_tools = true; # these small models aren't reliable at tool calling
+              model = "qwen2.5:3b";
+              timeout = 60000;
+              disable_tools = true;
               is_env_set.__raw = ''require("avante.providers.ollama").check_endpoint_alive'';
               extra_request_body = {
                 options = {

@@ -2,7 +2,6 @@
   pkgs,
   lib,
   config,
-  primaryUser,
   ...
 }:
 
@@ -20,27 +19,27 @@ let
 in
 {
   sops.secrets = {
-    "gitea/dbPassword" = {
+    "services/gitea/db_password" = {
       owner = "gitea";
       group = "gitea";
       mode = "0444";
     };
-    "gitea/internalToken" = {
+    "services/gitea/internal_token" = {
       owner = "gitea";
       group = "gitea";
     };
-    "gitea/lfsJwtSecret" = {
+    "services/gitea/lfs_jwt_secret" = {
       owner = "gitea";
       group = "gitea";
     };
-    "gitea/mailerPassword" = {
+    "services/gitea/mailer_password" = {
       owner = "gitea";
       group = "gitea";
     };
-    "gitea/runnerToken" = {
+    "services/gitea/runner_token" = {
       mode = "0444";
     };
-    "kanidm_gitea_secret" = {
+    "kanidm/gitea_secret" = {
       owner = "gitea";
       group = "gitea";
       mode = "0444";
@@ -75,7 +74,7 @@ in
         RemainAfterExit = true;
       };
       script = ''
-        pass=$(cat ${config.sops.secrets."gitea/dbPassword".path})
+        pass=$(cat ${config.sops.secrets."services/gitea/db_password".path})
         ${pkgs.postgresql_14}/bin/psql -c \
           "ALTER USER gitea WITH PASSWORD '$pass';"
       '';
@@ -126,7 +125,7 @@ in
         port = 5432;
         name = "gitea";
         user = "gitea";
-        passwordFile = config.sops.secrets."gitea/dbPassword".path;
+        passwordFile = config.sops.secrets."services/gitea/db_password".path;
       };
 
       settings = {
@@ -222,7 +221,7 @@ in
     gitea-actions-runner.instances."cyper_nix" = {
       enable = true;
       url = "https://git.cyperpunk.de";
-      tokenFile = config.sops.secrets."gitea/runnerToken".path;
+      tokenFile = config.sops.secrets."services/gitea/runner_token".path;
       name = "cyper-controller";
       labels = [ "nix:host" ];
 

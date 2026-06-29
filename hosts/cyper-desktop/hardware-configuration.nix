@@ -34,12 +34,11 @@
   };
 
   sops = {
-    secrets.smb_passwd = { };
-
+    secrets."network/smb_passwd" = { };
     templates.smb_credentials = {
       content = ''
         username=${primaryUser}
-        password=${config.sops.placeholder.smb_passwd}
+        password=${config.sops.placeholder."network/smb_passwd"}
       '';
     };
   };

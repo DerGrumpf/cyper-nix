@@ -1,15 +1,15 @@
 { config, lib, ... }:
 {
   sops.secrets = {
-    discord_bot_token = {
+    "matrix/bridges/discord/bot_token" = {
       owner = "mautrix-discord";
       group = "mautrix-discord";
     };
-    discord_client_id = {
+    "matrix/bridges/discord/client_id" = {
       owner = "mautrix-discord";
       group = "mautrix-discord";
     };
-    discord_pickle_key = {
+    "matrix/bridges/discord/pickle_key" = {
       owner = "mautrix-discord";
       group = "mautrix-discord";
     };
@@ -35,9 +35,15 @@
         };
         script = ''
           mkdir -p /run/mautrix-discord
-          echo "DISCORD_BOT_TOKEN=$(cat ${config.sops.secrets.discord_bot_token.path})" > /run/mautrix-discord/env
-          echo "DISCORD_CLIENT_ID=$(cat ${config.sops.secrets.discord_client_id.path})" >> /run/mautrix-discord/env
-          echo "DISCORD_PICKLE_KEY=$(cat ${config.sops.secrets.discord_pickle_key.path})" >> /run/mautrix-discord/env
+          echo "DISCORD_BOT_TOKEN=$(cat ${
+            config.sops.secrets."matrix/bridges/discord/bot_token".path
+          })" > /run/mautrix-discord/env
+          echo "DISCORD_CLIENT_ID=$(cat ${
+            config.sops.secrets."matrix/bridges/discord/client_id".path
+          })" >> /run/mautrix-discord/env
+          echo "DISCORD_PICKLE_KEY=$(cat ${
+            config.sops.secrets."matrix/bridges/discord/pickle_key".path
+          })" >> /run/mautrix-discord/env
           chmod 600 /run/mautrix-discord/env
           chown mautrix-discord:mautrix-discord /run/mautrix-discord/env
         '';

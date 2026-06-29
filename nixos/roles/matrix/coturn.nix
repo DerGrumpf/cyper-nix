@@ -1,15 +1,14 @@
 { config, lib, ... }:
 {
   sops.secrets = {
-    coturn_static_auth_secret = {
+    "matrix/coturn_static_auth_secret" = {
       owner = "turnserver";
       group = "turnserver";
     };
-
     coturn_static_auth_secret_synapse = {
       owner = "matrix-synapse";
       group = "matrix-synapse";
-      key = "coturn_static_auth_secret";
+      key = "matrix/coturn_static_auth_secret";
     };
   };
 
@@ -21,7 +20,7 @@
       min-port = 49000;
       max-port = 50000;
       use-auth-secret = true;
-      static-auth-secret-file = config.sops.secrets.coturn_static_auth_secret.path;
+      static-auth-secret-file = config.sops.secrets."matrix/coturn_static_auth_secret".path;
       realm = "turn.cyperpunk.de";
       cert = "${config.security.acme.certs.${realm}.directory}/full.pem";
       pkey = "${config.security.acme.certs.${realm}.directory}/key.pem";

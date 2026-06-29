@@ -27,15 +27,15 @@ in
   imports = [ ./gs-exporter.nix ];
 
   sops.secrets = {
-    grafana_secret_key = {
+    "services/grafana/secret_key" = {
       owner = "grafana";
       group = "grafana";
     };
-    kanidm_grafana_secret = {
+    "kanidm/grafana_secret" = {
       owner = "grafana";
       group = "grafana";
     };
-    zyxel_pass = {
+    "network/zyxel_pass" = {
       group = "gs1200-exporter";
       mode = "0440";
     };
@@ -78,7 +78,7 @@ in
           serve_from_sub_path = true;
         };
         security = {
-          secret_key = "$__file{${config.sops.secrets.grafana_secret_key.path}}";
+          secret_key = "$__file{${config.sops.secrets."services/grafana/secret_key".path}}";
           allow_embedding = true;
           cookie_samesite = "none";
           cookie_secure = true;
@@ -91,7 +91,7 @@ in
           enabled = true;
           name = "Kanidm";
           client_id = "grafana";
-          client_secret = "$__file{${config.sops.secrets.kanidm_grafana_secret.path}}";
+          client_secret = "$__file{${config.sops.secrets."kanidm/grafana_secret".path}}";
           scopes = "openid profile email";
           auth_url = "https://auth.cyperpunk.de/ui/oauth2";
           token_url = "https://auth.cyperpunk.de/oauth2/token";
@@ -181,13 +181,13 @@ in
       zyxel1 = {
         address = "192.168.2.3";
         port = 9934;
-        passwordFile = config.sops.secrets.zyxel_pass.path;
+        passwordFile = config.sops.secrets."network/zyxel_pass".path;
         group = "gs1200-exporter";
       };
       zyxel2 = {
         address = "192.168.2.4";
         port = 9935;
-        passwordFile = config.sops.secrets.zyxel_pass.path;
+        passwordFile = config.sops.secrets."network/zyxel_pass".path;
         group = "gs1200-exporter";
       };
     };

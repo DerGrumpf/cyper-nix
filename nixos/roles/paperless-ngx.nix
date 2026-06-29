@@ -1,11 +1,10 @@
 { config, ... }:
 {
-
   sops.secrets = {
-    paperless_admin = {
+    "services/paperless/admin" = {
       owner = "paperless";
     };
-    paperless_oidc_secret = {
+    "services/paperless/oidc_secret" = {
       owner = "paperless";
     };
   };
@@ -18,7 +17,7 @@
     consumptionDir = "/storage/fast/paperless/consume";
     dataDir = "/storage/fast/paperless";
     configureTika = true;
-    passwordFile = config.sops.secrets.paperless_admin.path;
+    passwordFile = config.sops.secrets."services/paperless/admin".path;
     settings = {
       PAPERLESS_USE_X_FORWARDED_HOST = true;
       PAPERLESS_USE_X_FORWARDED_PORT = true;
@@ -54,7 +53,7 @@
         requires = [ "systemd-tmpfiles-setup.service" ];
       };
       paperless-web = {
-        serviceConfig.EnvironmentFiles = [ config.sops.secrets.paperless_oidc_secret.path ];
+        serviceConfig.EnvironmentFiles = [ config.sops.secrets."services/paperless/oidc_secret".path ];
       };
     };
   };

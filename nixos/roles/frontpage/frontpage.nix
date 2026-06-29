@@ -13,7 +13,7 @@ let
         "/var/lib/flame-${name}:/app/data"
       ]
       ++ extraVolumes;
-      environmentFiles = [ config.sops.secrets."flame_${name}_password".path ];
+      environmentFiles = [ config.sops.secrets."services/flame/${name}_password".path ];
     };
 
   instances = [
@@ -57,7 +57,7 @@ in
   ];
 
   sops.secrets = lib.listToAttrs (
-    map ({ name, ... }: lib.nameValuePair "flame_${name}_password" { }) instances
+    map ({ name, ... }: lib.nameValuePair "services/flame/${name}_password" { }) instances
   );
 
   virtualisation = {

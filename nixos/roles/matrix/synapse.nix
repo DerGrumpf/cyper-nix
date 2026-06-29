@@ -34,16 +34,16 @@ let
 in
 {
   sops.secrets = {
-    matrix_macaroon_secret = { };
-    matrix_registration_secret = {
+    "matrix/macaroon_secret" = { };
+    "matrix/registration_secret" = {
       owner = "matrix-synapse";
       group = "matrix-synapse";
     };
-    pg_replication_password = {
+    "postgres/replication_password" = {
       owner = "postgres";
       group = "postgres";
     };
-    kanidm_synapse_secret = {
+    "kanidm/synapse_secret" = {
       owner = "matrix-synapse";
       group = "matrix-synapse";
     };
@@ -95,8 +95,8 @@ in
         enable_registration = false;
         trusted_key_servers = [ { server_name = "matrix.org"; } ];
         suppress_key_server_warning = true;
-        registration_shared_secret_path = config.sops.secrets.matrix_registration_secret.path;
-        macaroon_secret_key = "$__file{${config.sops.secrets.matrix_macaroon_secret.path}}";
+        registration_shared_secret_path = config.sops.secrets."matrix/registration_secret".path;
+        macaroon_secret_key = "$__file{${config.sops.secrets."matrix/macaroon_secret".path}}";
         matrix_rtc = {
           enabled = true;
           transports = [
@@ -162,7 +162,7 @@ in
             idp_name = "Kanidm";
             issuer = "https://auth.cyperpunk.de/oauth2/openid/synapse";
             client_id = "synapse";
-            client_secret_path = config.sops.secrets.kanidm_synapse_secret.path;
+            client_secret_path = config.sops.secrets."kanidm/synapse_secret".path;
             scopes = [
               "openid"
               "profile"
@@ -254,7 +254,7 @@ in
         ssl = true;
       };
       authentication = lib.mkAfter ''
-        hostssl replication replicator 100.0.0.0/8 scram-sha-256
+        hostssl replication replicator 10.10.0.2/32 scram-sha-256
       '';
     };
 
@@ -273,7 +273,7 @@ in
         "/var/lib/mautrix-whatsapp"
       ];
       postgresql.postStart = lib.mkAfter ''
-        PG_PASS=$(cat ${config.sops.secrets.pg_replication_password.path})
+        PG_PASS=$(cat ${config.sops.secrets."postgres/replication_password".path})
         ${config.services.postgresql.package}/bin/psql -U postgres -c \
           "ALTER ROLE replicator WITH PASSWORD '$PG_PASS';"
       '';

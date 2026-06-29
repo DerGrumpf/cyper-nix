@@ -1,19 +1,19 @@
 { config, lib, ... }:
 {
   sops.secrets = {
-    meta_as_token = {
+    "matrix/bridges/meta/as_token" = {
       owner = "mautrix-meta-facebook";
       group = "mautrix-meta";
     };
-    meta_hs_token = {
+    "matrix/bridges/meta/hs_token" = {
       owner = "mautrix-meta-facebook";
       group = "mautrix-meta";
     };
-    instagram_as_token = {
+    "matrix/bridges/instagram/as_token" = {
       owner = "mautrix-meta-instagram";
       group = "mautrix-meta";
     };
-    instagram_hs_token = {
+    "matrix/bridges/instagram/hs_token" = {
       owner = "mautrix-meta-instagram";
       group = "mautrix-meta";
     };
@@ -44,8 +44,12 @@
       };
       script = ''
         mkdir -p /run/mautrix-meta-facebook
-        echo "META_AS_TOKEN=$(cat ${config.sops.secrets.meta_as_token.path})" > /run/mautrix-meta-facebook/env
-        echo "META_HS_TOKEN=$(cat ${config.sops.secrets.meta_hs_token.path})" >> /run/mautrix-meta-facebook/env
+        echo "META_AS_TOKEN=$(cat ${
+          config.sops.secrets."matrix/bridges/meta/as_token".path
+        })" > /run/mautrix-meta-facebook/env
+        echo "META_HS_TOKEN=$(cat ${
+          config.sops.secrets."matrix/bridges/meta/hs_token".path
+        })" >> /run/mautrix-meta-facebook/env
         chmod 600 /run/mautrix-meta-facebook/env
         chown mautrix-meta-facebook:mautrix-meta /run/mautrix-meta-facebook/env
       '';
@@ -60,8 +64,12 @@
       };
       script = ''
         mkdir -p /run/mautrix-meta-instagram
-        echo "INSTAGRAM_AS_TOKEN=$(cat ${config.sops.secrets.instagram_as_token.path})" > /run/mautrix-meta-instagram/env
-        echo "INSTAGRAM_HS_TOKEN=$(cat ${config.sops.secrets.instagram_hs_token.path})" >> /run/mautrix-meta-instagram/env
+        echo "INSTAGRAM_AS_TOKEN=$(cat ${
+          config.sops.secrets."matrix/bridges/instagram/as_token".path
+        })" > /run/mautrix-meta-instagram/env
+        echo "INSTAGRAM_HS_TOKEN=$(cat ${
+          config.sops.secrets."matrix/bridges/instagram/hs_token".path
+        })" >> /run/mautrix-meta-instagram/env
         chmod 600 /run/mautrix-meta-instagram/env
         chown mautrix-meta-instagram:mautrix-meta /run/mautrix-meta-instagram/env
       '';
