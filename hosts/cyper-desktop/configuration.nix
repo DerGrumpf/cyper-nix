@@ -1,6 +1,8 @@
-{ ... }:
 {
-  imports = [ ./hardware-configuration.nix ];
+  imports = [
+    ./disko.nix
+    ./hardware-configuration.nix
+  ];
 
   networking = {
     useNetworkd = true;

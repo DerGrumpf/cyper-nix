@@ -45,18 +45,17 @@
 
   fileSystems = {
     "/" = {
-      device = "/dev/disk/by-label/NIXROOT";
-      fsType = "ext4";
-    };
-
-    "/boot" = {
-      device = "/dev/disk/by-label/NIXBOOT";
-      fsType = "vfat";
+      device = "none";
+      fsType = "tmpfs";
       options = [
-        "fmask=0022"
-        "dmask=0022"
+        "defaults"
+        "size=4G"
+        "mode=755"
       ];
     };
+
+    "/nix".neededForBoot = true;
+    "/persist".neededForBoot = true;
 
     "/storage" = {
       device = "/dev/disk/by-label/STORAGE";
@@ -96,8 +95,6 @@
     "d /shares/storage-fast 0775 ${primaryUser} users -"
     "d /shares/storage-backup 0775 ${primaryUser} users -"
   ];
-
-  swapDevices = [ ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
