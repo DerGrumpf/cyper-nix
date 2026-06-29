@@ -149,7 +149,7 @@ in
             type = "metrics";
             bind_addresses = [
               "127.0.0.1"
-              "100.109.10.91"
+              "10.10.0.1"
             ];
             resources = [ ];
           }
@@ -250,7 +250,7 @@ in
         wal_level = "replica";
         max_wal_senders = 5;
         wal_keep_size = "512MB";
-        listen_addresses = lib.mkForce "127.0.0.1,100.109.10.91";
+        listen_addresses = lib.mkForce "127.0.0.1,10.10.0.1";
         ssl = true;
       };
       authentication = lib.mkAfter ''

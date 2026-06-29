@@ -1,4 +1,3 @@
-{ pkgs, ... }:
 {
   # Avante: AI-powered coding assistant (Cursor-like experience in Neovim)
   programs.nixvim = {
@@ -29,7 +28,7 @@
             };
 
             ollama = {
-              endpoint = "http://100.109.179.25:11434"; # tailscale IP, no /v1 suffix
+              endpoint = "http://10.10.0.2:11434";
               model = "qwen2.5:3b"; # swap for "llama3.2:3b" or "deepseek-r1:1.5b"
               timeout = 60000; # local + small model can be slow on first load
               disable_tools = true; # these small models aren't reliable at tool calling

@@ -22,10 +22,10 @@
     settings = {
       PAPERLESS_USE_X_FORWARDED_HOST = true;
       PAPERLESS_USE_X_FORWARDED_PORT = true;
-      PAPERLESS_ALLOWED_HOSTS = "ngx.cyperpunk.de,100.109.179.25,localhost";
+      PAPERLESS_ALLOWED_HOSTS = "ngx.cyperpunk.de,10.10.0.2,localhost";
       PAPERLESS_CSRF_TRUSTED_ORIGINS = [
         "https://ngx.cyperpunk.de"
-        "http://100.109.179.25:28101"
+        "http://10.10.0.2:28101"
       ];
       PAPERLESS_OCR_LANGUAGE = "deu+eng";
       PAPERLESS_CONSUMER_POLLING = 60;

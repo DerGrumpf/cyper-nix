@@ -50,7 +50,7 @@
                 --network host \
                 postgres:17 \
                 pg_basebackup \
-                  --host=100.109.10.91 \
+                  --host=10.10.0.1 \
                   --port=5432 \
                   --username=replicator \
                   --pgdata=/out/postgresql-replica \
@@ -64,7 +64,7 @@
 
               # primary conninfo
               cat > "$DATADIR/postgresql.auto.conf" <<EOF
-      primary_conninfo = 'host=100.109.10.91 port=5432 user=replicator password=$PG_PASS application_name=cyper-controller sslmode=disable'
+      primary_conninfo = 'host=10.10.0.1 port=5432 user=replicator password=$PG_PASS application_name=cyper-controller sslmode=disable'
       EOF
 
               # minimal postgresql.conf

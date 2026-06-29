@@ -134,7 +134,7 @@ in
           metrics_path = "/_synapse/metrics";
           static_configs = [
             {
-              targets = [ "100.109.10.91:9009" ];
+              targets = [ "10.10.0.1:9009" ];
               labels = {
                 instance = "cyper-proxy";
                 job = "master";
@@ -158,7 +158,7 @@ in
           job_name = "postgresql-proxy";
           static_configs = [
             {
-              targets = [ "100.109.10.91:9188" ];
+              targets = [ "10.10.0.1:9188" ];
               labels = {
                 instance = "cyper-proxy";
               };
