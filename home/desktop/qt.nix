@@ -6,10 +6,10 @@
     platformTheme.name = "kvantum";
   };
   home.packages = lib.mkIf (!pkgs.stdenv.isDarwin) (
-    with pkgs;
+    with pkgs.kdePackages;
     [
-      kdePackages.qt6ct
-      kdePackages.qtstyleplugin-kvantum
+      qt6ct
+      qtstyleplugin-kvantum
     ]
   );
 }

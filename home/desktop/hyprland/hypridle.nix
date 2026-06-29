@@ -1,6 +1,4 @@
-{ ... }:
 {
-  # Hypridle configuration
   services.hypridle = {
     enable = true;
     settings = {
