@@ -11,7 +11,7 @@
   imports = [
     ./sops.nix
     ./locale.nix
-    ./tailscale.nix
+    ./wireguard.nix
     ./ssh.nix
     ./impermanence.nix
   ]

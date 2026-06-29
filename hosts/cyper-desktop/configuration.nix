@@ -6,6 +6,17 @@
     useNetworkd = true;
     useDHCP = false;
     firewall.enable = true;
+    wireguard.interfaces.wg0 = {
+      ips = [ "10.10.0.40/24" ];
+      peers = [
+        {
+          publicKey = "NjMYaUZO/iPRM/J46qyPPuWYg5oSeAUxjocMs/hYTXs=";
+          endpoint = "178.254.8.35:51820";
+          allowedIPs = [ "10.10.0.0/24" ];
+          persistentKeepalive = 25;
+        }
+      ];
+    };
   };
 
   systemd.network = {

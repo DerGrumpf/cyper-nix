@@ -8,6 +8,7 @@
     ./settings.nix
     ./homebrew.nix
     ./yabai.nix
+    ./wireguard.nix
   ];
 
   # nix config

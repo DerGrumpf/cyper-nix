@@ -16,6 +16,7 @@
       ];
       kernelModules = [ ];
     };
+    kernel.sysctl."net.ipv4.ip_forward" = 1;
     kernelModules = [ ];
     extraModulePackages = [ ];
   };
@@ -30,10 +31,9 @@
         "mode=755"
       ];
     };
+
+    "/nix".neededForBoot = true;
+    "/persist".neededForBoot = true;
   };
-
-  fileSystems."/nix".neededForBoot = true;
-  fileSystems."/persist".neededForBoot = true;
-
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }
