@@ -275,6 +275,9 @@
           hostName = "cyper-proxy";
           target = ""; # KVM console IP
         };
+        install-cyper-desktop = mkInstall {
+          hostName = "cyper-desktop";
+        };
       };
     };
 }
