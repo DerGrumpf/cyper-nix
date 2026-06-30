@@ -6,7 +6,7 @@
         after_sleep_cmd = "hyprctl dispatch dpms on";
         ignore_dbus_inhibit = false;
         lock_cmd = "hyprlock";
-        before_sleep_cmd = "notify-send -u critical \"I'm getting sleepy… I'll see you in my code dreams 💖\" --icon=$HOME/.config/hypr/avatar.png --app-name=Hyprlock";
+        before_sleep_cmd = "notify-send -u critical \"I'm getting sleepy… I'll see you in my code dreams 💖\" --app-name=Hyprlock";
       };
 
       listener = [

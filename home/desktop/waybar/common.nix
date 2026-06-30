@@ -163,7 +163,7 @@
         clouds=$(echo "$data" | jq -r '.clouds.all')
         sunrise=$(echo "$data" | jq -r '.sys.sunrise | strftime("%H:%M")')
         sunset=$(echo "$data" | jq -r '.sys.sunset | strftime("%H:%M")')
-        notify-send "$city" "Temperature: $temp °C\nFeels Like: $feels °C\nHumidity: $humidity%\nWind: $wind m/s\nClouds: $clouds%\nSunrise at: $sunrise\nSunset at: $sunset" -u normal --icon="$HOME/Pictures/Avatar/avatar_weather_no_bg.png"
+        notify-send "$city" "Temperature: $temp °C\nFeels Like: $feels °C\nHumidity: $humidity%\nWind: $wind m/s\nClouds: $clouds%\nSunrise at: $sunrise\nSunset at: $sunset" -u normal --icon="$HOME/Pictures/Avatar/miku_window_no_bg.png"
       '';
     };
 

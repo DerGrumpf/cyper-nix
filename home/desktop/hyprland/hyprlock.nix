@@ -14,7 +14,7 @@
 
       background = [
         {
-          path = "~/Pictures/Wallpapers/lucy_with_cat.png";
+          path = "$HOME/Pictures/Wallpapers/lucy_with_cat.png";
           blur_passes = 1;
           blur_size = 5;
         }
@@ -77,7 +77,7 @@
         outline_thickness = 4;
         dots_size = 0.2;
         dots_spacing = 0.2;
-        dots_center = "true";
+        dots_center = true;
         outer_color = "$red";
         inner_color = "$surface0";
         font_color = "$text";
@@ -93,16 +93,17 @@
         valign = "center";
       };
 
-      image = {
-        monitor = "";
-        path = "~/.config/hypr/avatar/avatar.png";
-        size = 300;
-        border_color = "$teal";
-        position = "0, 75";
-        halign = "center";
-        valign = "center";
-      };
+      image = [
+        {
+          monitor = "";
+          path = "$HOME/Pictures/Avatar/miku_happy_sparkels.png";
+          size = 300;
+          border_color = "$teal";
+          position = "0, 75";
+          halign = "center";
+          valign = "center";
+        }
+      ];
     };
   };
-
 }
