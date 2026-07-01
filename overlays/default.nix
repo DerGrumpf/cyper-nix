@@ -7,4 +7,5 @@ final: prev:
     inherit (prev) vaultwarden;
   };
   netradiant-custom = final.callPackage ./netradiant-custom.nix { };
+  xonotic-latest = final.callPackage ./xonotic-latest.nix { };
 }
