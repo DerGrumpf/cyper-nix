@@ -29,7 +29,7 @@
             };
 
             ollama = {
-              endpoint = "http://100.109.179.25:11434"; # tailscale IP, no /v1 suffix
+              endpoint = "http://100.86.56.71:11434"; # tailscale IP, no /v1 suffix
               model = "qwen2.5:3b"; # swap for "llama3.2:3b" or "deepseek-r1:1.5b"
               timeout = 60000; # local + small model can be slow on first load
               disable_tools = true; # these small models aren't reliable at tool calling

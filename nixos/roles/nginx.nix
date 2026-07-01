@@ -1,6 +1,7 @@
 _:
 let
-  upstream = "100.109.179.25";
+
+  upstream = "100.86.56.71";
 
   mkProxy = port: {
     forceSSL = true;

@@ -17,6 +17,8 @@
   libx11,
   SDL2,
   gmp,
+  git,
+  gcc,
   autoconf,
   automake,
   libtool,
@@ -33,7 +35,7 @@ let
     owner = "xonotic";
     repo = "darkplaces";
     rev = "ddabe55ae766087df0b82d214ca4b6d79a443345";
-    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    hash = "sha256-S1jWfMx60lTcpMv4DxoDI2BT124bo/jzjtezSsQUL2M=";
   };
 
   d0_blind_id-src = fetchFromGitLab {
@@ -41,7 +43,7 @@ let
     owner = "xonotic";
     repo = "d0_blind_id";
     rev = "64983f4156e860a94a6f5e264c67a1c2df69d7e9";
-    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    hash = "sha256-KblIXuzDTcFk7x3YFtJkugrqZ47+aQbDE0fL/sfUxUc=";
   };
 
   xonotic-data = fetchFromGitLab {
@@ -49,7 +51,7 @@ let
     owner = "xonotic";
     repo = "xonotic-data.pk3dir";
     rev = "bc2ce0925b46ff79d4deb4cf4995f1330f00de43";
-    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    hash = "sha256-b5QvLdAFxn/7EjF0lufL1DbuXGgC39k6zfVN7G+mD2I=";
   };
 
   desktopItem = makeDesktopItem {
@@ -76,9 +78,7 @@ let
       libtool
     ];
     buildInputs = [ gmp ];
-
     preConfigure = "autoreconf -fi";
-    configureFlags = [ "--prefix=$out" ];
     enableParallelBuilding = true;
   };
 
@@ -99,6 +99,7 @@ let
 
     dontStrip = false;
     enableParallelBuilding = true;
+    env.NIX_CFLAGS_COMPILE = "-std=gnu11";
 
     preBuild = ''
       mkdir -p ../d0_blind_id/include ../d0_blind_id/lib
@@ -154,15 +155,28 @@ let
     inherit version;
     src = xonotic-data;
 
-    nativeBuildInputs = [ gmqcc ];
+    nativeBuildInputs = [
+      gmqcc
+      git
+      gcc
+    ];
+
+    preBuild = ''
+      chmod +w qcsrc/tools/qcc.sh
+      patchShebangs qcsrc/tools/
+    '';
 
     buildPhase = ''
-      runHook preBuild
-      export QCC="${gmqcc}/bin/gmqcc"
-      export QCCFLAGS_WATERMARK=nix_build
-      export ZIP=/bin/true
-      make -C qcsrc -j $NIX_BUILD_CORES
-      runHook postBuild
+                  runHook preBuild
+                  export QCC="${gmqcc}/bin/gmqcc"
+                  export CPP="cc -xc -E"
+      			export WORKDIR="../.tmp"
+                  export QCCFLAGS_WATERMARK="nix_build"
+                  export ZIP=true
+            	  ls -la qcsrc/tools/qcc.sh || echo "MISSING"
+                  ls -la qcsrc/tools/ || echo "DIR MISSING"
+                  make -C qcsrc -j1 
+                  runHook postBuild
     '';
 
     installPhase = ''
