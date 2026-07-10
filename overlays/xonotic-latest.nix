@@ -54,6 +54,30 @@ let
     hash = "sha256-b5QvLdAFxn/7EjF0lufL1DbuXGgC39k6zfVN7G+mD2I=";
   };
 
+  xonotic-music = fetchFromGitLab {
+    domain = "gitlab.com";
+    owner = "xonotic";
+    repo = "xonotic-music.pk3dir";
+    rev = "89bd037ad5d7c35fef606f5860d13b8fdbda8e88";
+    hash = "sha256-lYWqjjdMQ5cBfS0WzU3ayDdMGGvlVUuVhu+VCOUm6DU=";
+  };
+
+  xonotic-nexcompat = fetchFromGitLab {
+    domain = "gitlab.com";
+    owner = "xonotic";
+    repo = "xonotic-nexcompat.pk3dir";
+    rev = "a9c3bec5173d5f090fbf2c3a100f864ed35eadb0";
+    hash = "sha256-lYWqjjdMQ5cBfS0WzU3ayDdMGGvlVUuVhu+VCOUm6DU=";
+  };
+
+  xonotic-maps = fetchFromGitLab {
+    domain = "gitlab.com";
+    owner = "xonotic";
+    repo = "xonotic-maps.pk3dir";
+    rev = "552fbb5bdb4266ca374d2c5dc845bcd504bd499a";
+    hash = "sha256-lYWqjjdMQ5cBfS0WzU3ayDdMGGvlVUuVhu+VCOUm6DU=";
+  };
+
   desktopItem = makeDesktopItem {
     name = "xonotic-latest";
     exec = "xonotic-latest";
@@ -167,22 +191,25 @@ let
     '';
 
     buildPhase = ''
-                  runHook preBuild
-                  export QCC="${gmqcc}/bin/gmqcc"
-                  export CPP="cc -xc -E"
-      			export WORKDIR="../.tmp"
-                  export QCCFLAGS_WATERMARK="nix_build"
-                  export ZIP=true
-            	  ls -la qcsrc/tools/qcc.sh || echo "MISSING"
-                  ls -la qcsrc/tools/ || echo "DIR MISSING"
-                  make -C qcsrc -j1 
-                  runHook postBuild
+      runHook preBuild
+      export QCC="${gmqcc}/bin/gmqcc"
+      export CPP="cc -xc -E"
+      export WORKDIR="../.tmp"
+      export QCCFLAGS_WATERMARK="nix_build"
+      export ZIP=true
+      ls -la qcsrc/tools/qcc.sh || echo "MISSING"
+      ls -la qcsrc/tools/ || echo "DIR MISSING"
+      make -C qcsrc -j1 
+      runHook postBuild
     '';
 
     installPhase = ''
-      runHook preInstall
-      mkdir -p $out
-      cp -r . $out/xonotic-data.pk3dir
+      runHook preInstall 
+      mkdir -p $out/data
+      cp -r . $out/data/xonotic-data.pk3dir
+      cp -r ${xonotic-music} $out/data/xonotic-music.pk3dir
+      cp -r ${xonotic-nexcompat} $out/data/xonotic-nexcompat.pk3dir
+      cp -r ${xonotic-maps} $out/data/xonotic-maps.pk3dir
       runHook postInstall
     '';
   };
@@ -196,7 +223,6 @@ runCommand "xonotic-latest-${version}"
       copyDesktopItems
     ];
     desktopItems = [ desktopItem ];
-
     meta = {
       description = "Free fast-paced first-person shooter (git build)";
       homepage = "https://xonotic.org/";
@@ -207,20 +233,21 @@ runCommand "xonotic-latest-${version}"
   }
   ''
     mkdir -p $out/bin $out/share
-
-    ${lib.optionalString withDedicated ''
-      ln -s ${darkplaces-built}/bin/xonotic-latest-dedicated $out/bin/
-    ''}
     ${lib.optionalString withSDL ''
-      ln -s ${darkplaces-built}/bin/xonotic-latest-sdl $out/bin/
+      cp ${darkplaces-built}/bin/xonotic-latest-sdl $out/bin/xonotic-latest-sdl
+      chmod +x $out/bin/xonotic-latest-sdl
+      wrapProgram $out/bin/xonotic-latest-sdl \
+        --add-flags "-basedir ${xonotic-data-compiled}" \
+        --add-flags "+vid_dpi 96" \
+        --prefix LD_LIBRARY_PATH : "${darkplaces-built}/lib"
       ln -sf $out/bin/xonotic-latest-sdl $out/bin/xonotic-latest
     ''}
-
-    copyDesktopItems
-
-    for binary in $out/bin/xonotic-latest*; do
-      wrapProgram "$binary" \
+    ${lib.optionalString withDedicated ''
+      cp ${darkplaces-built}/bin/xonotic-latest-dedicated $out/bin/xonotic-latest-dedicated
+      chmod +x $out/bin/xonotic-latest-dedicated
+      wrapProgram $out/bin/xonotic-latest-dedicated \
         --add-flags "-basedir ${xonotic-data-compiled}" \
         --prefix LD_LIBRARY_PATH : "${darkplaces-built}/lib"
-    done
+    ''}
+    copyDesktopItems
   ''
