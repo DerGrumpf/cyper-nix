@@ -60,9 +60,15 @@
     networks."10-ethernet" = {
       matchConfig.Name = "en*";
       networkConfig = {
-        Address = "192.168.2.99/24";
-        Gateway = "192.168.2.1";
-        DNS = "192.168.2.2";
+        #Address = "192.168.2.99/24";
+        #Gateway = "192.168.2.1";
+        #DNS = "192.168.2.2";
+        Address = "195.90.219.9/22";
+        Gateway = "195.90.216.1";
+        DNS = [
+          "178.254.16.151"
+          "178.254.16.141"
+        ];
         DHCP = "no";
       };
     };
