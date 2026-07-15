@@ -21,7 +21,7 @@
 
       [Peer]
       PublicKey = NjMYaUZO/iPRM/J46qyPPuWYg5oSeAUxjocMs/hYTXs=
-      Endpoint = 178.254.8.35:51820
+      Endpoint = 195.90.219.9:51820
       AllowedIPs = 10.10.0.0/24
       PersistentKeepalive = 25
       EOF
