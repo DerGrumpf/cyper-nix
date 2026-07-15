@@ -39,6 +39,11 @@ in
       owner = "matrix-synapse";
       group = "matrix-synapse";
     };
+    "matrix/signing_key" = {
+      owner = "matrix-synapse";
+      group = "matrix-synapse";
+      mode = "0400";
+    };
     "postgres/replication_password" = {
       owner = "postgres";
       group = "postgres";
@@ -97,6 +102,7 @@ in
         suppress_key_server_warning = true;
         registration_shared_secret_path = config.sops.secrets."matrix/registration_secret".path;
         macaroon_secret_key = "$__file{${config.sops.secrets."matrix/macaroon_secret".path}}";
+        signing_key_path = config.sops.secrets."matrix/signing_key".path;
         matrix_rtc = {
           enabled = true;
           transports = [
@@ -272,11 +278,40 @@ in
         "/var/lib/mautrix-discord"
         "/var/lib/mautrix-whatsapp"
       ];
-      postgresql.postStart = lib.mkAfter ''
-        PG_PASS=$(cat ${config.sops.secrets."postgres/replication_password".path})
-        ${config.services.postgresql.package}/bin/psql -U postgres -c \
-          "ALTER ROLE replicator WITH PASSWORD '$PG_PASS';"
-      '';
+
+      postgresql = {
+        preStart = lib.mkBefore ''
+          cd ${config.services.postgresql.dataDir}
+
+          if [ ! -f server.crt ]; then
+            ${pkgs.openssl}/bin/openssl req \
+              -new \
+              -x509 \
+              -days 3650 \
+              -nodes \
+              -keyout server.key \
+              -out server.crt \
+              -subj "/CN=cyper-proxy"
+
+            chmod 600 server.key
+          fi
+        '';
+
+        postStart = lib.mkAfter ''
+          PG_PASS=$(cat ${config.sops.secrets."postgres/replication_password".path})
+          ${config.services.postgresql.package}/bin/psql -U postgres -c "
+            DO \$\$
+            BEGIN
+              IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'replicator') THEN
+                CREATE ROLE replicator WITH REPLICATION LOGIN PASSWORD '$PG_PASS';
+              ELSE
+                ALTER ROLE replicator WITH PASSWORD '$PG_PASS';
+              END IF;
+            END
+            \$\$;
+          "
+        '';
+      };
     };
 
     tmpfiles.rules = [
