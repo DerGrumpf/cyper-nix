@@ -28,6 +28,9 @@ _: {
         background_alpha = 0.5;
       };
     };
+    lutris = {
+      enable = true;
+    };
     mpv.enable = true;
     onlyoffice = {
       enable = true;
