@@ -1,10 +1,8 @@
-{ ... }:
 {
   imports = [
     ./disko.nix
     ./hardware-configuration.nix
     ../../nixos/roles/nginx.nix
-    #    ../../nixos/roles/jitsi.nix
     ../../nixos/roles/matrix
   ];
 
@@ -26,12 +24,10 @@
       ];
     };
     defaultGateway = "195.90.216.1";
-
     defaultGateway6 = {
       address = "2a00:6800:3::1";
       interface = "ens3";
     };
-
     nameservers = [
       "178.254.16.151"
       "178.254.16.141"
@@ -75,13 +71,11 @@
         "cyperpunk.de"
         "matrix.cyperpunk.de"
       ];
-
       "2a00:6800:3:113e::1" = [
         "cyperpunk.de"
         "matrix.cyperpunk.de"
       ];
     };
-
   };
 
   system.stateVersion = "26.05";
