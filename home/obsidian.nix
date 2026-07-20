@@ -2,11 +2,10 @@
   config,
   pkgs,
   lib,
-  primaryUser,
   ...
 }:
 let
-  vaultRepo = "ssh://gitea@git.cyperpunk.de:12222/DerGrumpf/Notes.git";
+  vaultRepo = "ssh://forgejo@git.cyperpunk.de:12222/DerGrumpf/Notes.git";
   vaultPath = "${config.home.homeDirectory}/Notes";
   sshBinary = "${pkgs.openssh}/bin/ssh";
   gitBin = "${pkgs.git}/bin";
@@ -28,7 +27,7 @@ in
       openssh
     ];
 
-    persistence."/persist/home".directories = [
+    persistence."/persist".directories = [
       "Notes"
     ];
 
