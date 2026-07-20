@@ -26,7 +26,7 @@
     ];
 
     persistence = lib.mkIf (!isDarwin) {
-      "/persist/home" = {
+      "/persist" = {
         directories = [ ".local/share/zoxide" ];
         files = [ ".local/share/fish/fish_history" ];
       };
