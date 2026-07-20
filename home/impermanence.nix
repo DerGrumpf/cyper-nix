@@ -1,5 +1,5 @@
 {
-  home.persistence."/persist/home" = {
+  home.persistence."/persist" = {
     hideMounts = true;
     directories = [
       ".config/nix"
