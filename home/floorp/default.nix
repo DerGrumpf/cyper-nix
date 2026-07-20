@@ -22,7 +22,7 @@ let
     };
 in
 {
-  home.persistence."/persist/home".directories = [
+  home.persistence."/persist".directories = [
     ".mozilla/firefox/${primaryUser}"
   ];
 

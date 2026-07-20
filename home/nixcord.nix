@@ -8,7 +8,7 @@
     inputs.nixcord.homeModules.nixcord
   ];
 
-  home.persistence."/persist/home".directories = [
+  home.persistence."/persist".directories = [
     ".config/vesktop"
   ];
 

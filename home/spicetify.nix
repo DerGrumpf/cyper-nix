@@ -8,7 +8,7 @@
     inputs.spicetify-nix.homeManagerModules.default
   ];
 
-  home.persistence."/persist/home".directories = [
+  home.persistence."/persist".directories = [
     ".config/spotify"
   ];
 
