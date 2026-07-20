@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  isDarwin,
   ...
 }:
 let
@@ -27,7 +28,7 @@ in
       openssh
     ];
 
-    persistence."/persist".directories = [
+    persistence."/persist".directories = lib.mkIf (!isDarwin) [
       "Notes"
     ];
 
