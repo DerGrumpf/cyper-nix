@@ -9,6 +9,9 @@
       "Pictures"
       ".thunderbird"
       ".xonotic"
+      ".config/Element"
+      ".irssi"
+      ".config/blender"
     ];
   };
 }

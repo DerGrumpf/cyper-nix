@@ -57,7 +57,6 @@
       ++ lib.optionals (!pkgs.stdenv.isDarwin && !isServer) [
         # GUI
         element-desktop
-        zapzap
         nautilus
         swayimg
         kdePackages.okular
