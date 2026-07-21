@@ -35,6 +35,9 @@
       ".config/fastfetch/config.jsonc".source = ./fastfetch.jsonc;
       ".config/tabiew/theme.toml".source = ./tabiew.toml;
       ".config/kitty/tab_bar.py".source = ./tab_bar.py;
+      ".cache/starship/init.nu".source = pkgs.runCommand "starship-init-nu" { } ''
+        ${pkgs.starship}/bin/starship init nu > $out
+      '';
       ".hushlogin" = lib.mkIf isDarwin { text = ""; }; # Suppress Login
     };
   };
@@ -134,16 +137,13 @@
         $env.config = {
         show_banner: false
         }
-        # Starship
         $env.STARSHIP_SHELL = "nu"
-        mkdir ~/.cache/starship
-        starship init nu | save -f ~/.cache/starship/init.nu
+        source ~/.cache/starship/init.nu
         # fzf picker for nvim
         def f [] { nvim (fzf) }
       '';
       extraEnv = ''
-        starship init nu | save -f ~/.cache/starship/init.nu
-        use ~/.cache/starship/init.nu
+        $env.STARSHIP_SHELL = "nu"
       '';
     };
 
