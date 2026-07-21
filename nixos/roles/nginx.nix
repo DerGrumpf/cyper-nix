@@ -30,6 +30,15 @@ let
   };
 in
 {
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/acme";
+      user = "acme";
+      group = "acme";
+      mode = "0750";
+    }
+  ];
+
   networking.firewall.allowedTCPPorts = [
     80
     443

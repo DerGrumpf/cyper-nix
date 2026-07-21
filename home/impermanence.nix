@@ -12,6 +12,9 @@
       ".config/Element"
       ".irssi"
       ".config/blender"
+      ".local/state/wireplumber"
+      ".local/state/waypaper"
+      ".cache/awww"
     ];
   };
 }

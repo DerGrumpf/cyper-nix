@@ -1,4 +1,12 @@
-_: {
+{
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/ollama";
+      user = "ollama";
+      group = "ollama";
+    }
+  ];
+
   services.ollama = {
     enable = true;
 

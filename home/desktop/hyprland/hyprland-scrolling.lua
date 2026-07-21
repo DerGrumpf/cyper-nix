@@ -76,6 +76,7 @@ local wallpaper = "$HOME/Pictures/Wallpapers/Ghost_in_the_Shell.png"
 
 local autostart = {
 	"sleep 2 && waybar & disown",
+	"sleep 2 && waypaper --restore & disown",
 }
 
 hl.on("hyprland.start", function()
