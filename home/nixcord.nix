@@ -1,6 +1,7 @@
 {
   lib,
   inputs,
+  isDarwin,
   ...
 }:
 {
@@ -8,7 +9,7 @@
     inputs.nixcord.homeModules.nixcord
   ];
 
-  home.persistence."/persist".directories = [
+  home.persistence."/persist".directories = lib.mkIf (!isDarwin) [
     ".config/vesktop"
   ];
 

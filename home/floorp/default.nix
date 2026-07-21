@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  lib,
+  isDarwin,
+  ...
+}:
 let
   addons = pkgs.nur.repos.rycee.firefox-addons;
   readJson = path: builtins.readFile path;
@@ -22,7 +27,7 @@ let
     };
 in
 {
-  home.persistence."/persist".directories = [
+  home.persistence."/persist".directories = lib.mkIf (!isDarwin) [
     ".floorp"
   ];
 
