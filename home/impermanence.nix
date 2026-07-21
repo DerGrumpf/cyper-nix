@@ -6,6 +6,8 @@
       "Documents"
       "Downloads"
       "Pictures"
+      ".thunderbird"
+      ".xonotic"
     ];
   };
 }

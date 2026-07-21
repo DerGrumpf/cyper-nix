@@ -1,4 +1,4 @@
-{ pkgs, primaryUser, ... }:
+{ pkgs, ... }:
 let
   addons = pkgs.nur.repos.rycee.firefox-addons;
   readJson = path: builtins.readFile path;
@@ -23,7 +23,7 @@ let
 in
 {
   home.persistence."/persist".directories = [
-    ".mozilla/firefox/${primaryUser}"
+    ".floorp"
   ];
 
   programs.floorp = {
