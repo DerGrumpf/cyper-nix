@@ -67,12 +67,6 @@ in
       group = "postgres";
       mode = "0750";
     }
-    {
-      directory = "/var/lib/acme";
-      user = "acme";
-      group = "acme";
-      mode = "0755";
-    }
   ];
 
   services = {

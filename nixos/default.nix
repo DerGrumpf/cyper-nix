@@ -28,6 +28,9 @@
       mode = "0400";
     };
     "nix/cachix_auth_token" = { };
+    "system/${primaryUser}" = {
+      neededForUsers = true;
+    };
   };
 
   nix = {
@@ -98,7 +101,10 @@
   environment.systemPackages = with pkgs; [ git ];
 
   security = lib.mkIf (!isServer) {
-    pam.services.swaylock = { };
+    pam.services = {
+      swaylock = { };
+      hyprlock = { };
+    };
     polkit.enable = true;
     apparmor.enable = false;
   };
@@ -147,6 +153,7 @@
 
   users.users.${primaryUser} = {
     home = "/home/${primaryUser}";
+    hashedPasswordFile = config.sops.secrets."system/${primaryUser}".path;
     shell = pkgs.fish;
     isNormalUser = true;
     extraGroups = [

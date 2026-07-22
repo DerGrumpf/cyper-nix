@@ -9,9 +9,10 @@ in
 {
   environment.persistence."/persist".directories = [
     {
-      directory = "/var/lib/AdGuardHome";
-      user = "adguardhome";
-      group = "adguardhome";
+      directory = "/var/lib/private/AdGuardHome";
+      user = "root";
+      group = "root";
+      mode = "0700";
     }
   ];
 

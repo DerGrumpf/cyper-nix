@@ -1,9 +1,10 @@
 {
   environment.persistence."/persist".directories = [
     {
-      directory = "/var/lib/ollama";
-      user = "ollama";
-      group = "ollama";
+      directory = "/var/lib/private/ollama";
+      user = "root";
+      group = "root";
+      mode = "0700";
     }
   ];
 

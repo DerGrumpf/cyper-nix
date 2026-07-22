@@ -34,6 +34,6 @@
       enableXdgAutostart = false;
     };
 
-    extraConfig = builtins.readFile ./hyprland-scrolling.lua;
+    extraConfig = builtins.readFile ./hyprland.lua;
   };
 }
