@@ -1,81 +1,35 @@
-{
-  lib,
-  pkgs,
-  primaryUser,
-  ...
-}:
-{
-  environment.etc = {
-    "greetd/background.png".source = ../assets/wallpapers/lucy_with_cat.png;
-    "greetd/environments".text = ''
-      Hyprland
-      fish
-    '';
-  };
+{ pkgs, primaryUser, ... }:
+let
+  mochaTheme = builtins.concatStringsSep ";" [
+    "border=blue"
+    "text=white"
+    "prompt=magenta"
+    "time=green"
+    "action=yellow"
+    "button=yellow"
+    "container=black"
+    "input=white"
+    "greet=magenta"
+    "title=cyan"
+  ];
 
-  programs.regreet = {
-    enable = true;
-    cageArgs = [
-      "-s"
-      "-m"
-      "last"
-    ];
-    theme = {
-      name = "catppuccin-mocha-standard-sky-dark";
-      package = pkgs.catppuccin-gtk;
-    };
-    cursorTheme = {
-      name = "catppuccin-mocha-sapphire-cursors";
-      package = pkgs.catppuccin-cursors.mochaSapphire;
-    };
-    iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme;
-    };
-    font = {
-      name = "FiraCode Nerd Font Propo";
-      size = 12;
-      package = pkgs.nerd-fonts.fira-code;
-    };
-    settings = {
-      background = {
-        path = "/etc/greetd/background.png";
-        fit = "Fill";
-      };
-      GTK = {
-        application_prefer_dark_theme = true;
-        cursor_theme_name = lib.mkForce "catppuccin-mocha-sapphire-cursors";
-        font_name = lib.mkForce "FiraCode Nerd Font Propo 12";
-        icon_theme_name = lib.mkForce "Papirus-Dark";
-        theme_name = lib.mkForce "catppuccin-mocha-standard-sky-dark";
-      };
-      commands = {
-        reboot = [
-          "systemctl"
-          "reboot"
-        ];
-        poweroff = [
-          "systemctl"
-          "poweroff"
-        ];
-      };
-      appearance = {
-        greeting_msg = "Hey there!";
-      };
-      widget.clock = {
-        format = "%A %d.%m.%Y %T";
-        resolution = "500ms";
-        timezone = "Europe/Berlin";
-        label_width = 150;
-      };
-    };
-  };
-
+  tuigreetArgs = builtins.concatStringsSep " " [
+    "--time"
+    "--remember"
+    "--remember-user-session"
+    "--asterisks"
+    "--asterisks-char '#'"
+    "--greeting 'Hey there!'"
+    "--theme '${mochaTheme}'"
+    "--cmd start-hyprland"
+  ];
+in
+{
   services.greetd = {
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.regreet}/bin/regreet";
+        command = "${pkgs.tuigreet}/bin/tuigreet ${tuigreetArgs}";
         user = "greeter";
       };
       initial_session = {
