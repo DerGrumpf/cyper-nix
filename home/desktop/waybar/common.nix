@@ -150,11 +150,11 @@
       format = "{}";
       return-type = "json";
       exec = ''
-        curl -sf --max-time 10 "https://api.openweathermap.org/data/2.5/weather?lat=52.281311&lon=10.527029&appid=$(cat ~/.config/sops-nix/secrets/OPENWEATHER_API_KEY)&units=metric&lang=en" | jq -c '{text: "\(.name) \(.main.temp)C°"}'
+        curl -sf --max-time 10 "https://api.openweathermap.org/data/2.5/weather?lat=52.281311&lon=10.527029&appid=$(cat ~/.config/sops-nix/secrets/api_keys/openweather)&units=metric&lang=en" | jq -c '{text: "\(.name) \(.main.temp)C°"}'
       '';
       interval = 120;
       on-click = ''
-        data=$(curl -sf --max-time 10 "https://api.openweathermap.org/data/2.5/weather?lat=52.281311&lon=10.527029&appid=$(cat ~/.config/sops-nix/secrets/OPENWEATHER_API_KEY)&units=metric&lang=en")
+        data=$(curl -sf --max-time 10 "https://api.openweathermap.org/data/2.5/weather?lat=52.281311&lon=10.527029&appid=$(cat ~/.config/sops-nix/secrets/api_keys/openweather)&units=metric&lang=en")
         city=$(echo "$data" | jq -r '.name')
         temp=$(echo "$data" | jq -r '.main.temp')
         feels=$(echo "$data" | jq -r '.main.feels_like')
@@ -163,7 +163,7 @@
         clouds=$(echo "$data" | jq -r '.clouds.all')
         sunrise=$(echo "$data" | jq -r '.sys.sunrise | strftime("%H:%M")')
         sunset=$(echo "$data" | jq -r '.sys.sunset | strftime("%H:%M")')
-        notify-send "$city" "Temperature: $temp °C\nFeels Like: $feels °C\nHumidity: $humidity%\nWind: $wind m/s\nClouds: $clouds%\nSunrise at: $sunrise\nSunset at: $sunset" -u normal --icon="$HOME/Pictures/Avatar/avatar_weather_no_bg.png"
+        notify-send "$city" "Temperature: $temp °C\nFeels Like: $feels °C\nHumidity: $humidity%\nWind: $wind m/s\nClouds: $clouds%\nSunrise at: $sunrise\nSunset at: $sunset" -u normal --icon="$HOME/Pictures/Avatar/miku_window_no_bg.png"
       '';
     };
 

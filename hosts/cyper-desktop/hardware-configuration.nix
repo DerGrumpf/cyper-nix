@@ -30,35 +30,34 @@
     extraModulePackages = [ config.boot.kernelPackages.v4l2loopback.out ];
     extraModprobeConfig = ''
       options v4l2loopback exclusive_caps=1 card_label="Virtual Camera"
+      options hid_apple fnmode=2
     '';
     zfs.forceImportRoot = false;
   };
 
   sops = {
-    secrets.smb_passwd = { };
-
+    secrets."network/smb_passwd" = { };
     templates.smb_credentials = {
       content = ''
         username=${primaryUser}
-        password=${config.sops.placeholder.smb_passwd}
+        password=${config.sops.placeholder."network/smb_passwd"}
       '';
     };
   };
 
   fileSystems = {
     "/" = {
-      device = "/dev/disk/by-label/NIXROOT";
-      fsType = "ext4";
-    };
-
-    "/boot" = {
-      device = "/dev/disk/by-label/NIXBOOT";
-      fsType = "vfat";
+      device = "none";
+      fsType = "tmpfs";
       options = [
-        "fmask=0022"
-        "dmask=0022"
+        "defaults"
+        "size=4G"
+        "mode=755"
       ];
     };
+
+    "/nix".neededForBoot = true;
+    "/persist".neededForBoot = true;
 
     "/storage" = {
       device = "/dev/disk/by-label/STORAGE";
@@ -98,8 +97,6 @@
     "d /shares/storage-fast 0775 ${primaryUser} users -"
     "d /shares/storage-backup 0775 ${primaryUser} users -"
   ];
-
-  swapDevices = [ ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 

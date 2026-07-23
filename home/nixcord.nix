@@ -1,7 +1,16 @@
-{ lib, inputs, ... }:
+{
+  lib,
+  inputs,
+  isDarwin,
+  ...
+}:
 {
   imports = [
     inputs.nixcord.homeModules.nixcord
+  ];
+
+  home.persistence."/persist".directories = lib.mkIf (!isDarwin) [
+    ".config/vesktop"
   ];
 
   programs.nixcord = {

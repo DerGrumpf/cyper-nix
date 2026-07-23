@@ -1,14 +1,23 @@
 {
   primaryUser,
   pkgs,
+  lib,
+  isDarwin,
   ...
 }:
 {
 
-  home.packages = with pkgs; [
-    gh
-    gnupg
-  ];
+  home = {
+    packages = with pkgs; [
+      gh
+      gnupg
+    ];
+
+    persistence."/persist".directories = lib.mkIf (!isDarwin) [
+      ".config/gh"
+      ".gnupg"
+    ];
+  };
 
   programs = {
     git = {
@@ -21,8 +30,8 @@
           defaultBranch = "main";
         };
         user = {
-          name = "DerGrumpf"; # TODO replace
-          email = "phil.keier@hotmail.com"; # TODO replace
+          name = "DerGrumpf";
+          email = "phil.keier@hotmail.com";
         };
       };
 

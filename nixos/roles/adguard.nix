@@ -2,12 +2,20 @@
   config,
   ...
 }:
-
 let
   primaryInterface = config.systemd.network.networks."10-ethernet".matchConfig.Name;
   adguardPort = 3010;
 in
 {
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/private/AdGuardHome";
+      user = "root";
+      group = "root";
+      mode = "0700";
+    }
+  ];
+
   services = {
     resolved.enable = false;
     adguardhome = {

@@ -12,7 +12,7 @@ _: {
           npm = "@ai-sdk/openai-compatible";
           name = "Ollama (tailscale)";
           options = {
-            baseURL = "http://100.109.179.25:11434/v1";
+            baseURL = "http://10.10.0.2:11434/v1";
           };
           models = {
             "llama3.2:3b" = {

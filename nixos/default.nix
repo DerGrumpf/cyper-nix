@@ -11,8 +11,9 @@
   imports = [
     ./sops.nix
     ./locale.nix
-    ./tailscale.nix
+    ./wireguard.nix
     ./ssh.nix
+    ./impermanence.nix
   ]
   ++ lib.optionals (!isServer) [
     ./regreet.nix
@@ -22,9 +23,14 @@
     ./catppuccin.nix
   ];
 
-  sops.secrets."nix_cache_priv_key" = {
-
-    mode = "0400";
+  sops.secrets = {
+    "nix/cache_priv_key" = {
+      mode = "0400";
+    };
+    "nix/cachix_auth_token" = { };
+    "system/${primaryUser}" = {
+      neededForUsers = true;
+    };
   };
 
   nix = {
@@ -47,7 +53,7 @@
         "https://nix-community.cachix.org"
         "https://cyper-cache.cachix.org"
       ];
-      secret-key-files = [ config.sops.secrets."nix_cache_priv_key".path ];
+      secret-key-files = [ config.sops.secrets."nix/cache_priv_key".path ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
@@ -95,7 +101,10 @@
   environment.systemPackages = with pkgs; [ git ];
 
   security = lib.mkIf (!isServer) {
-    pam.services.swaylock = { };
+    pam.services = {
+      swaylock = { };
+      hyprlock = { };
+    };
     polkit.enable = true;
     apparmor.enable = false;
   };
@@ -112,8 +121,6 @@
     };
   };
 
-  sops.secrets.cachix_auth_token = { };
-
   systemd.services.cachix-push = {
     description = "Push new store paths to Cachix";
     after = [ "multi-user.target" ];
@@ -121,17 +128,32 @@
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStart = "${pkgs.bash}/bin/bash -c 'CACHIX_AUTH_TOKEN=$(cat ${config.sops.secrets.cachix_auth_token.path}) ${pkgs.nix}/bin/nix path-info --recursive /run/current-system | CACHIX_AUTH_TOKEN=$(cat ${config.sops.secrets.cachix_auth_token.path}) ${pkgs.cachix}/bin/cachix push cyper-cache'";
+      ExecStart = "${pkgs.bash}/bin/bash -c 'CACHIX_AUTH_TOKEN=$(cat ${
+        config.sops.secrets."nix/cachix_auth_token".path
+      }) ${pkgs.nix}/bin/nix path-info --recursive /run/current-system | CACHIX_AUTH_TOKEN=$(cat ${
+        config.sops.secrets."nix/cachix_auth_token".path
+      }) ${pkgs.cachix}/bin/cachix push cyper-cache'";
     };
   };
 
-  networking.firewall.allowedTCPPorts = [
-    9002
-    3100
-  ];
+  networking = {
+    hosts = {
+      "10.10.0.1" = [ "proxy.cyperpunk.de" ];
+      "10.10.0.2" = [ "controller.cyperpunk.de" ];
+      "10.10.0.3" = [ "mac.cyperpunk.de" ];
+      "10.10.0.30" = [ "node1.cyperpunk.de" ];
+      "10.10.0.31" = [ "node2.cyperpunk.de" ];
+      "10.10.0.40" = [ "desktop.cyperpunk.de" ];
+    };
+    firewall.allowedTCPPorts = [
+      9002
+      3100
+    ];
+  };
 
   users.users.${primaryUser} = {
     home = "/home/${primaryUser}";
+    hashedPasswordFile = config.sops.secrets."system/${primaryUser}".path;
     shell = pkgs.fish;
     isNormalUser = true;
     extraGroups = [

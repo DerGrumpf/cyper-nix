@@ -6,6 +6,16 @@ let
   iface = config.systemd.network.networks."10-ethernet".matchConfig.Name;
 in
 {
+
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/watchyourlan";
+      user = "watchyourlan";
+      group = "watchyourlan";
+      mode = "0750";
+    }
+  ];
+
   networking.firewall.allowedTCPPorts = [ 8840 ];
 
   systemd.services.watchyourlan = {

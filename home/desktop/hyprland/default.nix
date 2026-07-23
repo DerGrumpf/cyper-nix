@@ -15,6 +15,7 @@
     pamixer
     brightnessctl
     playerctl
+    waypaper
   ];
 
   systemd.user.targets.hyprland-session.Unit.Wants = [ "xdg-desktop-autostart.target" ];
@@ -33,6 +34,6 @@
       enableXdgAutostart = false;
     };
 
-    extraConfig = builtins.readFile ./hyprland-scrolling.lua;
+    extraConfig = builtins.readFile ./hyprland.lua;
   };
 }

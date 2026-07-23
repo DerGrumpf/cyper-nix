@@ -38,6 +38,7 @@
         nix-index
         ncdu
         tty-solitaire
+        cowsay
       ]
       ++ lib.optionals (!pkgs.stdenv.isDarwin) [
         # dev tools
@@ -56,7 +57,6 @@
       ++ lib.optionals (!pkgs.stdenv.isDarwin && !isServer) [
         # GUI
         element-desktop
-        zapzap
         nautilus
         swayimg
         kdePackages.okular

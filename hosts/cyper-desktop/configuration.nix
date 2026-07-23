@@ -1,36 +1,19 @@
-{ ... }:
 {
-  imports = [ ./hardware-configuration.nix ];
+  imports = [
+    ./disko.nix
+    ./hardware-configuration.nix
+    ../net-config.nix
+    ../boot.nix
+  ];
 
-  networking = {
-    useNetworkd = true;
-    useDHCP = false;
-    firewall.enable = true;
-  };
-
-  systemd.network = {
-    enable = true;
-    networks."10-ethernet" = {
-      matchConfig.Name = "eno1";
-      networkConfig = {
-        Address = "192.168.2.40/24";
-        Gateway = "192.168.2.1";
-        DNS = [
-          "192.168.2.2"
-          "1.1.1.1"
-        ];
-        DHCP = "no";
-      };
-    };
-  };
-
-  boot.loader = {
-    systemd-boot = {
-      enable = true;
-      configurationLimit = 10;
-      editor = false;
-    };
-    efi.canTouchEfiVariables = true;
+  net = {
+    wgIP = "10.10.0.40/24";
+    ethAddress = "192.168.2.40/24";
+    ethIface = "eno1";
+    ethDNS = [
+      "192.168.2.2"
+      "1.1.1.1"
+    ];
   };
 
   services = {
@@ -47,7 +30,7 @@
   ];
 
   system.stateVersion = "26.11";
-
   virtualisation.docker.enable = true;
   users.users.phil.extraGroups = [ "docker" ];
+  programs.fuse.userAllowOther = true;
 }

@@ -5,6 +5,15 @@ let
   certDir = "/var/lib/kanidm/tls";
 in
 {
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/kanidm";
+      user = "kanidm";
+      group = "kanidm";
+      mode = "0750";
+    }
+  ];
+
   systemd.services.kanidm-selfsigned-cert = {
     description = "Generate self-signed TLS certificate for Kanidm";
     wantedBy = [ "kanidm.service" ];

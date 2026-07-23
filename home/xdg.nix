@@ -51,7 +51,6 @@ in
 {
   xdg = lib.mkIf (!pkgs.stdenv.isDarwin) {
     enable = true;
-    cacheHome = config.home.homeDirectory + "/.local/cache";
 
     mimeApps = {
       enable = true;

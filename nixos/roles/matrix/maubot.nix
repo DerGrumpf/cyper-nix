@@ -1,8 +1,19 @@
 { config, pkgs, ... }:
 {
-  environment.systemPackages = with pkgs; [
-    maubot
-  ];
+  environment = {
+    systemPackages = with pkgs; [
+      maubot
+    ];
+
+    persistence."/persist".directories = [
+      {
+        directory = "/var/lib/maubot";
+        user = "maubot";
+        group = "maubot";
+        mode = "0750";
+      }
+    ];
+  };
 
   services = {
     maubot = {

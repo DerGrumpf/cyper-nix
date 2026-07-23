@@ -1,6 +1,15 @@
 { pkgs, ... }:
 
 {
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/unifi";
+      user = "unifi";
+      group = "unifi";
+      mode = "0750";
+    }
+  ];
+
   services.unifi = {
     enable = true;
     unifiPackage = pkgs.unifi;

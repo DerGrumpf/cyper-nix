@@ -8,14 +8,25 @@ let
   userScss = builtins.readFile ./user.vaultwarden.scss.hbs;
 in
 {
-  sops.secrets.vaultwarden_env = {
+
+  sops.secrets."services/vaultwarden/env" = {
     owner = "vaultwarden";
     group = "vaultwarden";
   };
+
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/vaultwarden";
+      user = "vaultwarden";
+      group = "vaultwarden";
+      mode = "0750";
+    }
+  ];
+
   services.vaultwarden = {
     enable = true;
     package = pkgs.oidcwarden;
-    environmentFile = config.sops.secrets.vaultwarden_env.path;
+    environmentFile = config.sops.secrets."services/vaultwarden/env".path;
     backupDir = "/var/local/vaultwarden/backup";
     config = {
       DOMAIN = "https://vault.cyperpunk.de";
@@ -31,7 +42,9 @@ in
       SSO_PKCE = false;
     };
   };
+
   networking.firewall.allowedTCPPorts = [ port ];
+
   systemd = {
     services.vaultwarden-backup-rotate = {
       description = "Rotate old Vaultwarden backups";

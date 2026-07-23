@@ -2,7 +2,7 @@
 result
 result-*
 *.qcow2
-extra_files/*
+extra-files/*
 
 # Ignore everything in the secrets directory
 secrets/*

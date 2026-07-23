@@ -5,11 +5,6 @@
   ];
 
   boot = {
-    loader.grub = {
-      enable = true;
-      device = "/dev/vda";
-    };
-
     initrd = {
       availableKernelModules = [
         "ata_piix"
@@ -21,6 +16,7 @@
       ];
       kernelModules = [ ];
     };
+    kernel.sysctl."net.ipv4.ip_forward" = 1;
     kernelModules = [ ];
     extraModulePackages = [ ];
     zfs.forceImportRoot = false;
@@ -28,19 +24,17 @@
 
   fileSystems = {
     "/" = {
-      device = "/dev/disk/by-label/NIXROOT";
-      fsType = "ext4";
-    };
-
-    "/boot" = {
-      device = "/dev/disk/by-label/NIXBOOT";
-      fsType = "vfat";
+      device = "none";
+      fsType = "tmpfs";
       options = [
-        "fmask=0022"
-        "dmask=0022"
+        "defaults"
+        "size=2G"
+        "mode=755"
       ];
     };
-  };
 
-  swapDevices = [ ];
+    "/nix".neededForBoot = true;
+    "/persist".neededForBoot = true;
+  };
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }

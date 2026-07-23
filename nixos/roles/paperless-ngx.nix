@@ -1,11 +1,10 @@
 { config, ... }:
 {
-
   sops.secrets = {
-    paperless_admin = {
+    "services/paperless/admin" = {
       owner = "paperless";
     };
-    paperless_oidc_secret = {
+    "services/paperless/oidc_secret" = {
       owner = "paperless";
     };
   };
@@ -18,14 +17,14 @@
     consumptionDir = "/storage/fast/paperless/consume";
     dataDir = "/storage/fast/paperless";
     configureTika = true;
-    passwordFile = config.sops.secrets.paperless_admin.path;
+    passwordFile = config.sops.secrets."services/paperless/admin".path;
     settings = {
       PAPERLESS_USE_X_FORWARDED_HOST = true;
       PAPERLESS_USE_X_FORWARDED_PORT = true;
-      PAPERLESS_ALLOWED_HOSTS = "ngx.cyperpunk.de,100.109.179.25,localhost";
+      PAPERLESS_ALLOWED_HOSTS = "ngx.cyperpunk.de,10.10.0.2,localhost";
       PAPERLESS_CSRF_TRUSTED_ORIGINS = [
         "https://ngx.cyperpunk.de"
-        "http://100.109.179.25:28101"
+        "http://10.10.0.2:28101"
       ];
       PAPERLESS_OCR_LANGUAGE = "deu+eng";
       PAPERLESS_CONSUMER_POLLING = 60;
@@ -54,7 +53,7 @@
         requires = [ "systemd-tmpfiles-setup.service" ];
       };
       paperless-web = {
-        serviceConfig.EnvironmentFiles = [ config.sops.secrets.paperless_oidc_secret.path ];
+        serviceConfig.EnvironmentFiles = [ config.sops.secrets."services/paperless/oidc_secret".path ];
       };
     };
   };

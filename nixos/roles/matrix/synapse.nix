@@ -34,45 +34,58 @@ let
 in
 {
   sops.secrets = {
-    matrix_macaroon_secret = { };
-    matrix_registration_secret = {
+    "matrix/macaroon_secret" = { };
+    "matrix/registration_secret" = {
       owner = "matrix-synapse";
       group = "matrix-synapse";
     };
-    pg_replication_password = {
+    "matrix/signing_key" = {
+      owner = "matrix-synapse";
+      group = "matrix-synapse";
+      mode = "0400";
+    };
+    "postgres/replication_password" = {
       owner = "postgres";
       group = "postgres";
     };
-    kanidm_synapse_secret = {
+    "kanidm/synapse_secret" = {
       owner = "matrix-synapse";
       group = "matrix-synapse";
     };
   };
 
-  systemd.tmpfiles.rules = [
-    "d /var/www/matrix            0755 nginx nginx -"
-    "L+ /var/www/matrix/index.html   0644 nginx nginx - ${matrixIndexHtml}"
-    "L+ /var/www/matrix/register.php 0644 nginx nginx - ${matrixRegisterPhp}"
-    "L+ /var/www/matrix/style.css  0644 nginx nginx - ${matrixStyleCss}"
-    "L+ /var/www/matrix/app.js     0644 nginx nginx - ${matrixAppJs}"
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/matrix-synapse";
+      user = "matrix-synapse";
+      group = "matrix-synapse";
+      mode = "0700";
+    }
+    {
+      directory = "/var/lib/postgresql";
+      user = "postgres";
+      group = "postgres";
+      mode = "0750";
+    }
   ];
 
-  services.phpfpm.pools.matrix = {
-    user = "nginx";
-    group = "nginx";
-    settings = {
-      "listen.owner" = "nginx";
-      "listen.group" = "nginx";
-      "pm" = "dynamic";
-      "pm.max_children" = 10;
-      "pm.start_servers" = 2;
-      "pm.min_spare_servers" = 1;
-      "pm.max_spare_servers" = 3;
-    };
-    phpPackage = pkgs.php.withExtensions ({ enabled, all }: enabled ++ [ all.curl ]);
-  };
-
   services = {
+
+    phpfpm.pools.matrix = {
+      user = "nginx";
+      group = "nginx";
+      settings = {
+        "listen.owner" = "nginx";
+        "listen.group" = "nginx";
+        "pm" = "dynamic";
+        "pm.max_children" = 10;
+        "pm.start_servers" = 2;
+        "pm.min_spare_servers" = 1;
+        "pm.max_spare_servers" = 3;
+      };
+      phpPackage = pkgs.php.withExtensions ({ enabled, all }: enabled ++ [ all.curl ]);
+    };
+
     matrix-synapse = {
       enable = true;
       settings = {
@@ -81,8 +94,9 @@ in
         enable_registration = false;
         trusted_key_servers = [ { server_name = "matrix.org"; } ];
         suppress_key_server_warning = true;
-        registration_shared_secret_path = config.sops.secrets.matrix_registration_secret.path;
-        macaroon_secret_key = "$__file{${config.sops.secrets.matrix_macaroon_secret.path}}";
+        registration_shared_secret_path = config.sops.secrets."matrix/registration_secret".path;
+        macaroon_secret_key = "$__file{${config.sops.secrets."matrix/macaroon_secret".path}}";
+        signing_key_path = config.sops.secrets."matrix/signing_key".path;
         matrix_rtc = {
           enabled = true;
           transports = [
@@ -135,7 +149,7 @@ in
             type = "metrics";
             bind_addresses = [
               "127.0.0.1"
-              "100.109.10.91"
+              "10.10.0.1"
             ];
             resources = [ ];
           }
@@ -148,7 +162,7 @@ in
             idp_name = "Kanidm";
             issuer = "https://auth.cyperpunk.de/oauth2/openid/synapse";
             client_id = "synapse";
-            client_secret_path = config.sops.secrets.kanidm_synapse_secret.path;
+            client_secret_path = config.sops.secrets."kanidm/synapse_secret".path;
             scopes = [
               "openid"
               "profile"
@@ -236,10 +250,11 @@ in
         wal_level = "replica";
         max_wal_senders = 5;
         wal_keep_size = "512MB";
-        listen_addresses = lib.mkForce "127.0.0.1,100.109.10.91";
+        listen_addresses = lib.mkForce "127.0.0.1,10.10.0.1";
+        ssl = true;
       };
       authentication = lib.mkAfter ''
-        host replication replicator 100.0.0.0/8 scram-sha-256
+        hostssl replication replicator 10.10.0.2/32 scram-sha-256
       '';
     };
 
@@ -251,15 +266,55 @@ in
     };
   };
 
-  systemd.services = {
-    matrix-synapse.serviceConfig.ReadOnlyPaths = [
-      "/var/lib/mautrix-discord"
-      "/var/lib/mautrix-whatsapp"
+  systemd = {
+    services = {
+      matrix-synapse.serviceConfig.ReadOnlyPaths = [
+        "/var/lib/mautrix-discord"
+        "/var/lib/mautrix-whatsapp"
+      ];
+
+      postgresql = {
+        preStart = lib.mkBefore ''
+          cd ${config.services.postgresql.dataDir}
+
+          if [ ! -f server.crt ]; then
+            ${pkgs.openssl}/bin/openssl req \
+              -new \
+              -x509 \
+              -days 3650 \
+              -nodes \
+              -keyout server.key \
+              -out server.crt \
+              -subj "/CN=cyper-proxy"
+
+            chmod 600 server.key
+          fi
+        '';
+
+        postStart = lib.mkAfter ''
+          PG_PASS=$(cat ${config.sops.secrets."postgres/replication_password".path})
+          ${config.services.postgresql.package}/bin/psql -U postgres -c "
+            DO \$\$
+            BEGIN
+              IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'replicator') THEN
+                CREATE ROLE replicator WITH REPLICATION LOGIN PASSWORD '$PG_PASS';
+              ELSE
+                ALTER ROLE replicator WITH PASSWORD '$PG_PASS';
+              END IF;
+            END
+            \$\$;
+          "
+        '';
+      };
+    };
+
+    tmpfiles.rules = [
+      "d /var/www/matrix            0755 nginx nginx -"
+      "L+ /var/www/matrix/index.html   0644 nginx nginx - ${matrixIndexHtml}"
+      "L+ /var/www/matrix/register.php 0644 nginx nginx - ${matrixRegisterPhp}"
+      "L+ /var/www/matrix/style.css  0644 nginx nginx - ${matrixStyleCss}"
+      "L+ /var/www/matrix/app.js     0644 nginx nginx - ${matrixAppJs}"
     ];
-    postgresql.postStart = lib.mkAfter ''
-      PG_PASS=$(cat ${config.sops.secrets.pg_replication_password.path})
-      ${config.services.postgresql.package}/bin/psql -U postgres -c \
-        "ALTER ROLE replicator WITH PASSWORD '$PG_PASS';"
-    '';
   };
+
 }

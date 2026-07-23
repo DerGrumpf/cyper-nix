@@ -5,6 +5,23 @@
     # monorepo w/ recipes ("derivations")
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    # declarative disk layout
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # declarative impermanence
+    impermanence = {
+      url = "github:nix-community/impermanence";
+    };
+
+    # declarative installer
+    nixos-anywhere = {
+      url = "github:nix-community/nixos-anywhere";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # declarative Configs
     home-manager = {
       url = "github:nix-community/home-manager/master";
@@ -84,86 +101,54 @@
       hyprland,
       sops-nix,
       nur,
+      impermanence,
+      disko,
+      nixos-anywhere,
       ...
     }@inputs:
     let
       primaryUser = "phil";
 
-      /*
-        mkIso - Build a NixOS image for a given target.
+      installer = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
+        modules = [
+          {
+            nixpkgs = {
+              config.allowUnfree = true;
+              hostPlatform = "x86_64-linux";
+            };
+          }
+          ./hosts/installer/configuration.nix
+        ];
+      };
 
-        Available targets (imageModule → imageBuildAttr):
-        		ISO (minimal)  : "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"         → "isoImage"
-        		ISO (graphical): "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-gnome.nix" → "isoImage"
-        		Amazon EC2     : "${nixpkgs}/nixos/modules/virtualisation/amazon-image.nix"                       → "amazonImage"
-        		Linode         : "${nixpkgs}/nixos/modules/virtualisation/linode-image.nix"                       → "linodeImage"
-        		Proxmox LXC    : "${nixpkgs}/nixos/modules/virtualisation/proxmox-lxc.nix"                       → "tarball"
-        		Google Cloud   : "${nixpkgs}/nixos/modules/virtualisation/google-compute-image.nix"               → "googleComputeImage"
-        		Azure          : "${nixpkgs}/nixos/modules/virtualisation/azure-image.nix"                        → "azureImage"
-        		QEMU (runnable): "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix"                            → "vm"
-        		QEMU (headless): "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix"                            → "vmWithBootLoader"
-        - Claude Sonnet 4.6
-      */
-      mkIso =
+      mkInstall =
         {
           hostName,
-          isDarwin ? false,
-          isServer ? false,
-          imageModule ? "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix",
-          imageBuildAttr ? "isoImage",
+          target ? "192.168.2.99",
         }:
-        (nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            inherit
-              inputs
-              primaryUser
-              self
-              hostName
-              isDarwin
-              isServer
-              ;
-          };
-          modules = [
-            imageModule
-            {
-              nixpkgs.overlays = [
-                inputs.nur.overlays.default
-                (import ./overlays { inherit (inputs) nur; })
-              ];
+        let
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        in
+        {
+          type = "app";
+          program = "${
+            pkgs.writeShellApplication {
+              name = "install-${hostName}";
+              runtimeInputs = [ nixos-anywhere.packages.x86_64-linux.nixos-anywhere ];
+              text = ''
+                EXTRA_FILES="''${1:-./extra-files}"
+                TARGET="''${2:-${target}}"
+                nixos-anywhere \
+                  --flake .#${hostName} \
+                  --extra-files "$EXTRA_FILES" \
+                  --chown /persist/secrets/age-key.txt "$(id -u ${primaryUser})":100 \
+                  root@"$TARGET"
+              '';
             }
-            { nixpkgs.config.allowUnfree = true; }
-            { nixpkgs.hostPlatform = "x86_64-linux"; }
-            { networking.hostName = hostName; }
-            ./hosts/${hostName}/configuration.nix
-            ./nixos
-            inputs.sops-nix.nixosModules.sops
-            inputs.home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                extraSpecialArgs = {
-                  inherit
-                    inputs
-                    primaryUser
-                    self
-                    hostName
-                    isDarwin
-                    isServer
-                    ;
-                };
-                users.${primaryUser} = import ./home;
-                backupFileExtension = "backup";
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                sharedModules = [
-                  {
-                    programs.nixvim.nixpkgs.source = inputs.nixpkgs;
-                  }
-                ];
-              };
-            }
-          ];
-        }).config.system.build.${imageBuildAttr};
+          }/bin/install-${hostName}";
+        };
 
       mkSystem =
         {
@@ -224,6 +209,8 @@
               [
                 { nixpkgs.hostPlatform = system; }
                 ./nixos
+                inputs.impermanence.nixosModules.impermanence
+                inputs.disko.nixosModules.disko
               ];
 
         in
@@ -235,6 +222,8 @@
     in
     {
       nixosConfigurations = {
+        "installer" = installer;
+
         "cyper-desktop" = mkSystem {
           hostName = "cyper-desktop";
           system = "x86_64-linux";
@@ -272,25 +261,28 @@
       };
 
       packages.x86_64-linux = {
-        cyper-desktop-iso = mkIso { hostName = "cyper-desktop"; };
-        cyper-controller-iso = mkIso {
-          hostName = "cyper-controller";
-          isServer = true;
-        };
-        cyper-proxy-iso = mkIso {
-          hostName = "cyper-proxy";
-          isServer = true;
-        };
-        cyper-node-1-iso = mkIso {
-          hostName = "cyper-node-1";
-          isServer = true;
-        };
-        cyper-node-2-iso = mkIso {
-          hostName = "cyper-node-2";
-          isServer = true;
-        };
+        installer = self.nixosConfigurations.installer.config.system.build.isoImage;
       };
 
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-tree;
+
+      apps.x86_64-linux = {
+        install-cyper-node-1 = mkInstall {
+          hostName = "cyper-node-1";
+        };
+        install-cyper-node-2 = mkInstall {
+          hostName = "cyper-node-2";
+        };
+        install-cyper-controller = mkInstall {
+          hostName = "cyper-controller";
+        };
+        install-cyper-proxy = mkInstall {
+          hostName = "cyper-proxy";
+          target = ""; # KVM console IP
+        };
+        install-cyper-desktop = mkInstall {
+          hostName = "cyper-desktop";
+        };
+      };
     };
 }

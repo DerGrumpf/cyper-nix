@@ -1,11 +1,12 @@
 {
   pkgs,
   primaryUser,
+  config,
   ...
 }:
 
 {
-  sops.secrets.smb_passwd = { };
+  sops.secrets."network/smb_passwd" = { };
 
   users.users.${primaryUser}.extraGroups = [ "sambashare" ];
 
@@ -93,7 +94,7 @@
           sleep 1
         done
 
-        PASSWORD=$(cat /run/secrets/smb_passwd)
+        PASSWORD=$(cat ${config.sops.secrets."network/smb_passwd".path})
         (echo "$PASSWORD"; echo "$PASSWORD") | ${pkgs.samba}/bin/smbpasswd -a -s ${primaryUser} || \
         (echo "$PASSWORD"; echo "$PASSWORD") | ${pkgs.samba}/bin/smbpasswd -s ${primaryUser}
       '';

@@ -5,23 +5,42 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    eza # ls replacement
-    tdf # terminal pdf viewer
-    jq # json parser
-    fastfetch # system stats
-    tabiew # Table viewer
-    glow # MD Viewer
-    fd # find alternative
-    bat # cat alternative
-    ripgrep # grep alternative
-    dnsutils
+  home = {
+    packages = with pkgs; [
+      eza # ls replacement
+      tdf # terminal pdf viewer
+      jq # json parser
+      fastfetch # system stats
+      tabiew # Table viewer
+      glow # MD Viewer
+      fd # find alternative
+      bat # cat alternative
+      ripgrep # grep alternative
+      dnsutils
 
-    # Fun stuff
-    zoxide
-    lolcat
-    cmatrix
-  ];
+      # Fun stuff
+      zoxide
+      lolcat
+      cmatrix
+    ];
+
+    persistence = lib.mkIf (!isDarwin) {
+      "/persist" = {
+        directories = [ ".local/share/zoxide" ];
+        files = [ ".local/share/fish/fish_history" ];
+      };
+    };
+
+    file = {
+      ".config/fastfetch/config.jsonc".source = ./fastfetch.jsonc;
+      ".config/tabiew/theme.toml".source = ./tabiew.toml;
+      ".config/kitty/tab_bar.py".source = ./tab_bar.py;
+      ".cache/starship/init.nu".source = pkgs.runCommand "starship-init-nu" { } ''
+        ${pkgs.starship}/bin/starship init nu > $out
+      '';
+      ".hushlogin" = lib.mkIf isDarwin { text = ""; }; # Suppress Login
+    };
+  };
 
   programs = {
     kitty = {
@@ -118,16 +137,13 @@
         $env.config = {
         show_banner: false
         }
-        # Starship
         $env.STARSHIP_SHELL = "nu"
-        mkdir ~/.cache/starship
-        starship init nu | save -f ~/.cache/starship/init.nu
+        source ~/.cache/starship/init.nu
         # fzf picker for nvim
         def f [] { nvim (fzf) }
       '';
       extraEnv = ''
-        starship init nu | save -f ~/.cache/starship/init.nu
-        use ~/.cache/starship/init.nu
+        $env.STARSHIP_SHELL = "nu"
       '';
     };
 
@@ -243,30 +259,4 @@
     };
   };
 
-  home = {
-    file = {
-      ".config/fastfetch/config.jsonc".source = ./fastfetch.jsonc;
-      ".config/tabiew/theme.toml".source = ./tabiew.toml;
-      ".config/kitty/tab_bar.py".source = ./tab_bar.py;
-      ".hushlogin" = lib.mkIf isDarwin { text = ""; }; # Suppress Login
-
-      # Link LLM std template
-      ".config/io.datasette.llm/templates/std.yaml".text = ''
-        system: |
-          You are a concise technical assistant running on an Intel Mac (x86_64-darwin) 
-          with nix-darwin and home-manager.
-          
-          Rules:
-          - Always respond in valid markdown
-          - Be concise and direct, no unnecessary explanation
-          - Prefer code blocks for commands and code
-          - You have access to these tools in the shell: nvim, fish, git, 
-            eza, bat, ripgrep, fzf, yazi, glow, llm, zoxide, fastfetch,
-            nix, darwin-rebuild, brew
-          - When suggesting nix config changes, use the nix language
-          - nix-switch rebuilds the system config
-          - nix-check validates the flake without building
-      '';
-    };
-  };
 }

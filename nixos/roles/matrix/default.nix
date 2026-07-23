@@ -6,7 +6,7 @@
     ./synapse.nix
     ./livekit.nix
     ./clients.nix
-    ./mjolnir.nix
+    ./draupnir.nix
     ./coturn.nix
     ./maubot.nix
     ./discord-bridge.nix

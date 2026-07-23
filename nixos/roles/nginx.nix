@@ -1,6 +1,6 @@
 _:
 let
-  upstream = "100.109.179.25";
+  upstream = "10.10.0.2";
 
   mkProxy = port: {
     forceSSL = true;
@@ -30,6 +30,15 @@ let
   };
 in
 {
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/var/lib/acme";
+      user = "acme";
+      group = "acme";
+      mode = "0750";
+    }
+  ];
+
   networking.firewall.allowedTCPPorts = [
     80
     443
