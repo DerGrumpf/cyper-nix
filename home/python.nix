@@ -12,7 +12,7 @@
   ];
 
   home.sessionVariables = {
-    PYTHON = "${pkgs.python313}/bin/python3";
+    PYTHON = "${pkgs.python314}/bin/python3";
   };
 
   programs.fish.shellAliases = {

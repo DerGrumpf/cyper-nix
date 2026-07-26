@@ -72,11 +72,15 @@ end
 
 -- ── Autostart ────────────────────────────────────────────────────────────────
 
-local wallpaper = "$HOME/Pictures/Wallpapers/Ghost_in_the_Shell.png"
-
 local autostart = {
 	"sleep 2 && waybar & disown",
 	"sleep 2 && waypaper --restore & disown",
+	"floorp",
+	"thunderbird",
+	"spotify",
+	"vesktop",
+	"kitty",
+	"obsidian",
 }
 
 hl.on("hyprland.start", function()
@@ -201,6 +205,14 @@ local window_rules = {
 	{ name = "obsidian_width", match = { class = "obsidian" }, scrolling_width = 0.5 },
 	{ name = "nautilus_width", match = { class = "nautilus" }, scrolling_width = 0.333 },
 	{ name = "thunderbird_width", match = { class = "thunderbird" }, scrolling_width = 0.667 },
+
+	-- workspace placement
+	{ name = "ws_floorp", match = { class = "floorp" }, workspace = "0 silent" },
+	{ name = "ws_thunderbird", match = { class = "thunderbird" }, workspace = "2 silent" },
+	{ name = "ws_spotify", match = { class = "Spotify" }, workspace = "3 silent" },
+	{ name = "ws_vesktop", match = { class = "vesktop" }, workspace = "4 silent" },
+	{ name = "ws_kitty", match = { class = "kitty" }, workspace = "8 silent" },
+	{ name = "ws_obsidian", match = { class = "obsidian" }, workspace = "9 silent" },
 }
 
 for _, rule in ipairs(window_rules) do

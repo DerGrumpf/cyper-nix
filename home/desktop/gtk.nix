@@ -14,6 +14,7 @@ in
       ".config/gtk-4.0/assets".source = "${theme}/share/themes/${theme_name}/gtk-4.0/assets";
     };
   };
+
   gtk = lib.mkIf (!pkgs.stdenv.isDarwin) {
     enable = true;
     font = {
@@ -35,6 +36,7 @@ in
     };
     gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
   };
+
   dconf = lib.mkIf (!pkgs.stdenv.isDarwin) {
     enable = true;
     settings = {

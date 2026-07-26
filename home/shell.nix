@@ -116,7 +116,7 @@
       enableZshIntegration = true;
       enableFishIntegration = true;
       defaultCommand = "fd --type f --strip-cwd-prefix --hidden --exclude .git";
-      fileWidgetCommand = "fd --type f --strip-cwd-prefix --hidden --exclude .git";
+      fileWidget.command = "fd --type f --strip-cwd-prefix --hidden --exclude .git";
       defaultOptions = [
         "--height 100%"
         "--border sharp"

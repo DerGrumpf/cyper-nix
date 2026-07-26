@@ -34,7 +34,7 @@
         accountPanelServerProfile.enable = true;
         copyFileContents.enable = true;
         fakeProfileThemes.enable = true;
-        friendsSince.enable = true;
+        #        friendsSince.enable = true;
         implicitRelationships.enable = true;
         #        noTrack.enable = true;
         permissionsViewer.enable = true;
