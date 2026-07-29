@@ -35,11 +35,15 @@ in
       owner = "mastodon";
       group = "mastodon";
     };
-    "kanidm/mastodon_secret" = {
+    "services/mastodon/smtp_password" = {
       owner = "mastodon";
       group = "mastodon";
-      mode = "0444";
     };
+    #    "kanidm/mastodon_secret" = {
+    #      owner = "mastodon";
+    #      group = "mastodon";
+    #      mode = "0444";
+    #    };
   };
 
   environment.persistence."/persist".directories = [
@@ -79,9 +83,12 @@ in
 
       smtp = {
         createLocally = false;
-        fromAddress = "mastodon@cyperpunk.de";
-        # TODO: set host/port/authenticate = true + user/passwordFile once
-        # you pick a real mail provider - required for confirmation emails
+        host = "smtp.gmail.com";
+        port = 587;
+        authenticate = true;
+        user = "phil.keier@gmail.com";
+        passwordFile = config.sops.secrets."services/mastodon/smtp_password".path;
+        fromAddress = "phil.keier@gmail.com";
       };
 
       extraConfig = {
