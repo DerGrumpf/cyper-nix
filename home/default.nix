@@ -19,6 +19,7 @@
     ./python.nix
     ./fonts.nix
     ./impermanence.nix
+    ./helium.nix
     inputs.sops-nix.homeManagerModules.sops
   ]
   ++ lib.optionals (!isDarwin && !isServer) [

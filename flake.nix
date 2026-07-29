@@ -88,6 +88,12 @@
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Helium Overlay
+    helium-flake = {
+      url = "github:oxcl/nix-flake-helium-browser";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -104,6 +110,7 @@
       impermanence,
       disko,
       nixos-anywhere,
+      helium-flake,
       ...
     }@inputs:
     let
@@ -176,7 +183,10 @@
             { networking.hostName = hostName; }
             {
               nixpkgs = {
-                overlays = [ (import ./overlays { inherit (inputs) nur; }) ];
+                overlays = [
+                  (import ./overlays { inherit (inputs) nur; })
+                  helium-flake.overlays.default
+                ];
                 config.allowUnfree = true;
               };
             }
