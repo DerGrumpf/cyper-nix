@@ -4,6 +4,8 @@
     ./hardware-configuration.nix
     ../../nixos/roles/nginx.nix
     ../../nixos/roles/matrix
+    ../../nixos/roles/mastodon.nix
+    ../../nixos/roles/postgresql.nix
   ];
 
   networking = {
@@ -70,6 +72,7 @@
       "195.90.219.9" = [
         "cyperpunk.de"
         "matrix.cyperpunk.de"
+        "mastodon.cyperpunk.de"
       ];
       "2a00:6800:3:113e::1" = [
         "cyperpunk.de"

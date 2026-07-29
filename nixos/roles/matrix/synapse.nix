@@ -61,12 +61,6 @@ in
       group = "matrix-synapse";
       mode = "0700";
     }
-    {
-      directory = "/var/lib/postgresql";
-      user = "postgres";
-      group = "postgres";
-      mode = "0750";
-    }
   ];
 
   services = {
@@ -236,34 +230,15 @@ in
       };
     };
 
-    postgresql = {
-      enable = true;
-      initialScript = pkgs.writeText "synapse-init.sql" ''
-        CREATE ROLE "matrix-synapse" WITH LOGIN PASSWORD 'synapse';
-        CREATE ROLE replicator WITH REPLICATION LOGIN;
-        CREATE DATABASE "matrix-synapse" WITH OWNER "matrix-synapse"
-          TEMPLATE template0
-          LC_COLLATE = "C"
-          LC_CTYPE = "C";
-      '';
-      settings = {
-        wal_level = "replica";
-        max_wal_senders = 5;
-        wal_keep_size = "512MB";
-        listen_addresses = lib.mkForce "127.0.0.1,10.10.0.1";
-        ssl = true;
-      };
-      authentication = lib.mkAfter ''
-        hostssl replication replicator 10.10.0.2/32 scram-sha-256
-      '';
-    };
+    postgresql.initialScript = pkgs.writeText "synapse-init.sql" ''
+      CREATE ROLE "matrix-synapse" WITH LOGIN PASSWORD 'synapse';
+      CREATE ROLE replicator WITH REPLICATION LOGIN;
+      CREATE DATABASE "matrix-synapse" WITH OWNER "matrix-synapse"
+        TEMPLATE template0
+        LC_COLLATE = "C"
+        LC_CTYPE = "C";
+    '';
 
-    prometheus.exporters.postgres = {
-      enable = true;
-      port = 9188;
-      runAsLocalSuperUser = true;
-      dataSourceName = "postgresql:///postgres?host=/run/postgresql&sslmode=disable";
-    };
   };
 
   systemd = {
