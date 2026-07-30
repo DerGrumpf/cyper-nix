@@ -7,6 +7,8 @@
 {
   imports = [ inputs.catppuccin.homeModules.catppuccin ];
 
+  home.pointerCursor.enable = true;
+
   catppuccin = {
     enable = true;
     autoEnable = false;

@@ -60,7 +60,7 @@
         nautilus
         swayimg
         kdePackages.okular
-        tuba
+        kdePackages.tokodon
         gnumeric
         sqlitebrowser
         thunderbird
