@@ -1,10 +1,30 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  config,
+  primaryUser,
+  ...
+}:
 let
   domain = "auth.cyperpunk.de";
   port = 8444;
   certDir = "/var/lib/kanidm/tls";
 in
 {
+  sops.secrets = {
+    "kanidm/idm_admin_password" = {
+      owner = "kanidm";
+      mode = "0400";
+    };
+    "kanidm/synapse_secret" = {
+      group = "kanidm";
+      mode = "0440";
+    };
+    "kanidm/mastodon_secret" = {
+      group = "kanidm";
+      mode = "0440";
+    };
+  };
+
   environment.persistence."/persist".directories = [
     {
       directory = "/var/lib/kanidm";
@@ -40,13 +60,15 @@ in
   };
 
   services.kanidm = {
-    package = pkgs.kanidm_1_10;
+    package = pkgs.kanidmWithSecretProvisioning_1_10;
 
     server = {
       enable = true;
       settings = {
         inherit domain;
         origin = "https://${domain}";
+
+        adminbindpath = "/run/kanidmd/sock";
 
         tls_chain = "${certDir}/cert.pem";
         tls_key = "${certDir}/key.pem";
@@ -66,6 +88,52 @@ in
     client = {
       enable = true;
       settings.uri = "https://${domain}";
+    };
+
+    provision = {
+      enable = true;
+      instanceUrl = "https://localhost:${toString port}";
+      acceptInvalidCerts = true;
+      idmAdminPasswordFile = config.sops.secrets."kanidm/idm_admin_password".path;
+
+      persons.${primaryUser} = {
+        displayName = "DerGrumpf";
+        mailAddresses = [ "phil.keier@hotmail.com" ];
+      };
+
+      groups = {
+        synapse_users.members = [ "phil" ];
+        mastodon_users.members = [ "phil" ];
+      };
+
+      systems.oauth2 = {
+        synapse = {
+          displayName = "Matrix Synapse";
+          originUrl = "https://matrix.cyperpunk.de/_synapse/client/oidc/callback";
+          originLanding = "https://matrix.cyperpunk.de/";
+          basicSecretFile = config.sops.secrets."kanidm/synapse_secret".path;
+          preferShortUsername = true;
+          scopeMaps.synapse_users = [
+            "openid"
+            "profile"
+            "email"
+          ];
+        };
+
+        mastodon = {
+          allowInsecureClientDisablePkce = true;
+          displayName = "Mastodon";
+          originUrl = "https://mastodon.cyperpunk.de/auth/auth/openid_connect/callback";
+          originLanding = "https://mastodon.cyperpunk.de/";
+          basicSecretFile = config.sops.secrets."kanidm/mastodon_secret".path;
+          preferShortUsername = true;
+          scopeMaps.mastodon_users = [
+            "openid"
+            "profile"
+            "email"
+          ];
+        };
+      };
     };
   };
 

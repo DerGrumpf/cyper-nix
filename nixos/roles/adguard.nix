@@ -134,6 +134,7 @@ in
           safe_search.enabled = false;
           parental_enabled = false;
           safebrowsing_enabled = false;
+          rewrites = [ ];
         };
       };
     };

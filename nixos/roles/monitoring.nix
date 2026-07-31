@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  primaryUser,
   ...
 }:
 let
@@ -33,7 +34,8 @@ in
     };
     "kanidm/grafana_secret" = {
       owner = "grafana";
-      group = "grafana";
+      group = "kanidm";
+      mode = "0440";
     };
     "network/zyxel_pass" = {
       group = "gs1200-exporter";
@@ -189,6 +191,26 @@ in
         port = 9935;
         passwordFile = config.sops.secrets."network/zyxel_pass".path;
         group = "gs1200-exporter";
+      };
+    };
+
+    kanidm.provision = {
+      groups.grafana_users = {
+        members = [ primaryUser ];
+      };
+
+      systems.oauth2.grafana = {
+        allowInsecureClientDisablePkce = true;
+        displayName = "Grafana";
+        originUrl = "https://www.cyperpunk.de/grafana/login/generic_oauth";
+        originLanding = "https://www.cyperpunk.de/grafana/";
+        basicSecretFile = config.sops.secrets."kanidm/grafana_secret".path;
+        preferShortUsername = true;
+        scopeMaps.grafana_users = [
+          "openid"
+          "profile"
+          "email"
+        ];
       };
     };
   };

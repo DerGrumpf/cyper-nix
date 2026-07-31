@@ -110,6 +110,15 @@ in
               add_header Content-Security-Policy "frame-ancestors *";
             '';
           };
+          "/jupyter/" = {
+            proxyPass = "http://${upstream}:8000/jupyter/";
+            proxyWebsockets = true;
+            extraConfig = ''
+              proxy_set_header X-Scheme $scheme;
+              proxy_buffering off;
+              proxy_read_timeout 86400s;
+            '';
+          };
         };
       };
     };

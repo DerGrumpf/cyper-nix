@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  primaryUser,
   ...
 }:
 let
@@ -51,6 +52,7 @@ in
     "kanidm/synapse_secret" = {
       owner = "matrix-synapse";
       group = "matrix-synapse";
+      mode = "0440";
     };
   };
 

@@ -3,6 +3,7 @@
   lib,
   config,
   inputs,
+  primaryUser,
   ...
 }:
 
@@ -178,6 +179,25 @@ in
         settings.runner.env_vars = {
           PATH = "/run/wrappers/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/bin:/bin";
         };
+      };
+    };
+
+    kanidm.provision = {
+      groups.forgejo_users = {
+        members = [ primaryUser ];
+      };
+
+      systems.oauth2.forgejo = {
+        displayName = "Forgejo";
+        originUrl = "https://git.cyperpunk.de/user/oauth2/kanidm/callback";
+        originLanding = "https://git.cyperpunk.de/";
+        basicSecretFile = config.sops.secrets."kanidm/forgejo_secret".path;
+        preferShortUsername = true;
+        scopeMaps.forgejo_users = [
+          "openid"
+          "profile"
+          "email"
+        ];
       };
     };
   };

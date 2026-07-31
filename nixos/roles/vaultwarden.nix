@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  primaryUser,
   ...
 }:
 let
@@ -9,9 +10,30 @@ let
 in
 {
 
-  sops.secrets."services/vaultwarden/env" = {
-    owner = "vaultwarden";
-    group = "vaultwarden";
+  sops = {
+    secrets = {
+      "services/vaultwarden/admin_token" = {
+        owner = "vaultwarden";
+        group = "vaultwarden";
+      };
+      #"kanidm/vaultwarden_secret" = {
+      #  owner = "vaultwarden";
+      #  group = "kanidm";
+      #  mode = "0440";
+      #};
+    };
+
+    templates."vaultwarden-env" = {
+      owner = "vaultwarden";
+      group = "vaultwarden";
+      content = ''
+        ADMIN_TOKEN=${config.sops.placeholder."services/vaultwarden/admin_token"}
+
+      '';
+
+      #SSO_CLIENT_ID=vaultwarden
+      #SSO_CLIENT_SECRET=${config.sops.placeholder."kanidm/vaultwarden_secret"}
+    };
   };
 
   environment.persistence."/persist".directories = [
@@ -23,24 +45,46 @@ in
     }
   ];
 
-  services.vaultwarden = {
-    enable = true;
-    package = pkgs.oidcwarden;
-    environmentFile = config.sops.secrets."services/vaultwarden/env".path;
-    backupDir = "/var/local/vaultwarden/backup";
-    config = {
-      DOMAIN = "https://vault.cyperpunk.de";
-      ROCKET_ADDRESS = "0.0.0.0";
-      ROCKET_PORT = port;
-      ROCKET_LOG = "critical";
-      SIGNUPS_ALLOWED = false;
-      WEBSOCKET_ENABLED = true;
-      SSO_ENABLED = true;
-      SSO_ONLY = false;
-      SSO_AUTHORITY = "https://auth.cyperpunk.de/oauth2/openid/vaultwarden";
-      SSO_SCOPES = "openid profile email";
-      SSO_PKCE = false;
+  services = {
+    vaultwarden = {
+      enable = true;
+      #package = pkgs.oidcwarden;
+      environmentFile = config.sops.templates."vaultwarden-env".path;
+      backupDir = "/var/local/vaultwarden/backup";
+      config = {
+        DOMAIN = "https://vault.cyperpunk.de";
+        ROCKET_ADDRESS = "0.0.0.0";
+        ROCKET_PORT = port;
+        ROCKET_LOG = "critical";
+        SIGNUPS_ALLOWED = false;
+        WEBSOCKET_ENABLED = true;
+        #SSO_ENABLED = true;
+        #SSO_ONLY = false;
+        #SSO_AUTHORITY = "https://auth.cyperpunk.de/oauth2/openid/vaultwarden";
+        #SSO_SCOPES = "openid profile email";
+        #SSO_PKCE = false;
+      };
     };
+
+    #kanidm.provision = {
+    #  groups.vaultwarden_users = {
+    #    members = [ primaryUser ];
+    #  };
+
+    #  systems.oauth2.vaultwarden = {
+    #    allowInsecureClientDisablePkce = true;
+    #    displayName = "Vaultwarden";
+    #    originUrl = "https://vault.cyperpunk.de/identity/connect/oidc-signin";
+    #    originLanding = "https://vault.cyperpunk.de/";
+    #    basicSecretFile = config.sops.secrets."kanidm/vaultwarden_secret".path;
+    #    preferShortUsername = true;
+    #    scopeMaps.vaultwarden_users = [
+    #      "openid"
+    #      "profile"
+    #      "email"
+    #    ];
+    #  };
+    #};
   };
 
   networking.firewall.allowedTCPPorts = [ port ];
@@ -68,4 +112,5 @@ in
       "L+ /var/lib/vaultwarden/templates/scss/user.vaultwarden.scss.hbs 0640 vaultwarden vaultwarden - ${pkgs.writeText "user.vaultwarden.scss.hbs" userScss}"
     ];
   };
+
 }

@@ -6,44 +6,54 @@ let
   domain = "mastodon.cyperpunk.de";
 in
 {
-  sops.secrets = {
-    "services/mastodon/secret_key_base" = {
+  sops = {
+    secrets = {
+      "services/mastodon/secret_key_base" = {
+        owner = "mastodon";
+        group = "mastodon";
+      };
+      "services/mastodon/vapid_private_key" = {
+        owner = "mastodon";
+        group = "mastodon";
+      };
+      "services/mastodon/vapid_public_key" = {
+        owner = "mastodon";
+        group = "mastodon";
+      };
+      "services/mastodon/ar_encryption_deterministic_key" = {
+        owner = "mastodon";
+        group = "mastodon";
+      };
+      "services/mastodon/ar_encryption_key_derivation_salt" = {
+        owner = "mastodon";
+        group = "mastodon";
+      };
+      "services/mastodon/ar_encryption_primary_key" = {
+        owner = "mastodon";
+        group = "mastodon";
+      };
+      "services/mastodon/db_password" = {
+        owner = "mastodon";
+        group = "mastodon";
+      };
+      "services/mastodon/smtp_password" = {
+        owner = "mastodon";
+        group = "mastodon";
+      };
+      "kanidm/mastodon_secret" = {
+        owner = "mastodon";
+        group = "mastodon";
+        mode = "0440";
+      };
+    };
+
+    templates."mastodon-oidc-env" = {
       owner = "mastodon";
       group = "mastodon";
+      content = ''
+        OIDC_CLIENT_SECRET=${config.sops.placeholder."kanidm/mastodon_secret"}
+      '';
     };
-    "services/mastodon/vapid_private_key" = {
-      owner = "mastodon";
-      group = "mastodon";
-    };
-    "services/mastodon/vapid_public_key" = {
-      owner = "mastodon";
-      group = "mastodon";
-    };
-    "services/mastodon/ar_encryption_deterministic_key" = {
-      owner = "mastodon";
-      group = "mastodon";
-    };
-    "services/mastodon/ar_encryption_key_derivation_salt" = {
-      owner = "mastodon";
-      group = "mastodon";
-    };
-    "services/mastodon/ar_encryption_primary_key" = {
-      owner = "mastodon";
-      group = "mastodon";
-    };
-    "services/mastodon/db_password" = {
-      owner = "mastodon";
-      group = "mastodon";
-    };
-    "services/mastodon/smtp_password" = {
-      owner = "mastodon";
-      group = "mastodon";
-    };
-    #    "kanidm/mastodon_secret" = {
-    #      owner = "mastodon";
-    #      group = "mastodon";
-    #      mode = "0444";
-    #    };
   };
 
   environment.persistence."/persist".directories = [
@@ -91,9 +101,21 @@ in
         fromAddress = "phil.keier@gmail.com";
       };
 
+      extraEnvFiles = [ config.sops.templates."mastodon-oidc-env".path ];
+
       extraConfig = {
         SINGLE_USER_MODE = "false";
         AUTHORIZED_FETCH = "true";
+        OIDC_ENABLED = "true";
+        OIDC_DISPLAY_NAME = "Kanidm";
+        OIDC_ISSUER = "https://auth.cyperpunk.de/oauth2/openid/mastodon";
+        OIDC_DISCOVERY = "true";
+        OIDC_SCOPE = "openid,profile,email";
+        OIDC_UID_FIELD = "email";
+        OIDC_CLIENT_ID = "mastodon";
+        OIDC_REDIRECT_URI = "https://${domain}/auth/auth/openid_connect/callback";
+        OIDC_SECURITY_ASSUME_EMAIL_IS_VERIFIED = "true";
+        #        ALLOW_UNSAFE_AUTH_PROVIDER_REATTACH = "true";
       };
     };
   };
