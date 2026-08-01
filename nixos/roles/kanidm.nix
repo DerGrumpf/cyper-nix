@@ -96,14 +96,20 @@ in
       acceptInvalidCerts = true;
       idmAdminPasswordFile = config.sops.secrets."kanidm/idm_admin_password".path;
 
-      persons.${primaryUser} = {
-        displayName = "DerGrumpf";
-        mailAddresses = [ "phil.keier@hotmail.com" ];
+      persons = {
+        ${primaryUser} = {
+          displayName = "DerGrumpf";
+          mailAddresses = [ "phil.keier@hotmail.com" ];
+        };
       };
 
       groups = {
-        synapse_users.members = [ "phil" ];
-        mastodon_users.members = [ "phil" ];
+        mastodon_users.members = [ primaryUser ];
+        jupyterhub_users.members = [ primaryUser ];
+        forgejo_users.members = [ primaryUser ];
+        synapse_users.members = [ primaryUser ];
+        grafana_users.members = [ primaryUser ];
+        vaultwarden_users.members = [ primaryUser ];
       };
 
       systems.oauth2 = {

@@ -74,6 +74,10 @@ in
       "git.cyperpunk.de" = (mkProxy 9000) // {
         extraConfig = ''
           client_max_body_size 8192m;
+          proxy_read_timeout 600s;
+          proxy_send_timeout 600s;
+          proxy_request_buffering off;
+          proxy_buffering off;
         '';
       };
       "search.cyperpunk.de" = mkProxy 11080;

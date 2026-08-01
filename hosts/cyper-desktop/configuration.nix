@@ -30,7 +30,13 @@
   ];
 
   system.stateVersion = "26.11";
-  virtualisation.docker.enable = true;
+  virtualisation.docker = {
+    enable = true;
+    daemon.settings = {
+      data-root = "/storage/docker";
+      insecure-registries = [ "192.168.2.2:9000" ];
+    };
+  };
   users.users.phil.extraGroups = [ "docker" ];
   programs.fuse.userAllowOther = true;
 }

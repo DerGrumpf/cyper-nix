@@ -11,6 +11,7 @@
     packages = with pkgs; [
       gh
       gnupg
+      tea
     ];
 
     persistence."/persist".directories = lib.mkIf (!isDarwin) [

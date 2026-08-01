@@ -63,28 +63,32 @@ in
   ];
 
   systemd = {
-    services.forgejo-db-password = {
-      description = "Set forgejo postgres user password";
-      requires = [
-        "postgresql.service"
-        "postgresql-setup.service"
-      ];
-      after = [
-        "postgresql.service"
-        "postgresql-setup.service"
-      ];
-      before = [ "forgejo.service" ];
-      wantedBy = [ "forgejo.service" ];
-      serviceConfig = {
-        Type = "oneshot";
-        User = "postgres";
-        RemainAfterExit = true;
+    services = {
+      forgejo-db-password = {
+        description = "Set forgejo postgres user password";
+        requires = [
+          "postgresql.service"
+          "postgresql-setup.service"
+        ];
+        after = [
+          "postgresql.service"
+          "postgresql-setup.service"
+        ];
+        before = [ "forgejo.service" ];
+        wantedBy = [ "forgejo.service" ];
+        serviceConfig = {
+          Type = "oneshot";
+          User = "postgres";
+          RemainAfterExit = true;
+        };
+        script = ''
+          pass=$(cat ${config.sops.secrets."services/forgejo/db_password".path})
+          ${pkgs.postgresql_14}/bin/psql -c \
+            "ALTER USER forgejo WITH PASSWORD '$pass';"
+        '';
       };
-      script = ''
-        pass=$(cat ${config.sops.secrets."services/forgejo/db_password".path})
-        ${pkgs.postgresql_14}/bin/psql -c \
-          "ALTER USER forgejo WITH PASSWORD '$pass';"
-      '';
+
+      "gitea-runner-docker_runner".serviceConfig.SupplementaryGroups = [ "docker" ];
     };
 
     tmpfiles.rules = [
@@ -155,29 +159,47 @@ in
 
     gitea-actions-runner = {
       package = pkgs.forgejo-runner;
-      instances."cyper_nix" = {
-        enable = true;
-        url = "https://git.cyperpunk.de";
-        tokenFile = config.sops.secrets."services/forgejo/runner_token".path;
-        name = "cyper-controller";
-        labels = [ "nix:host" ];
+      instances = {
+        cyper_nix = {
+          enable = true;
+          url = "https://git.cyperpunk.de";
+          tokenFile = config.sops.secrets."services/forgejo/runner_token".path;
+          name = "cyper-controller";
+          labels = [ "nix:host" ];
 
-        hostPackages = with pkgs; [
-          bash
-          coreutils
-          curl
-          gawk
-          gitMinimal
-          gnused
-          nodejs
-          wget
-          nix
-          openssh
-          nixos-rebuild
-        ];
+          hostPackages = with pkgs; [
+            bash
+            coreutils
+            curl
+            gawk
+            gitMinimal
+            gnused
+            nodejs
+            wget
+            nix
+            openssh
+            nixos-rebuild
+          ];
 
-        settings.runner.env_vars = {
-          PATH = "/run/wrappers/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/bin:/bin";
+          settings.runner.env_vars = {
+            PATH = "/run/wrappers/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/bin:/bin";
+          };
+        };
+
+        docker_runner = {
+          enable = true;
+          url = "https://git.cyperpunk.de";
+          tokenFile = config.sops.secrets."services/forgejo/runner_token".path;
+          name = "docker-runner";
+          labels = [ "docker:host" ];
+          hostPackages = with pkgs; [
+            bash
+            coreutils
+            curl
+            gitMinimal
+            docker
+            nodejs
+          ];
         };
       };
     };

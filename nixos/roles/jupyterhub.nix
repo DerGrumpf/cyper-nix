@@ -50,7 +50,7 @@ in
       );
 
       extraConfig = ''
-        import subprocess, json
+        import subprocess, json, os
 
         # --- Auth: kanidm OIDC, no local Unix accounts involved at all ---
         with open("${config.sops.secrets."kanidm/jupyterhub_secret".path}") as f:
@@ -80,13 +80,20 @@ in
         bridge = json.loads(subprocess.check_output(["${pkgs.docker}/bin/docker", "network", "inspect", "bridge"]))
         c.JupyterHub.hub_connect_ip = bridge[0]["IPAM"]["Config"][0]["Gateway"]
 
-        c.DockerSpawner.image = "quay.io/jupyter/base-notebook:latest"
+        c.DockerSpawner.image = "localhost:9000/dergrumpf/cyper-jupyter:latest"
         c.DockerSpawner.network_name = "bridge"
         c.DockerSpawner.remove = True
         c.DockerSpawner.notebook_dir = "/home/jovyan/work"
         c.DockerSpawner.volumes = {
-        		"/var/lib/jupyterhub-users/{username}": "/home/jovyan/work"
+        		"/storage/internal/jupyter/{username}": "/home/jovyan/work"
         }
+
+        def create_user_dir_hook(spawner):
+        		path = f"/storage/internal/jupyter/{spawner.user.name}"
+        		os.makedirs(path, exist_ok=True)
+        		os.chown(path, 1000, 100)
+
+        c.Spawner.pre_spawn_hook = create_user_dir_hook
       '';
     };
 
@@ -111,9 +118,18 @@ in
   };
 
   systemd.services.jupyterhub = {
-    after = [ "docker.service" ];
-    requires = [ "docker.service" ];
+    after = [
+      "docker.service"
+      "storage-internal.mount"
+    ];
+    requires = [
+      "docker.service"
+      "storage-internal.mount"
+    ];
   };
 
-  networking.firewall.allowedTCPPorts = [ port ];
+  networking.firewall = {
+    allowedTCPPorts = [ port ];
+    trustedInterfaces = [ "docker0" ];
+  };
 }

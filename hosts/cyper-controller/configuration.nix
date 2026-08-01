@@ -26,5 +26,10 @@
     ethAddress = "192.168.2.2/24";
   };
 
+  virtualisation.docker.daemon.settings = {
+    data-root = "/storage/internal/docker";
+    insecure-registries = [ "localhost:9000" ];
+  };
+
   system.stateVersion = "26.05";
 }
