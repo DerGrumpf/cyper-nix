@@ -14,6 +14,7 @@
     ./wireguard.nix
     ./ssh.nix
     ./impermanence.nix
+    ./build-machines.nix
   ]
   ++ lib.optionals (!isServer) [
     ./regreet.nix
@@ -42,10 +43,10 @@
       experimental-features = [
         "nix-command"
         "flakes"
-        #        "auto-allocate-uids"
-        #        "cgroups"
+        "auto-allocate-uids"
+        "cgroups"
       ];
-      #      extra-system-features = [ "uid-range" ];
+      extra-system-features = [ "uid-range" ];
       max-jobs = "auto";
       cores = 0;
       http-connections = 4;
@@ -65,8 +66,8 @@
         "cyper-nix:+YuG586UwrtNkXeGiivcr5GTCbZK70ILU2YqOxUoIWw="
       ];
       auto-optimise-store = true;
-      #      auto-allocate-uids = true;
-      #      use-cgroups = true;
+      auto-allocate-uids = true;
+      use-cgroups = true;
 
     };
     gc = {
