@@ -2,6 +2,13 @@
 final: prev:
 (nur.overlays.default final prev)
 // {
-  gs1200-exporter = final.callPackage ./gs1200-exporter.nix { };
   netradiant-custom = final.callPackage ./netradiant-custom.nix { };
+
+  pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
+    (pyFinal: pyPrev: {
+      python-lsp-server = pyPrev.python-lsp-server.overridePythonAttrs (_: {
+        doCheck = false;
+      });
+    })
+  ];
 }

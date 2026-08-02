@@ -16,6 +16,10 @@
       url = "github:nix-community/impermanence";
     };
 
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware/master";
+    };
+
     # declarative installer
     nixos-anywhere = {
       url = "github:nix-community/nixos-anywhere";
@@ -116,18 +120,33 @@
     let
       primaryUser = "phil";
 
-      installer = nixpkgs.lib.nixosSystem {
+      mkInstaller =
+        {
+          system,
+          configPath,
+        }:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = [
+            {
+              nixpkgs = {
+                config.allowUnfree = true;
+                hostPlatform = system;
+              };
+            }
+            configPath
+          ];
+        };
+
+      installer = mkInstaller {
         system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          {
-            nixpkgs = {
-              config.allowUnfree = true;
-              hostPlatform = "x86_64-linux";
-            };
-          }
-          ./hosts/installer/configuration.nix
-        ];
+        configPath = ./hosts/installer/configuration.nix;
+      };
+
+      installerPi = mkInstaller {
+        system = "aarch64-linux";
+        configPath = ./hosts/installer-pi/configuration.nix;
       };
 
       mkInstall =
@@ -155,6 +174,8 @@
               '';
             }
           }/bin/install-${hostName}";
+
+          meta.description = "Install NixOS on ${hostName} via nixos-anywhere";
         };
 
       mkSystem =
@@ -201,9 +222,7 @@
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 sharedModules = [
-                  {
-                    programs.nixvim.nixpkgs.source = inputs.nixpkgs;
-                  }
+                  { programs.nixvim.nixpkgs.useGlobalPackages = true; }
                 ];
               };
             }
@@ -234,6 +253,8 @@
       nixosConfigurations = {
         "installer" = installer;
 
+        "installer-pi" = installerPi;
+
         "cyper-desktop" = mkSystem {
           hostName = "cyper-desktop";
           system = "x86_64-linux";
@@ -260,6 +281,12 @@
         "cyper-node-2" = mkSystem {
           hostName = "cyper-node-2";
           system = "x86_64-linux";
+          isServer = true;
+        };
+
+        "cyper-pi-1" = mkSystem {
+          hostName = "cyper-pi-1";
+          system = "aarch64-linux";
           isServer = true;
         };
       };
@@ -292,6 +319,10 @@
         };
         install-cyper-desktop = mkInstall {
           hostName = "cyper-desktop";
+        };
+        install-cyper-pi-1 = mkInstall {
+          hostName = "cyper-pi-1";
+          target = "192.168.2.197";
         };
       };
     };
