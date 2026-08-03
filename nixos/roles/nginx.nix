@@ -143,6 +143,19 @@ in
               sub_filter ' action="/' ' action="/hydra/';
             '';
           };
+
+          "/hydra/api/push" = {
+            proxyPass = "http://${upstream}:3000/api/push";
+            extraConfig = ''
+              if ($arg_secret != "c9512c8075ade0a478e80524b7ba8356fed89fa7602c8c2a") {
+                return 403;
+              }
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header X-Forwarded-Host $host;
+              proxy_set_header X-Request-Base "https://www.cyperpunk.de/hydra";
+              proxy_set_header Referer "https://www.cyperpunk.de/hydra/";
+            '';
+          };
         };
       };
     };
