@@ -1,7 +1,27 @@
 {
-  nix.settings = {
-    allowed-uris = [ "git+https://git.cyperpunk.de/" ];
-    allow-import-from-derivation = true;
+  nix = {
+    buildMachines = [
+      {
+        hostName = "localhost";
+        system = "x86_64-linux";
+        supportedFeatures = [
+          "kvm"
+          "nixos-test"
+          "big-parallel"
+          "benchmark"
+        ];
+        maxJobs = 4;
+      }
+      {
+        hostName = "localhost";
+        system = "aarch64-linux";
+        maxJobs = 2;
+      }
+    ];
+    settings = {
+      allowed-uris = [ "git+https://git.cyperpunk.de/" ];
+      allow-import-from-derivation = true;
+    };
   };
 
   services = {
@@ -11,7 +31,6 @@
       notificationSender = "hydra@cyperpunk.de";
       port = 3000;
       useSubstitutes = true;
-      buildMachinesFiles = [ ];
       logo = ./hydra.png;
       maxServers = 12;
 

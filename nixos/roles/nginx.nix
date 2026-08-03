@@ -134,19 +134,14 @@ in
               proxy_set_header X-Forwarded-Path /hydra;
               proxy_set_header X-Request-Base "https://www.cyperpunk.de/hydra";
               proxy_set_header Accept-Encoding "";
-              sub_filter 'http://www.cyperpunk.de/static' 'https://www.cyperpunk.de/hydra/static';
-              sub_filter 'href="/static' 'href="/hydra/static';
-              sub_filter 'src="/static' 'src="/hydra/static';
-              sub_filter 'action="/search"' 'action="/hydra/search"';
-              sub_filter 'src="/logo"' 'src="/hydra/logo"';
-              sub_filter 'action="/login"' 'action="/hydra/login"';
-              sub_filter 'http://www.cyperpunk.de/login' 'https://www.cyperpunk.de/hydra/login';
               sub_filter_once off;
               sub_filter_types text/html text/css application/javascript;
+              sub_filter 'http://www.cyperpunk.de/static' 'https://www.cyperpunk.de/hydra/static';
+              sub_filter 'http://www.cyperpunk.de/login' 'https://www.cyperpunk.de/hydra/login';
+              sub_filter ' href="/' ' href="/hydra/';
+              sub_filter ' src="/' ' src="/hydra/';
+              sub_filter ' action="/' ' action="/hydra/';
             '';
-          };
-          "/static/" = {
-            proxyPass = "http://${upstream}:3000/static/";
           };
         };
       };
