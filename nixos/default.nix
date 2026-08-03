@@ -14,9 +14,9 @@
     ./wireguard.nix
     ./ssh.nix
     ./impermanence.nix
-    ./virt.nix
   ]
   ++ lib.optionals (!isServer) [
+    ./virt.nix
     ./regreet.nix
     ./plymouth.nix
     ./audio.nix

@@ -32,5 +32,10 @@
     insecure-registries = [ "localhost:9000" ];
   };
 
+  boot.binfmt.emulatedSystems = [
+    "aarch64-linux"
+    "riscv64-linux"
+  ];
+
   system.stateVersion = "26.05";
 }
