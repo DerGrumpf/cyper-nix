@@ -7,7 +7,7 @@
   services = {
     hydra = {
       enable = true;
-      hydraURL = "https://cyperpunk.de/hydra";
+      hydraURL = "https://www.cyperpunk.de/hydra";
       notificationSender = "hydra@cyperpunk.de";
       port = 3000;
       useSubstitutes = true;
