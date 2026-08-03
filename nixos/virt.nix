@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   virtualisation.libvirtd.enable = true;
-  boot.binfmt.emulatedSystems = [
+  boot.binfmt.emulatedSystems = builtins.filter (s: s != pkgs.stdenv.hostPlatform.system) [
     "aarch64-linux"
     "riscv64-linux"
   ];
