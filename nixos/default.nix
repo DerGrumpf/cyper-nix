@@ -14,7 +14,6 @@
     ./wireguard.nix
     ./ssh.nix
     ./impermanence.nix
-    ./build-machines.nix
   ]
   ++ lib.optionals (!isServer) [
     ./regreet.nix

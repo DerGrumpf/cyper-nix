@@ -2,7 +2,7 @@
   services = {
     postgresql = {
       enable = true;
-
+      checkConfig = false;
       settings = {
         wal_level = "replica";
         max_wal_senders = 5;

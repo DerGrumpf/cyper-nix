@@ -123,6 +123,15 @@ in
               proxy_read_timeout 86400s;
             '';
           };
+          "/hydra/" = {
+            proxyPass = "http://${upstream}:3000/";
+            proxyWebsockets = true;
+            extraConfig = ''
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header X-Forwarded-Host $host;
+              proxy_set_header X-Forwarded-Path /hydra;
+            '';
+          };
         };
       };
     };

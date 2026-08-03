@@ -19,6 +19,7 @@
     ../../nixos/roles/matrix/postgres-backup.nix
     ../../nixos/roles/kanidm.nix
     ../../nixos/roles/ollama.nix
+    ../../nixos/roles/hydra.nix
   ];
 
   net = {

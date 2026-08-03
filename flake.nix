@@ -325,5 +325,14 @@
           target = "192.168.2.197";
         };
       };
+
+      hydraJobs = {
+        cyper-desktop = self.nixosConfigurations.cyper-desktop.config.system.build.toplevel;
+        cyper-controller = self.nixosConfigurations.cyper-controller.config.system.build.toplevel;
+        cyper-proxy = self.nixosConfigurations.cyper-proxy.config.system.build.toplevel;
+        cyper-node-1 = self.nixosConfigurations.cyper-node-1.config.system.build.toplevel;
+        cyper-node-2 = self.nixosConfigurations.cyper-node-2.config.system.build.toplevel;
+        cyper-pi-1 = self.nixosConfigurations.cyper-pi-1.config.system.build.toplevel;
+      };
     };
 }
