@@ -1,5 +1,8 @@
 {
-  nix.settings.allowed-uris = [ "git+https://git.cyperpunk.de/" ];
+  nix.settings = {
+    allowed-uris = [ "git+https://git.cyperpunk.de/" ];
+    allow-import-from-derivation = true;
+  };
 
   services = {
     hydra = {
