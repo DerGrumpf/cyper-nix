@@ -14,12 +14,12 @@
     ./wireguard.nix
     ./ssh.nix
     ./impermanence.nix
+    ./virt.nix
   ]
   ++ lib.optionals (!isServer) [
     ./regreet.nix
     ./plymouth.nix
     ./audio.nix
-    ./virt.nix
     ./catppuccin.nix
   ];
 

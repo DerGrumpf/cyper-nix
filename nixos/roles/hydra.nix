@@ -14,6 +14,10 @@
       buildMachinesFiles = [ ];
       logo = ./hydra.png;
       maxServers = 12;
+
+      extraConfig = ''
+        allow_import_from_derivation = true
+      '';
     };
   };
 
