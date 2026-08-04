@@ -2,9 +2,9 @@
   "main": {
     "enabled": 1,
     "hidden": false,
-    "description": "Cyper Nix Evaluation",
-    "type": "flake",
-    "flakeref": "git+https://git.cyperpunk.de/DerGrumpf/cyper-nix.git",
+    "description": "cyper-nix main branch",
+    "type": 1,
+    "flake": "git+https://git.cyperpunk.de/DerGrumpf/cyper-nix.git",
     "schedulingshares": 100,
     "enableemail": false,
     "emailoverride": "",
