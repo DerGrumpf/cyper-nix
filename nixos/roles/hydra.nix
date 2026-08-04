@@ -1,9 +1,15 @@
 { config, ... }:
 {
   sops = {
-    secrets."services/hydra/forgejo_webhook_secret" = {
-      owner = "hydra";
-      mode = "0440";
+    secrets = {
+      "services/hydra/forgejo_webhook_secret" = {
+        owner = "hydra";
+        mode = "0440";
+      };
+      "services/hydra/github_webhook_secret" = {
+        owner = "hydra";
+        mode = "0440";
+      };
     };
 
     templates."hydra-webhook-secrets.conf" = {
@@ -13,6 +19,9 @@
         <gitea>
           secret = ${config.sops.placeholder."services/hydra/forgejo_webhook_secret"}
         </gitea>
+        <github>
+          secret = ${config.sops.placeholder."services/hydra/github_webhook_secret"}
+        </github>
       '';
     };
 
@@ -38,7 +47,10 @@
       }
     ];
     settings = {
-      allowed-uris = [ "git+https://git.cyperpunk.de/" ];
+      allowed-uris = [
+        "git+https://git.cyperpunk.de/"
+        "git+https://github.com/"
+      ];
       allow-import-from-derivation = true;
     };
   };
@@ -54,10 +66,11 @@
       maxServers = 12;
 
       extraConfig = ''
-        allow_import_from_derivation = true
-        <webhooks>
-          Include ${config.sops.templates."hydra-webhook-secrets.conf".path}
-        </webhooks>
+                allow_import_from_derivation = true
+        		gitTimeout = 600
+                <webhooks>
+                  Include ${config.sops.templates."hydra-webhook-secrets.conf".path}
+                </webhooks>
       '';
 
       tracker = ''
