@@ -129,31 +129,25 @@ in
             proxyPass = "http://${upstream}:3000/";
             proxyWebsockets = true;
             extraConfig = ''
-              proxy_set_header X-Forwarded-Proto $scheme;
-              proxy_set_header X-Forwarded-Host $host;
-              proxy_set_header X-Forwarded-Path /hydra;
-              proxy_set_header X-Request-Base "https://www.cyperpunk.de/hydra";
-              proxy_set_header Accept-Encoding "";
-              sub_filter_once off;
-              sub_filter_types text/html text/css application/javascript;
-              sub_filter 'http://www.cyperpunk.de/static' 'https://www.cyperpunk.de/hydra/static';
-              sub_filter 'http://www.cyperpunk.de/login' 'https://www.cyperpunk.de/hydra/login';
-              sub_filter ' href="/' ' href="/hydra/';
-              sub_filter ' src="/' ' src="/hydra/';
-              sub_filter ' action="/' ' action="/hydra/';
+              	proxy_set_header X-Forwarded-Proto $scheme;
+              	proxy_set_header X-Forwarded-Host $host;
+              	proxy_set_header X-Forwarded-Path /hydra;
+              	proxy_set_header X-Request-Base "https://www.cyperpunk.de/hydra";
+              	proxy_set_header Accept-Encoding "";
+              	sub_filter_once off;
+              	sub_filter_types text/html text/css application/javascript;
+              	sub_filter 'http://www.cyperpunk.de/static' 'https://www.cyperpunk.de/hydra/static';
+              	sub_filter 'http://www.cyperpunk.de/login' 'https://www.cyperpunk.de/hydra/login';
+              	sub_filter ' href="/' ' href="/hydra/';
+              	sub_filter ' src="/' ' src="/hydra/';
+              	sub_filter ' action="/' ' action="/hydra/';
+                sub_filter '</head>' '<link rel="stylesheet" href="https://www.cyperpunk.de/hydra-theme/mocha.css"></head>';
             '';
           };
-
-          "/hydra/api/push" = {
-            proxyPass = "http://${upstream}:3000/api/push";
+          "= /hydra-theme/mocha.css" = {
+            alias = "${./hydra-theme.css}";
             extraConfig = ''
-              if ($arg_secret != "c9512c8075ade0a478e80524b7ba8356fed89fa7602c8c2a") {
-                return 403;
-              }
-              proxy_set_header X-Forwarded-Proto $scheme;
-              proxy_set_header X-Forwarded-Host $host;
-              proxy_set_header X-Request-Base "https://www.cyperpunk.de/hydra";
-              proxy_set_header Referer "https://www.cyperpunk.de/hydra/";
+              add_header Cache-Control "no-cache";
             '';
           };
         };

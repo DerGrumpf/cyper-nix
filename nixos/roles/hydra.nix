@@ -1,4 +1,23 @@
+{ config, ... }:
 {
+  sops = {
+    secrets."services/hydra/forgejo_webhook_secret" = {
+      owner = "hydra";
+      mode = "0440";
+    };
+
+    templates."hydra-webhook-secrets.conf" = {
+      owner = "hydra";
+      mode = "0440";
+      content = ''
+        <gitea>
+          secret = ${config.sops.placeholder."services/hydra/forgejo_webhook_secret"}
+        </gitea>
+      '';
+    };
+
+  };
+
   nix = {
     buildMachines = [
       {
@@ -36,6 +55,13 @@
 
       extraConfig = ''
         allow_import_from_derivation = true
+        <webhooks>
+          Include ${config.sops.templates."hydra-webhook-secrets.conf".path}
+        </webhooks>
+      '';
+
+      tracker = ''
+        <link rel="stylesheet" href="https://www.cyperpunk.de/hydra-theme/mocha.css">
       '';
     };
   };
