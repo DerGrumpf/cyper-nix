@@ -2,6 +2,7 @@
   pkgs,
   lib,
   isServer,
+  isDarwin,
   ...
 }:
 {
@@ -40,7 +41,7 @@
         tty-solitaire
         cowsay
       ]
-      ++ lib.optionals (!pkgs.stdenv.isDarwin) [
+      ++ lib.optionals (!isDarwin) [
         # dev tools
         pciutils
         usbutils
@@ -54,7 +55,7 @@
         # encryption
         ssh-to-age
       ]
-      ++ lib.optionals (!pkgs.stdenv.isDarwin && !isServer) [
+      ++ lib.optionals (!isDarwin && !isServer) [
         # GUI
         element-desktop
         nautilus
@@ -71,6 +72,6 @@
         netradiant-custom
         pinta
       ]
-      ++ lib.optionals pkgs.stdenv.isDarwin [ graphite-cli ];
+      ++ lib.optionals isDarwin [ graphite-cli ];
   };
 }

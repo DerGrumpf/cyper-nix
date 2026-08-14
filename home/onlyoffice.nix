@@ -1,3 +1,3 @@
-{ pkgs, ... }: {
-  programs.onlyoffice = pkgs.lib.mkIf (!pkgs.stdenv.isDarwin) { enable = true; };
+{ pkgs, isDarwin, ... }: {
+  programs.onlyoffice = pkgs.lib.mkIf (!isDarwin) { enable = true; };
 }

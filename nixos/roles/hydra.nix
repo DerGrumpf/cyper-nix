@@ -79,5 +79,7 @@
     };
   };
 
+  systemd.services.hydra-init.serviceConfig.SuccessExitStatus = [ 1 ];
+
   networking.firewall.allowedTCPPorts = [ 3000 ];
 }

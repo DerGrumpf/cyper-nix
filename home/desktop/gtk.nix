@@ -1,10 +1,15 @@
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  isDarwin,
+  ...
+}:
 let
   theme = pkgs.magnetic-catppuccin-gtk;
   theme_name = "Catppuccin-GTK-Dark";
 in
 {
-  home = lib.mkIf (!pkgs.stdenv.isDarwin) {
+  home = lib.mkIf (!isDarwin) {
     packages = with pkgs; [
       adwaita-icon-theme
     ];
@@ -15,7 +20,7 @@ in
     };
   };
 
-  gtk = lib.mkIf (!pkgs.stdenv.isDarwin) {
+  gtk = lib.mkIf (!isDarwin) {
     enable = true;
     font = {
       name = "FiraCode Nerd Font Propo";
@@ -37,7 +42,7 @@ in
     gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
   };
 
-  dconf = lib.mkIf (!pkgs.stdenv.isDarwin) {
+  dconf = lib.mkIf (!isDarwin) {
     enable = true;
     settings = {
       "org/gnome/desktop/interface" = {
