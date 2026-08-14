@@ -19,7 +19,7 @@ jobs:
         run: nix fmt -- --ci
       
       - name: Nix flake check
-        run: nix flake check --impure
+        run: nix flake check --impure --option allow-import-from-derivation true
 
       - name: Build NixOS configs (dry-run)
         run: |
