@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  lib,
   primaryUser,
   ...
 }:
@@ -8,6 +9,28 @@ let
   domain = "auth.cyperpunk.de";
   port = 8444;
   certDir = "/var/lib/kanidm/tls";
+
+  allServices = [
+    "mastodon_users"
+    "jupyterhub_users"
+    "forgejo_users"
+    "synapse_users"
+    "grafana_users"
+    "vaultwarden_users"
+  ];
+
+  extraUsers = import ./kanidm_users.nix;
+
+  # primaryUser always in every group; others only in listed services
+  # extraUsers.services uses short names (e.g. "mastodon"), groups use "<name>_users"
+  groupMembers =
+    group:
+    [ primaryUser ]
+    ++ builtins.attrNames (
+      lib.filterAttrs (
+        _: u: builtins.elem (group + "_users") (map (s: s + "_users") u.services)
+      ) extraUsers
+    );
 in
 {
   sops.secrets = {
@@ -101,16 +124,18 @@ in
           displayName = "DerGrumpf";
           mailAddresses = [ "phil.keier@hotmail.com" ];
         };
-      };
+      }
+      // builtins.mapAttrs (name: u: {
+        inherit (u) displayName;
+        mailAddresses = [ u.mail ];
+      }) extraUsers;
 
-      groups = {
-        mastodon_users.members = [ primaryUser ];
-        jupyterhub_users.members = [ primaryUser ];
-        forgejo_users.members = [ primaryUser ];
-        synapse_users.members = [ primaryUser ];
-        grafana_users.members = [ primaryUser ];
-        vaultwarden_users.members = [ primaryUser ];
-      };
+      groups = builtins.listToAttrs (
+        map (s: {
+          name = s;
+          value.members = groupMembers (lib.removeSuffix "_users" s);
+        }) allServices
+      );
 
       systems.oauth2 = {
         synapse = {

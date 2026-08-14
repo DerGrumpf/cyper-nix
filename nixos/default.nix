@@ -21,6 +21,7 @@
     ./plymouth.nix
     ./audio.nix
     ./catppuccin.nix
+    ./helium
   ];
 
   sops.secrets = {

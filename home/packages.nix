@@ -69,6 +69,7 @@
         blender
         nixpkgs-review
         netradiant-custom
+        pinta
       ]
       ++ lib.optionals pkgs.stdenv.isDarwin [ graphite-cli ];
   };
