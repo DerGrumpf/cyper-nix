@@ -69,6 +69,9 @@
       auto-allocate-uids = true;
       use-cgroups = true;
 
+      keep-outputs = lib.mkForce false;
+      keep-derivations = lib.mkForce false;
+
     };
     gc = {
       automatic = true;
