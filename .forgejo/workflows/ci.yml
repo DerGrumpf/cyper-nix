@@ -11,6 +11,7 @@ jobs:
     env:
       PATH: "/run/wrappers/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/bin:/bin"
       NIXPKGS_ALLOW_UNFREE: "1"
+      TMPDIR: "/persist/tmp"
     steps:
       - name: Checkout
         run: git clone https://git.cyperpunk.de/DerGrumpf/cyper-nix.git .
