@@ -36,6 +36,7 @@
       statix
       ruff
       clippy
+      nodePackages.eslint
     ];
   };
 }

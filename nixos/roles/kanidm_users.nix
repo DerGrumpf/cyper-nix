@@ -1,11 +1,10 @@
 {
   calvin = {
     displayName = "blonkh";
-    mail = "blonkh@cyperpunk.de";
+    mail = "calvin@cyperpunk.de";
     services = [
       "mastodon"
       "synapse"
-      "vaultwarden"
     ];
   };
 }
