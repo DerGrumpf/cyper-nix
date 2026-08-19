@@ -1,4 +1,4 @@
-_: {
+{
   # Catppuccin: Soothing pastel theme for Neovim
   # Provides consistent theming across plugins with transparency support.
   programs.nixvim = {

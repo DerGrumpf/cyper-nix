@@ -1,4 +1,4 @@
-_: {
+{
   # Which-key: Display available keybindings in popup
   # Shows all possible key combinations after pressing leader or other prefix keys
   programs.nixvim.plugins.which-key = {
@@ -35,6 +35,11 @@ _: {
           __unkeyed-1 = "<leader>o";
           group = "OpenSCAD";
           icon = "🔧";
+        }
+        {
+          __unkeyed-1 = "<leader>t";
+          group = "Typst";
+          icon = "📝";
         }
 
         # Bracket navigation groups

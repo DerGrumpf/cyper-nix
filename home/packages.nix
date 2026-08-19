@@ -71,6 +71,7 @@
         nixpkgs-review
         netradiant-custom
         pinta
+        orca-slicer
       ]
       ++ lib.optionals isDarwin [ graphite-cli ];
   };

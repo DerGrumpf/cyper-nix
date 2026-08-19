@@ -30,6 +30,7 @@
           };
           pylsp.enable = true; # Python language server
           clangd.enable = true;
+          tinymist.enable = true;
         };
 
         # Keymaps for LSP actions

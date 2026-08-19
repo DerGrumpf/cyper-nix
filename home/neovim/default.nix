@@ -22,12 +22,13 @@
     ./which-key.nix
     ./diffview.nix
     ./live-server.nix
+    ./typst.nix
   ];
 
   home.packages = with pkgs; [
     nil
     biome
-    #gdb
+    gdb
   ];
 
   programs.nixvim = {

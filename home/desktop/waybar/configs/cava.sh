@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Not my own work. Credit to original author
-
 #----- Optimized bars animation without much CPU usage increase --------
 bar="▁▂▃▄▅▆▇█"
 dict="s/;//g"
