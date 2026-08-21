@@ -1,7 +1,7 @@
 {
   calvin = {
     displayName = "blonkh";
-    mail = "calvin@cyperpunk.de";
+    mail = "calvinbrandt@outlook.de";
     services = [
       "mastodon"
       "synapse"

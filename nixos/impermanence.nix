@@ -1,4 +1,4 @@
-_: {
+{
   environment.persistence."/persist" = {
     hideMounts = true;
     files = [

@@ -128,6 +128,7 @@
     gnome = lib.mkIf (!isServer) {
       tinysparql.enable = true;
       localsearch.enable = true;
+      at-spi2-core.enable = true;
     };
   };
 

@@ -72,7 +72,7 @@ in
 
       settings = {
         # Startup
-        "browser.startup.homepage" = "https://www.cyperpunk.de";
+        "browser.startup.homepage" = "https://dash.cyperpunk.de";
 
         # UI
         "browser.ctrlTab.sortByRecentlyUsed" = true;
@@ -168,7 +168,7 @@ in
           );
           "newtaboverride@agenedia.com".settings = {
             type = "custom_url";
-            url = "https://www.cyperpunk.de/";
+            url = "https://dash.cyperpunk.de/";
           };
         };
       };

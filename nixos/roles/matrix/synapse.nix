@@ -93,6 +93,9 @@ in
         registration_shared_secret_path = config.sops.secrets."matrix/registration_secret".path;
         macaroon_secret_key = "$__file{${config.sops.secrets."matrix/macaroon_secret".path}}";
         signing_key_path = config.sops.secrets."matrix/signing_key".path;
+        media_retention = {
+          remote_media_lifetime = "30d";
+        };
         matrix_rtc = {
           enabled = true;
           transports = [

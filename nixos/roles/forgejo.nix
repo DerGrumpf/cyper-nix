@@ -89,6 +89,11 @@ in
       };
 
       "gitea-runner-docker_runner".serviceConfig.SupplementaryGroups = [ "docker" ];
+      "gitea-runner-cyper_nix".serviceConfig = {
+        LoadCredential = "deploy_ssh_key:/home/phil/.ssh/ssh";
+        ProtectSystem = "full";
+        DynamicUser = lib.mkForce false;
+      };
     };
 
     tmpfiles.rules = [
@@ -175,6 +180,8 @@ in
             gitMinimal
             gnused
             nodejs
+            pnpm
+            rsync
             wget
             nix
             openssh

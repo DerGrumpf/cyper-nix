@@ -6,5 +6,7 @@
     nerd-fonts.fira-code
     nerd-fonts.fira-mono
     nerd-fonts.hack
+    google-fonts
+    corefonts
   ];
 }

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, primaryUser, ... }:
 let
   upstream = "10.10.0.2";
 
@@ -47,6 +47,7 @@ in
 
   systemd.tmpfiles.rules = [
     "d /var/www/home.cyperpunk.de 0755 nginx nginx -"
+    "d /var/www/cyperpunk.de 0755 ${primaryUser} nginx -"
   ];
 
   security.acme = {
@@ -81,32 +82,30 @@ in
           proxy_request_buffering off;
           proxy_buffering off;
         '';
+        locations = (mkProxy 9000).locations // {
+          "= /dashboard" = {
+            alias = "${./forgejo-dashboard.html}";
+            extraConfig = ''
+              default_type text/html;
+              add_header Cache-Control "no-cache";
+            '';
+          };
+        };
       };
       "search.cyperpunk.de" = mkProxy 11080;
       "file.cyperpunk.de" = mkProxy 10000;
-      "ngx.cyperpunk.de" = mkWsProxy 28101;
       "vault.cyperpunk.de" = mkWsProxy 8222;
       "calvin.cyperpunk.de" = mkWsProxy 15006;
       "auth.cyperpunk.de" = mkHttpsProxy 8444;
-
-      #"home.cyperpunk.de" = {
-      #  forceSSL = true;
-      #  enableACME = true;
-      #  locations."/" = {
-      #    root = "/var/www/home.cyperpunk.de";
-      #    extraConfig = ''
-      #      try_files $uri $uri/ =404;
-      #    '';
-      #  };
-      #};
+      "dash.cyperpunk.de" = mkWsProxy 15005;
 
       "www.cyperpunk.de" = {
         forceSSL = true;
         enableACME = true;
+        root = "/var/www/cyperpunk.de";
         locations = {
           "/" = {
-            proxyPass = "http://${upstream}:15005";
-            proxyWebsockets = true;
+            tryFiles = "$uri $uri.html $uri/ =404";
           };
           "/grafana" = {
             proxyPass = "http://${upstream}:2342";
