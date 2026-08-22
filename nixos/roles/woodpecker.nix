@@ -29,6 +29,7 @@
         WOODPECKER_OPEN = "true";
         WOODPECKER_GRPC_ADDR = ":9003";
         WOODPECKER_SERVER_ADDR = ":8002";
+        WOODPECKER_PLUGINS_PRIVILEGED = "woodpeckerci/plugin-docker-buildx";
       };
       environmentFile = [
         config.sops.templates."woodpecker-server-secrets.env".path
