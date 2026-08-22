@@ -1,0 +1,24 @@
+steps:
+  - name: format-check
+    image: bash
+    commands:
+      - nix fmt -- --ci
+
+  - name: flake-check
+    image: bash
+    commands:
+      - nix flake check --impure --option allow-import-from-derivation true
+
+  - name: build-configs
+    image: bash
+    commands:
+      - nix build .#nixosConfigurations.cyper-desktop.config.system.build.toplevel --dry-run
+      - nix build .#nixosConfigurations.cyper-controller.config.system.build.toplevel --dry-run
+      - nix build .#nixosConfigurations.cyper-proxy.config.system.build.toplevel --dry-run
+      - nix build .#nixosConfigurations.cyper-node-1.config.system.build.toplevel --dry-run
+      - nix build .#nixosConfigurations.cyper-node-2.config.system.build.toplevel --dry-run
+
+when:
+  - event: push
+    branch: main
+  - event: pull_request

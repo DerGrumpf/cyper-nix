@@ -43,6 +43,7 @@ in
     80
     443
     12222
+    9003
   ];
 
   systemd.tmpfiles.rules = [
@@ -64,11 +65,15 @@ in
 
     additionalModules = [ pkgs.nginxModules.subsFilter ];
 
-    # Git ssh
     streamConfig = ''
       server {
         listen 12222;
         proxy_pass ${upstream}:12222;
+      }
+
+      server {
+        listen 9003;
+        proxy_pass ${upstream}:9003;
       }
     '';
 
@@ -88,6 +93,15 @@ in
             extraConfig = ''
               default_type text/html;
               add_header Cache-Control "no-cache";
+            '';
+          };
+
+          "/ci/" = {
+            proxyPass = "http://${upstream}:8002";
+            proxyWebsockets = true;
+            extraConfig = ''
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header X-Forwarded-Host $host;
             '';
           };
         };

@@ -13,7 +13,10 @@ let
   sshPort = 12222;
 in
 {
-  imports = [ inputs.catppuccin.nixosModules.catppuccin ];
+  imports = [
+    inputs.catppuccin.nixosModules.catppuccin
+    ./woodpecker.nix
+  ];
 
   catppuccin = {
     enable = true;
@@ -36,9 +39,6 @@ in
     "services/forgejo/lfs_jwt_secret" = {
       owner = "forgejo";
       group = "forgejo";
-    };
-    "services/forgejo/runner_token" = {
-      mode = "0444";
     };
     "kanidm/forgejo_secret" = {
       owner = "forgejo";
@@ -86,13 +86,6 @@ in
           ${pkgs.postgresql_14}/bin/psql -c \
             "ALTER USER forgejo WITH PASSWORD '$pass';"
         '';
-      };
-
-      "gitea-runner-docker_runner".serviceConfig.SupplementaryGroups = [ "docker" ];
-      "gitea-runner-cyper_nix".serviceConfig = {
-        LoadCredential = "deploy_ssh_key:/home/phil/.ssh/ssh";
-        ProtectSystem = "full";
-        DynamicUser = lib.mkForce false;
       };
     };
 
@@ -158,55 +151,6 @@ in
           ENABLED = true;
           ENABLED_ISSUE_BY_LABEL = true;
           ENABLED_ISSUE_BY_REPOSITORY = true;
-        };
-      };
-    };
-
-    gitea-actions-runner = {
-      package = pkgs.forgejo-runner;
-      instances = {
-        cyper_nix = {
-          enable = true;
-          url = "https://git.cyperpunk.de";
-          tokenFile = config.sops.secrets."services/forgejo/runner_token".path;
-          name = "cyper-controller";
-          labels = [ "nix:host" ];
-
-          hostPackages = with pkgs; [
-            bash
-            coreutils
-            curl
-            gawk
-            gitMinimal
-            gnused
-            nodejs
-            pnpm
-            rsync
-            wget
-            nix
-            openssh
-            nixos-rebuild
-          ];
-
-          settings.runner.env_vars = {
-            PATH = "/run/wrappers/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/bin:/bin";
-          };
-        };
-
-        docker_runner = {
-          enable = true;
-          url = "https://git.cyperpunk.de";
-          tokenFile = config.sops.secrets."services/forgejo/runner_token".path;
-          name = "docker-runner";
-          labels = [ "docker:host" ];
-          hostPackages = with pkgs; [
-            bash
-            coreutils
-            curl
-            gitMinimal
-            docker
-            nodejs
-          ];
         };
       };
     };
