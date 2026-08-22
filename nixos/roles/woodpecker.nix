@@ -64,9 +64,11 @@
           coreutils
           git
           gitMinimal
+          git-lfs
           nix
           openssh
           nixos-rebuild
+          woodpecker-plugin-git
         ];
       };
     };

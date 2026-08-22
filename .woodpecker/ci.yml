@@ -1,3 +1,6 @@
+labels:
+  backend: local
+
 steps:
   - name: format-check
     image: bash
