@@ -1,0 +1,91 @@
+labels:
+  backend: local
+
+steps:
+  - name: format-check
+    image: bash
+    commands:
+      - nix fmt -- --ci
+
+  - name: flake-check
+    image: bash
+    commands:
+      - nix flake check --impure --option allow-import-from-derivation true
+
+  - name: build-configs
+    image: bash
+    commands:
+      - nix build .#nixosConfigurations.cyper-desktop.config.system.build.toplevel --dry-run
+      - nix build .#nixosConfigurations.cyper-controller.config.system.build.toplevel --dry-run
+      - nix build .#nixosConfigurations.cyper-proxy.config.system.build.toplevel --dry-run
+      - nix build .#nixosConfigurations.cyper-node-1.config.system.build.toplevel --dry-run
+      - nix build .#nixosConfigurations.cyper-node-2.config.system.build.toplevel --dry-run
+
+  - name: setup-ssh
+    image: bash
+    secrets: [ssh_private_key]
+    commands:
+      - mkdir -p ~/.ssh
+      - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+      - chmod 600 ~/.ssh/id_ed25519
+    when:
+      - event: push
+        branch: main
+
+  - name: deploy-controller
+    image: bash
+    commands:
+      - nixos-rebuild switch --flake .#cyper-controller --target-host phil@192.168.2.2 --elevate=sudo
+    environment:
+      NIX_SSHOPTS: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /root/.ssh/id_ed25519"
+    when:
+      - event: push
+        branch: main
+
+  - name: deploy-desktop
+    image: bash
+    commands:
+      - nixos-rebuild switch --flake .#cyper-desktop --target-host phil@192.168.2.40 --elevate=sudo
+    environment:
+      NIX_SSHOPTS: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /root/.ssh/id_ed25519"
+    failure: ignore
+    when:
+      - event: push
+        branch: main
+
+  - name: deploy-proxy
+    image: bash
+    commands:
+      - nixos-rebuild switch --flake .#cyper-proxy --target-host phil@proxy.cyperpunk.de --elevate=sudo
+    environment:
+      NIX_SSHOPTS: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /root/.ssh/id_ed25519"
+    when:
+      - event: push
+        branch: main
+
+  - name: deploy-node-1
+    image: bash
+    commands:
+      - nixos-rebuild switch --flake .#cyper-node-1 --target-host phil@192.168.2.30 --elevate=sudo
+    environment:
+      NIX_SSHOPTS: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /root/.ssh/id_ed25519"
+    failure: ignore
+    when:
+      - event: push
+        branch: main
+
+  - name: deploy-node-2
+    image: bash
+    commands:
+      - nixos-rebuild switch --flake .#cyper-node-2 --target-host phil@192.168.2.31 --elevate=sudo
+    environment:
+      NIX_SSHOPTS: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /root/.ssh/id_ed25519"
+    failure: ignore
+    when:
+      - event: push
+        branch: main
+
+when:
+  - event: push
+    branch: main
+  - event: pull_request
