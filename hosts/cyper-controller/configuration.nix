@@ -29,7 +29,13 @@
 
   virtualisation.docker.daemon.settings = {
     data-root = "/storage/internal/docker";
-    insecure-registries = [ "localhost:9000" ];
+    insecure-registries = [
+      "localhost:9000"
+      "10.10.0.2:9000"
+    ];
+    dns = [
+      "192.168.2.2"
+    ];
   };
 
   boot.binfmt.emulatedSystems = [

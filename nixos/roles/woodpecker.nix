@@ -4,6 +4,7 @@
     secrets = {
       "services/woodpecker/agent_secret" = { };
       "services/woodpecker/forgejo_secret" = { };
+      "services/woodpecker/grpc_secret" = { };
     };
 
     templates = {
@@ -14,6 +15,7 @@
       "woodpecker-server-secrets.env".content = ''
         WOODPECKER_AGENT_SECRET=${config.sops.placeholder."services/woodpecker/agent_secret"}
         WOODPECKER_GITEA_SECRET=${config.sops.placeholder."services/woodpecker/forgejo_secret"}
+        WOODPECKER_GRPC_SECRET=${config.sops.placeholder."services/woodpecker/grpc_secret"}
       '';
     };
   };
@@ -63,6 +65,7 @@
         path = with pkgs; [
           bash
           coreutils
+          curl
           git
           gitMinimal
           git-lfs
