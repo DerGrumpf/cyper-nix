@@ -135,6 +135,13 @@ in
       };
 
       settings = {
+        service = {
+          ENABLE_INTERNAL_SIGNIN = false;
+          DISABLE_REGISTRATION = false;
+          ALLOW_ONLY_EXTERNAL_REGISTRATION = true;
+          SHOW_REGISTRATION_BUTTON = false;
+        };
+
         server = {
           DOMAIN = domain;
           HTTP_ADDR = "0.0.0.0";
@@ -145,6 +152,13 @@ in
           DISABLE_SSH = false;
           START_SSH_SERVER = true;
           LFS_START_SERVER = true;
+        };
+
+        oauth2_client = {
+          ENABLE_AUTO_REGISTRATION = true;
+          USERNAME = "preferred_username";
+          ACCOUNT_LINKING = "auto";
+          UPDATE_AVATAR = true;
         };
 
         metrics = {

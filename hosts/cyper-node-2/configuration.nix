@@ -4,6 +4,7 @@
     ./hardware-configuration.nix
     ../net-config.nix
     ../boot.nix
+    ./k3s-client.nix
   ];
 
   net = {

@@ -46,6 +46,7 @@
           WOODPECKER_SERVER = "localhost:9003";
           WOODPECKER_BACKEND = "docker";
           WOODPECKER_HEALTHCHECK_ADDR = ":3001";
+          WOODPECKER_MAX_WORKFLOWS = "4";
         };
         environmentFile = [
           config.sops.templates."woodpecker-agent-secret.env".path
@@ -58,6 +59,7 @@
           WOODPECKER_SERVER = "localhost:9003";
           WOODPECKER_BACKEND = "local";
           WOODPECKER_HEALTHCHECK_ADDR = ":3001";
+          WOODPECKER_MAX_WORKFLOWS = "2";
         };
         environmentFile = [
           config.sops.templates."woodpecker-agent-secret.env".path
@@ -69,6 +71,7 @@
           git
           gitMinimal
           git-lfs
+          jq
           nix
           openssh
           nixos-rebuild

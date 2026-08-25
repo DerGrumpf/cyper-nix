@@ -20,6 +20,7 @@
     ../../nixos/roles/kanidm.nix
     ../../nixos/roles/ollama.nix
     ../../nixos/roles/hydra.nix
+    ../../nixos/roles/mailserver.nix
   ];
 
   net = {

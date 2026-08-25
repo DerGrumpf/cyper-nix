@@ -98,6 +98,12 @@
       url = "github:oxcl/nix-flake-helium-browser";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Mailserver
+    nixos-mailserver = {
+      url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -115,6 +121,7 @@
       disko,
       nixos-anywhere,
       helium-flake,
+      nixos-mailserver,
       ...
     }@inputs:
     let

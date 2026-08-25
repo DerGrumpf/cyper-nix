@@ -105,6 +105,8 @@ in
           path = "/var/lib/kanidm/backups";
           schedule = "00 22 * * *";
         };
+
+        ldapbindaddress = "0.0.0.0:3636";
       };
     };
 
@@ -122,7 +124,10 @@ in
       persons = {
         ${primaryUser} = {
           displayName = "DerGrumpf";
-          mailAddresses = [ "phil.keier@hotmail.com" ];
+          mailAddresses = [
+            "phil.keier@hotmail.com"
+            "${primaryUser}@cyperpunk.de"
+          ];
         };
       }
       // builtins.mapAttrs (name: u: {
@@ -168,5 +173,8 @@ in
     };
   };
 
-  networking.firewall.allowedTCPPorts = [ port ];
+  networking.firewall.allowedTCPPorts = [
+    port
+    3636
+  ];
 }

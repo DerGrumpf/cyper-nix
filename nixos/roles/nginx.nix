@@ -113,6 +113,10 @@ in
       "auth.cyperpunk.de" = mkHttpsProxy 8444;
       "dash.cyperpunk.de" = mkWsProxy 15005;
 
+      "mail.cyperpunk.de" = {
+        locations."/".proxyPass = "http://${upstream}:80";
+      };
+
       "www.cyperpunk.de" = {
         forceSSL = true;
         enableACME = true;

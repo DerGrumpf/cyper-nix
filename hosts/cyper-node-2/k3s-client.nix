@@ -1,11 +1,20 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   sops.secrets."k3s/token" = { };
 
-  environment.persistence."/persist".directories = [
-    "/var/lib/rancher/k3s"
-    "/etc/rancher/k3s"
-  ];
+  environment = {
+    systemPackages = with pkgs; [ nerdctl ];
+
+    persistence."/persist".directories = [
+      "/var/lib/rancher/k3s"
+      "/etc/rancher/k3s"
+    ];
+  };
 
   networking.firewall.allowedUDPPorts = [
     8472 # flannel VXLAN
