@@ -11,7 +11,6 @@ Multi-host Nix flake managing NixOS desktops, macOS via nix-darwin, and a home s
 ```fish
 # Apply config on current host (works on any machine)
 nix-switch   # alias for: sudo nixos-rebuild switch --flake ~/.config/nix#(hostname -s)
-             #        or: sudo darwin-rebuild switch --flake .#(hostname -s)
 
 # Check flake without building (NixOS) / eval toplevel (macOS)
 nix-check
@@ -30,11 +29,7 @@ nix develop
 
 ```
 flake.nix                  # Entry point — defines all hosts via mkSystem
-hosts/<hostname>/          # Per-host configuration.nix + hardware-configuration.nix
-nixos/                     # Shared NixOS system modules (audio, fonts, sops, tailscale…)
-nixos/roles/               # Optional services (Gitea, Matrix, Vaultwarden, AdGuard…)
-darwin/                    # macOS-only system modules (fonts, homebrew, yabai, sketchybar)
-home/                      # Shared Home Manager config (all hosts, both platforms)
+home/                      # Shared Home Manager config (all hosts)
 home/desktop/              # Desktop-only home modules — Linux (hyprland/niri, waybar, rofi…)
 home/desktop/sketchybar/   # macOS-only bar config
 home/neovim/               # nixvim configuration split by plugin
@@ -47,8 +42,8 @@ secrets/                   # age-encrypted secrets — never edit .age files dir
 | Hostname | Platform | Type | Notes |
 |---|---|---|---|
 | cyper-desktop | NixOS x86_64 | Desktop | Primary Linux workstation |
-| cyper-mac | macOS x86_64 | Desktop | nix-darwin + Homebrew |
 | cyper-controller | NixOS x86_64 | Server | Runs all roles/services |
+| cyper-proxy | NixOS x86_64 | Server | |
 | cyper-node-1 | NixOS x86_64 | Server | `isServer = true` |
 | cyper-node-2 | NixOS x86_64 | Server | `isServer = true` |
 

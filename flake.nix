@@ -53,12 +53,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # system-level software and settings (macOS)
-    darwin = {
-      url = "github:lnl7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # declarative homebrew management
     nix-homebrew = {
       url = "github:zhaofengli/nix-homebrew";
@@ -111,7 +105,6 @@
       self,
       nixpkgs,
       home-manager,
-      darwin,
       nix-homebrew,
       nixvim,
       hyprland,
@@ -193,8 +186,8 @@
           isServer ? false,
         }:
         let
-          systemFunc = if isDarwin then darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
-          platformModuleSet = if isDarwin then "darwinModules" else "nixosModules";
+          systemFunc = nixpkgs.lib.nixosSystem;
+          platformModuleSet = "nixosModules";
 
           sharedSpecialArgs = {
             inherit
@@ -235,19 +228,12 @@
             }
           ];
 
-          platformModules =
-            if isDarwin then
-              [
-                ./darwin
-                inputs.nix-homebrew.darwinModules.nix-homebrew
-              ]
-            else
-              [
-                { nixpkgs.hostPlatform = system; }
-                ./nixos
-                inputs.impermanence.nixosModules.impermanence
-                inputs.disko.nixosModules.disko
-              ];
+          platformModules = [
+            { nixpkgs.hostPlatform = system; }
+            ./nixos
+            inputs.impermanence.nixosModules.impermanence
+            inputs.disko.nixosModules.disko
+          ];
 
         in
         systemFunc {
@@ -296,12 +282,6 @@
           system = "aarch64-linux";
           isServer = true;
         };
-      };
-
-      darwinConfigurations."cyper-mac" = mkSystem {
-        hostName = "cyper-mac";
-        system = "x86_64-darwin";
-        isDarwin = true;
       };
 
       packages.x86_64-linux = {
