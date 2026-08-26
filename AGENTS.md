@@ -1,5 +1,4 @@
 # AGENTS.md
-
 A guide for AI coding agents working in this Nix flake repository.
 
 ## Project Overview
@@ -20,7 +19,7 @@ nix-check
 nix flake check --no-build
 
 # Format Nix files
-nixfmt <file>    # managed via nixvim, runs nixfmt
+nix fmt <file>   # runs nixfmt via nixpkgs; also nixvim <leader>f
 
 # Enter dev shell if defined
 nix develop
@@ -32,7 +31,7 @@ nix develop
 flake.nix                  # Entry point — defines all hosts via mkSystem
 hosts/<hostname>/          # Per-host configuration.nix + hardware-configuration.nix
 nixos/                     # Shared NixOS system modules (audio, fonts, sops, tailscale…)
-nixos/roles/               # Optional services (Gitea, Matrix, Vaultwarden, AdGuard…)
+nixos/roles/               # Optional services (Gitea, Matrix, Vaultwarden, AdGuard, etc.)
 darwin/                    # macOS-only system modules (fonts, homebrew, yabai, sketchybar)
 home/                      # Shared Home Manager config (all hosts, both platforms)
 home/desktop/              # Desktop-only home modules — Linux (hyprland/niri, waybar, rofi…)
@@ -44,13 +43,17 @@ secrets/                   # age-encrypted secrets — never edit .age files dir
 
 ## Hosts
 
-| Hostname | Platform | Type | Notes |
-|---|---|---|---|
-| cyper-desktop | NixOS x86_64 | Desktop | Primary Linux workstation |
-| cyper-mac | macOS x86_64 | Desktop | nix-darwin + Homebrew |
-| cyper-controller | NixOS x86_64 | Server | Runs all roles/services |
-| cyper-node-1 | NixOS x86_64 | Server | `isServer = true` |
-| cyper-node-2 | NixOS x86_64 | Server | `isServer = true` |
+| Hostname | Platform | Architecture | Type | Notes |
+|---|---|---|---|---|
+| cyper-desktop | NixOS | x86_64-linux | Desktop | Primary Linux workstation |
+| cyper-mac | macOS | x86_64-darwin | Desktop | nix-darwin + Homebrew |
+| cyper-controller | NixOS | x86_64-linux | Server | Runs all roles/services |
+| cyper-node-1 | NixOS | x86_64-linux | Server | `isServer = true` |
+| cyper-node-2 | NixOS | x86_64-linux | Server | `isServer = true` |
+| cyper-pi-1 | NixOS | aarch64-linux | Server | `isServer = true` |
+| cyper-proxy | NixOS | x86_64-linux | Server | KVM console IP configurable |
+| installer | NixOS | x86_64-linux | Installer | ISO builder |
+| installer-pi | NixOS | aarch64-linux | Installer | ISO builder for Raspberry Pi |
 
 ## mkSystem Convention
 
@@ -70,6 +73,10 @@ if isServer then { ... } else { ... }
 
 A single `home/` tree is shared by all hosts. Desktop-only modules live under `home/desktop/` and are conditionally included. The `isDarwin` and `isServer` flags are available as `specialArgs` inside Home Manager modules.
 
+- `home-manager.backupFileExtension = "hm-backup"` is set globally
+- Conflicts create `.hm-backup` files rather than erroring
+- `users.${primaryUser}` is imported from `./home` with `extraSpecialArgs` and `useGlobalPkgs = true`
+
 ## Secrets
 
 Managed with [sops-nix](https://github.com/Mic92/sops-nix) + age encryption.
@@ -78,26 +85,22 @@ Managed with [sops-nix](https://github.com/Mic92/sops-nix) + age encryption.
 - Age key must exist at `~/.config/sops/age/keys.txt` on every host
 - Public keys are declared in `secrets/keys.txt.age` and `.sops.yaml` (if present)
 - Secrets are referenced in Nix via `config.sops.secrets.<name>.path`
+- To edit secrets: `sops secrets/secrets.yaml`
+- `primaryUser` is defined in `flake.nix` and injected everywhere via `sharedSpecialArgs` — never hardcode the username
 
-## Conventions
+## Roles / Services
 
-- **Formatter:** `nixfmt` (run via nixvim; apply before committing)
-- **No `hardware-configuration.nix` edits** — these are machine-generated; regenerate with `nixos-generate-config` if needed
-- **Homebrew** is managed declaratively via `darwin/homebrew.nix` — do not run `brew install` manually
-- **Catppuccin** theming is applied system-wide via `home/catppuccin.nix` and `nixos/catppuccin.nix`; keep theme tokens consistent across modules
-- **Shell is Fish** — shell aliases and functions live in `home/shell.nix`; use fish syntax
+29 optional services available under `nixos/roles/`. Each role is a self-contained Nix module.
 
-## Adding a New Host
-
-1. Create `hosts/<hostname>/configuration.nix` (and `hardware-configuration.nix` for NixOS)
-2. Add an entry to `nixosConfigurations` (or `darwinConfigurations`) in `flake.nix` via `mkSystem`
-3. Add the host to the machines table in `README.md` and this file
-
-## Adding a New Role/Service
+To add a new role:
 
 1. Create `nixos/roles/<service>.nix`
 2. Import it in the relevant host's `configuration.nix` or in `nixos/default.nix` behind an `isServer` guard
 3. Add any required secrets to `secrets/secrets.yaml` via `sops`
+
+Key roles include: adguard, cage, filebrowser, forgejo, hydra, jupyterhub, kanidm, mailserver, matrix, monitoring, nginx, octoprint, ollama, paperless-ngx, postgresql, searxng, unifi, vaultwarden, wyl, and more.
+
+Catppuccin theming is applied system-wide via `home/catppuccin.nix` and `nixos/catppuccin.nix`; keep theme tokens consistent across modules.
 
 ## PR Checklist
 
@@ -110,8 +113,13 @@ Managed with [sops-nix](https://github.com/Mic92/sops-nix) + age encryption.
 
 ## Gotchas
 
-- `primaryUser` is defined in `flake.nix` and injected everywhere via `sharedSpecialArgs` — never hardcode the username
-- `home-manager.backupFileExtension = "backup"` is set globally; conflicts create `.backup` files rather than erroring
+- `primaryUser` is defined in `flake.nix` (line 128) and injected everywhere via `sharedSpecialArgs` — never hardcode the username
+- `home-manager.backupFileExtension = "hm-backup"` is set globally; conflicts create `.hm-backup` files rather than erroring
 - The `l` fish function calls a Groq LLM (`llama-3.3-70b-versatile`) and pipes output through `glow` — it requires `$GROQ_API_KEY` to be set as a file path
 - sketchybar lives under `home/desktop/sketchybar/` but is macOS-only; hyprland/niri are Linux-only
 - `nix-switch` uses `hostname -s` at runtime — the hostname must match a key in `nixosConfigurations` / `darwinConfigurations`
+- `isServer = true` hosts skip desktop/GUI modules; verify desktop-specific code is guarded
+- `disko.nix` in hosts is used for automated disk partitioning — do not manually partition disks on hosts using disko
+- nix-darwin modules under `darwin/` are only included when `isDarwin = true`
+- Homebrew is managed declaratively via `darwin/homebrew.nix` — do not run `brew install` manually
+- Each host `configuration.nix` under `hosts/<hostname>/` is the primary entry point for that host's NixOS configuration
