@@ -2,6 +2,7 @@
   config,
   inputs,
   primaryUser,
+  pkgs,
   ...
 }:
 {
@@ -24,14 +25,14 @@
   };
 
   systemd = {
-    services.postfix.serviceConfig.BindPaths = [
-      "/run/dovecot2:/var/lib/postfix/queue/private/dovecot2"
-    ];
-
     tmpfiles.rules = [
       "d /storage/internal/mail/dkim 0770 virtualMail rspamd -"
     ];
   };
+
+  system.activationScripts.mailDkimAcl = ''
+    ${pkgs.acl}/bin/setfacl -m g:rspamd:x /storage/internal/mail
+  '';
 
   mailserver = {
     enable = true;

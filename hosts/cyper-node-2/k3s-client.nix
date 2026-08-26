@@ -8,12 +8,25 @@
   sops.secrets."k3s/token" = { };
 
   environment = {
-    systemPackages = with pkgs; [ nerdctl ];
+    systemPackages = with pkgs; [
+      nerdctl
+      buildkit
+    ];
 
     persistence."/persist".directories = [
       "/var/lib/rancher/k3s"
       "/etc/rancher/k3s"
     ];
+  };
+
+  systemd.services.buildkitd = {
+    description = "BuildKit daemon";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "k3s.service" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.buildkit}/bin/buildkitd --containerd-worker=true --containerd-worker-addr=/run/k3s/containerd/containerd.sock --containerd-worker-namespace=k8s.io";
+      Restart = "always";
+    };
   };
 
   networking.firewall.allowedUDPPorts = [

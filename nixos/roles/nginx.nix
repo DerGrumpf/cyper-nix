@@ -44,6 +44,9 @@ in
     443
     12222
     9003
+    25
+    465
+    993
   ];
 
   systemd.tmpfiles.rules = [
@@ -74,6 +77,22 @@ in
       server {
         listen 9003;
         proxy_pass ${upstream}:9003;
+      }
+
+      # Mail
+      server {
+        listen 25;
+        proxy_pass ${upstream}:25;
+      }
+
+      server {
+        listen 465;
+        proxy_pass ${upstream}:465;
+      }
+
+      server {
+        listen 993;
+        proxy_pass ${upstream}:993;
       }
     '';
 

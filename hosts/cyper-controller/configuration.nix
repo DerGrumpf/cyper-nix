@@ -28,6 +28,11 @@
     ethAddress = "192.168.2.2/24";
   };
 
+  networking = {
+    nameservers = [ "127.0.0.1" ];
+    resolvconf.useLocalResolver = true;
+  };
+
   virtualisation.docker.daemon.settings = {
     data-root = "/storage/internal/docker";
     insecure-registries = [
