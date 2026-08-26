@@ -72,6 +72,7 @@
         netradiant-custom
         pinta
         orca-slicer
+        localsend
       ]
       ++ lib.optionals isDarwin [ graphite-cli ];
   };
