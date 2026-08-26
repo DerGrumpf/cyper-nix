@@ -3,7 +3,10 @@ _: {
     enable = true;
 
     settings = {
-      enabled_providers = [ "ollama" ];
+      enabled_providers = [
+        "ollama"
+        "openrouter"
+      ];
 
       model = "ollama/llama3.2:3b";
 

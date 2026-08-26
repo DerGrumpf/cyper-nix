@@ -8,8 +8,13 @@
 {
   imports = [ inputs.nixos-mailserver.nixosModules.mailserver ];
 
-  sops.secrets."mail/${primaryUser}" = {
-    mode = "0440";
+  sops.secrets = {
+    "mail/${primaryUser}" = {
+      mode = "0440";
+    };
+    "mail/mastodon" = {
+      mode = "0440";
+    };
   };
 
   security.acme = {
@@ -19,9 +24,16 @@
 
   networking.firewall.allowedTCPPorts = [ 80 ];
 
-  services.nginx = {
-    enable = true;
-    virtualHosts."mail.cyperpunk.de".enableACME = true;
+  services = {
+    nginx = {
+      enable = true;
+      virtualHosts."mail.cyperpunk.de".enableACME = true;
+    };
+
+    postfix.settings.main = {
+      relayhost = [ "[10.10.0.1]:2525" ];
+      smtp_bind_address = "10.10.0.2";
+    };
   };
 
   systemd = {
@@ -47,6 +59,9 @@
       "${primaryUser}@cyperpunk.de" = {
         hashedPasswordFile = config.sops.secrets."mail/${primaryUser}".path;
         aliases = [ "postmaster@cyperpunk.de" ];
+      };
+      "mastodon@cyperpunk.de" = {
+        hashedPasswordFile = config.sops.secrets."mail/mastodon".path;
       };
     };
   };

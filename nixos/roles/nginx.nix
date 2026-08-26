@@ -81,7 +81,7 @@ in
 
       # Mail
       server {
-        listen 25;
+        listen 195.90.219.9:25;
         proxy_pass ${upstream}:25;
       }
 

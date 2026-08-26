@@ -6,6 +6,7 @@
     ../../nixos/roles/matrix
     ../../nixos/roles/mastodon.nix
     ../../nixos/roles/postgresql.nix
+    ../../nixos/roles/mail-relay.nix
   ];
 
   networking = {

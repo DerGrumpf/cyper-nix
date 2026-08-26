@@ -39,6 +39,7 @@ in
       "services/mastodon/smtp_password" = {
         owner = "mastodon";
         group = "mastodon";
+        mode = "0440";
       };
       "kanidm/mastodon_secret" = {
         owner = "mastodon";
@@ -93,12 +94,12 @@ in
 
       smtp = {
         createLocally = false;
-        host = "smtp.gmail.com";
-        port = 587;
+        host = "mail.cyperpunk.de";
+        port = 465;
         authenticate = true;
-        user = "phil.keier@gmail.com";
+        user = "mastodon@cyperpunk.de";
         passwordFile = config.sops.secrets."services/mastodon/smtp_password".path;
-        fromAddress = "phil.keier@gmail.com";
+        fromAddress = "mastodon@cyperpunk.de";
       };
 
       extraEnvFiles = [ config.sops.templates."mastodon-oidc-env".path ];
@@ -115,7 +116,8 @@ in
         OIDC_CLIENT_ID = "mastodon";
         OIDC_REDIRECT_URI = "https://${domain}/auth/auth/openid_connect/callback";
         OIDC_SECURITY_ASSUME_EMAIL_IS_VERIFIED = "true";
-        #        ALLOW_UNSAFE_AUTH_PROVIDER_REATTACH = "true";
+        SMTP_SSL = "true";
+        SMTP_ENABLE_STARTTLS_AUTO = "false";
       };
     };
   };
