@@ -1,4 +1,4 @@
-_: {
+{
   programs.opencode = {
     enable = true;
 
@@ -6,6 +6,7 @@ _: {
       enabled_providers = [
         "ollama"
         "openrouter"
+        "groq"
       ];
 
       model = "ollama/llama3.2:3b";
