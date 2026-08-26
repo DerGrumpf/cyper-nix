@@ -7,11 +7,22 @@
         "ollama"
         "openrouter"
         "groq"
+        "nvidia"
       ];
 
       model = "ollama/llama3.2:3b";
 
       provider = {
+        groq = {
+          models = {
+            "qwen/qwen3.6-27b" = {
+              limit = {
+                context = 8000;
+                output = 2000;
+              };
+            };
+          };
+        };
         ollama = {
           npm = "@ai-sdk/openai-compatible";
           name = "Ollama (tailscale)";
