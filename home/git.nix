@@ -12,6 +12,7 @@
       gh
       gnupg
       tea
+      woodpecker-cli
     ];
 
     persistence."/persist".directories = lib.mkIf (!isDarwin) [

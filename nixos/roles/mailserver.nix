@@ -40,6 +40,7 @@
     tmpfiles.rules = [
       "d /storage/internal/mail/dkim 0770 virtualMail rspamd -"
     ];
+    services.postfix-tlspol.serviceConfig.RestrictAddressFamilies = [ "AF_UNIX" ];
   };
 
   system.activationScripts.mailDkimAcl = ''

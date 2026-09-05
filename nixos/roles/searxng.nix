@@ -18,6 +18,19 @@ in
     package = pkgs.searxng;
     redisCreateLocally = true;
 
+    limiterSettings = {
+      botdetection = {
+        ipv4_prefix = 32;
+        ipv6_prefix = 56;
+
+        ip_lists.pass_ip = [
+          "127.0.0.0/8"
+          "::1"
+          "10.10.0.0/24"
+        ];
+      };
+    };
+
     settings = {
       general = {
         instance_name = "SearXNG";
@@ -29,6 +42,7 @@ in
         bind_address = "0.0.0.0";
         base_url = "http://${ip}:${toString port}";
         secret_key = "@SEARX_SECRET_KEY@";
+        limiter = true;
       };
 
       ui = {
@@ -42,6 +56,12 @@ in
       search = {
         safe_search = 0;
         autocomplete = "duckduckgo";
+        formats = [
+          "html"
+          "json"
+          "csv"
+          "rss"
+        ];
       };
     };
   };

@@ -29,6 +29,7 @@ in
     ];
 
     persistence."/persist".directories = lib.mkIf (!isDarwin) [
+      ".config/obsidian" # global app config (vault trust, etc.)
       "Notes"
     ];
 

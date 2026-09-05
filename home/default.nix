@@ -45,8 +45,6 @@
     enableNixpkgsReleaseCheck = false;
     stateVersion = "26.05";
     sessionVariables = lib.mkIf (!isDarwin && !isServer) {
-      GROQ_API_KEY = config.sops.secrets."api_keys/groq".path;
-      OPENWEATHER_API_KEY = config.sops.secrets."api_keys/openweather".path;
     };
     file = lib.mkIf (!isServer) {
       "Pictures/Avatar" = {
@@ -69,8 +67,6 @@
       else
         "/persist/secrets/age-key.txt";
     secrets = {
-      "api_keys/groq" = { };
-      "api_keys/openweather" = { };
       "ssh/private_key" = {
         path = if isDarwin then "/Users/${primaryUser}/.ssh/ssh" else "/home/${primaryUser}/.ssh/ssh";
         mode = "0600";

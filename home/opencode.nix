@@ -1,46 +1,29 @@
+{ config, ... }:
 {
+  sops = {
+    secrets."system/nvidia" = { };
+    templates."nvidia-api-key".content = config.sops.placeholder."system/nvidia";
+  };
+
   programs.opencode = {
     enable = true;
-
     settings = {
       enabled_providers = [
-        "ollama"
-        "openrouter"
-        "groq"
         "nvidia"
       ];
-
-      model = "ollama/llama3.2:3b";
-
+      model = "nvidia/nemotron-3-ultra-550b-a55b";
       provider = {
-        groq = {
-          models = {
-            "qwen/qwen3.6-27b" = {
-              limit = {
-                context = 8000;
-                output = 2000;
-              };
-            };
-          };
-        };
-        ollama = {
+        nvidia = {
           npm = "@ai-sdk/openai-compatible";
-          name = "Ollama (tailscale)";
+          name = "NVIDIA";
+          env = [ "NVIDIA_API_KEY" ];
           options = {
-            baseURL = "http://10.10.0.2:11434/v1";
+            baseURL = "https://integrate.api.nvidia.com/v1";
+            apiKey = "{env:NVIDIA_API_KEY}";
           };
           models = {
-            "llama3.2:3b" = {
-              name = "Llama 3.2 3B";
-            };
-            "qwen2.5:3b" = {
-              name = "Qwen 2.5 3B";
-            };
-            "deepseek-r1:1.5b" = {
-              name = "DeepSeek-R1 1.5B";
-            };
-            "gemma4:e2b" = {
-              name = "Gemma 4 2B Edge";
+            "nvidia/nemotron-3-ultra-550b-a55b" = {
+              name = "Nemotron 3 Ultra 550B A55B";
             };
           };
         };

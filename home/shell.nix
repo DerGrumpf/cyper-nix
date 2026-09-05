@@ -1,5 +1,6 @@
 {
   pkgs,
+  config,
   isDarwin,
   lib,
   ...
@@ -142,8 +143,10 @@
         # fzf picker for nvim
         def f [] { nvim (fzf) }
       '';
+
       extraEnv = ''
         $env.STARSHIP_SHELL = "nu"
+        $env.NVIDIA_API_KEY = (open "${config.sops.templates."nvidia-api-key".path}")
       '';
     };
 
@@ -173,6 +176,7 @@
       };
 
       interactiveShellInit = ''
+        set -gx NVIDIA_API_KEY (cat "${config.sops.templates."nvidia-api-key".path}")
         starship init fish | source
         fzf --fish | source
         zoxide init fish --cmd cd | source

@@ -31,10 +31,12 @@
   networking = {
     nameservers = [ "127.0.0.1" ];
     resolvconf.useLocalResolver = true;
+    firewall.allowedTCPPorts = [
+      6080
+    ];
   };
 
   virtualisation.docker.daemon.settings = {
-    data-root = "/storage/internal/docker";
     insecure-registries = [
       "localhost:9000"
       "10.10.0.2:9000"
