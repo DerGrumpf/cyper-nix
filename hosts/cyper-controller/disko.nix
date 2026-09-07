@@ -5,6 +5,7 @@
     content = {
       type = "gpt";
       partitions = {
+
         ESP = {
           size = "512M";
           type = "EF00";
@@ -22,6 +23,7 @@
             ];
           };
         };
+
         swap = {
           size = "8G";
           content = {
@@ -32,6 +34,7 @@
             ];
           };
         };
+
         nix = {
           size = "80G";
           content = {
@@ -44,6 +47,7 @@
             ];
           };
         };
+
         persist = {
           size = "100%";
           content = {
