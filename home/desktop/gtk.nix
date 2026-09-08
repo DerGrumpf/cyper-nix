@@ -1,7 +1,6 @@
 {
   pkgs,
   lib,
-  isDarwin,
   ...
 }:
 let
@@ -9,7 +8,7 @@ let
   theme_name = "Catppuccin-GTK-Dark";
 in
 {
-  home = lib.mkIf (!isDarwin) {
+  home = {
     packages = with pkgs; [
       adwaita-icon-theme
     ];
@@ -20,7 +19,7 @@ in
     };
   };
 
-  gtk = lib.mkIf (!isDarwin) {
+  gtk = {
     enable = true;
     font = {
       name = "FiraCode Nerd Font Propo";
@@ -42,7 +41,7 @@ in
     gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
   };
 
-  dconf = lib.mkIf (!isDarwin) {
+  dconf = {
     enable = true;
     settings = {
       "org/gnome/desktop/interface" = {

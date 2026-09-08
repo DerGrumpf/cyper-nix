@@ -1,8 +1,6 @@
 {
   primaryUser,
   pkgs,
-  lib,
-  isDarwin,
   ...
 }:
 {
@@ -14,7 +12,7 @@
       tea
     ];
 
-    persistence."/persist".directories = lib.mkIf (!isDarwin) [
+    persistence."/persist".directories = [
       ".config/gh"
       ".gnupg"
     ];

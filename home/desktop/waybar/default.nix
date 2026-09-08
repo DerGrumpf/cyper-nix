@@ -1,12 +1,10 @@
 {
   pkgs,
-  lib,
-  isDarwin,
   compositor ? "hyprland",
   ...
 }:
 {
-  programs.waybar = lib.mkIf (!isDarwin) (
+  programs.waybar = (
     {
       enable = true;
       package = pkgs.waybar;
@@ -15,9 +13,9 @@
   );
 
   home = {
-    packages = lib.mkIf (!isDarwin) (with pkgs; [ cava ]);
+    packages = (with pkgs; [ cava ]);
 
-    file = lib.mkIf (!isDarwin) {
+    file = {
       ".config/waybar" = {
         source = ./configs;
         recursive = true;

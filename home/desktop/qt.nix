@@ -1,16 +1,14 @@
 {
   pkgs,
-  lib,
-  isDarwin,
   ...
 }:
 {
-  qt = lib.mkIf (!isDarwin) {
+  qt = {
     enable = true;
     style.name = "kvantum";
     platformTheme.name = "kvantum";
   };
-  home.packages = lib.mkIf (!isDarwin) (
+  home.packages = (
     with pkgs.kdePackages;
     [
       qt6ct

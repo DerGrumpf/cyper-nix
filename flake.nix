@@ -53,11 +53,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # declarative homebrew management
-    nix-homebrew = {
-      url = "github:zhaofengli/nix-homebrew";
-    };
-
     # declarative Neovim
     nixvim = {
       url = "github:nix-community/nixvim";
@@ -105,7 +100,6 @@
       self,
       nixpkgs,
       home-manager,
-      nix-homebrew,
       nixvim,
       hyprland,
       sops-nix,
@@ -182,7 +176,6 @@
         {
           hostName,
           system,
-          isDarwin ? false,
           isServer ? false,
         }:
         let
@@ -195,7 +188,6 @@
               primaryUser
               self
               hostName
-              isDarwin
               isServer
               ;
           };

@@ -1,6 +1,6 @@
-{ lib, isDarwin, ... }:
+{ ... }:
 {
-  home.persistence."/persist" = lib.mkIf (!isDarwin) {
+  home.persistence."/persist" = {
     hideMounts = true;
     directories = [
       ".config/nix"

@@ -2,7 +2,6 @@
   pkgs,
   lib,
   isServer,
-  isDarwin,
   ...
 }:
 {
@@ -40,8 +39,7 @@
         ncdu
         tty-solitaire
         cowsay
-      ]
-      ++ lib.optionals (!isDarwin) [
+
         # dev tools
         pciutils
         usbutils
@@ -55,7 +53,7 @@
         # encryption
         ssh-to-age
       ]
-      ++ lib.optionals (!isDarwin && !isServer) [
+      ++ lib.optionals (!isServer) [
         # GUI
         element-desktop
         nautilus
@@ -73,7 +71,6 @@
         pinta
         orca-slicer
         localsend
-      ]
-      ++ lib.optionals isDarwin [ graphite-cli ];
+      ];
   };
 }

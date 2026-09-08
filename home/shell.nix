@@ -1,6 +1,5 @@
 {
   pkgs,
-  isDarwin,
   lib,
   ...
 }:
@@ -24,7 +23,7 @@
       cmatrix
     ];
 
-    persistence = lib.mkIf (!isDarwin) {
+    persistence = {
       "/persist" = {
         directories = [ ".local/share/zoxide" ];
         files = [ ".local/share/fish/fish_history" ];
@@ -38,7 +37,6 @@
       ".cache/starship/init.nu".source = pkgs.runCommand "starship-init-nu" { } ''
         ${pkgs.starship}/bin/starship init nu > $out
       '';
-      ".hushlogin" = lib.mkIf isDarwin { text = ""; }; # Suppress Login
     };
   };
 
@@ -93,7 +91,7 @@
       };
     };
 
-    cava = lib.mkIf (!isDarwin) { enable = true; };
+    cava = { enable = true; };
 
     yazi = {
       enable = true;
@@ -159,17 +157,9 @@
         bat = "bat --color=always --style=numbers";
         grep = "rg";
         cp = "rsync -ah --progress";
-        nix-switch =
-          if isDarwin then
-            "sudo darwin-rebuild switch --flake ~/.config/nix#(hostname -s)"
-          else
-            "sudo nixos-rebuild switch --flake ~/.config/nix#(hostname -s)";
+        nix-switch = "sudo nixos-rebuild switch --flake ~/.config/nix#(hostname -s)";
 
-        nix-check =
-          if isDarwin then
-            "nix eval ~/.config/nix#darwinConfigurations.(hostname -s).config.system.build.toplevel.outPath"
-          else
-            "nix flake check --no-build ~/.config/nix";
+        nix-check = "nix flake check --no-build ~/.config/nix";
       };
 
       interactiveShellInit = ''

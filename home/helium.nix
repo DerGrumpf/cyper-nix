@@ -1,12 +1,10 @@
 {
   inputs,
-  lib,
-  isDarwin,
   ...
 }:
 {
   imports = [ inputs.helium-flake.homeModules.default ];
-  home.persistence."/persist".directories = lib.mkIf (!isDarwin) [
+  home.persistence."/persist".directories = [
     ".config/net.imput.helium"
   ];
   programs.helium = {

@@ -1,12 +1,10 @@
 {
   pkgs,
-  lib,
-  isDarwin,
   ...
 }:
 {
   home = {
-    packages = lib.mkIf (!isDarwin) (
+    packages = (
       with pkgs;
       [
         rofi-power-menu
@@ -14,7 +12,7 @@
       ]
     );
 
-    file = lib.mkIf (!isDarwin) {
+    file = {
       ".config/rofi/background.png".source = ./background.png;
       ".config/rofi/custom.rasi".source = ./custom.rasi;
       ".config/rofi/power.jpg".source = ./power.jpg;
@@ -23,7 +21,7 @@
     };
   };
 
-  programs.rofi = lib.mkIf (!isDarwin) {
+  programs.rofi = {
     enable = true;
     cycle = true;
     package = pkgs.rofi;

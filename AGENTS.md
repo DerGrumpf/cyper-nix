@@ -4,7 +4,9 @@ A guide for AI coding agents working in this Nix flake repository.
 
 ## Project Overview
 
-Multi-host Nix flake managing NixOS desktops, macOS via nix-darwin, and a home server cluster — all sharing a common Home Manager configuration. Secrets are encrypted with sops-nix + age.
+Multi-host Nix flake managing NixOS desktops and a home server cluster — all sharing a common Home Manager configuration. Secrets are encrypted with sops-nix + age.
+
+Note: this repo previously supported macOS via nix-darwin. That support has been removed; darwin-only modules are preserved (unreferenced) under `darwin/` for backup purposes only.
 
 ## Key Commands
 
@@ -12,7 +14,7 @@ Multi-host Nix flake managing NixOS desktops, macOS via nix-darwin, and a home s
 # Apply config on current host (works on any machine)
 nix-switch   # alias for: sudo nixos-rebuild switch --flake ~/.config/nix#(hostname -s)
 
-# Check flake without building (NixOS) / eval toplevel (macOS)
+# Check flake without building
 nix-check
 
 # Validate flake inputs and locks
@@ -26,15 +28,14 @@ nix develop
 ```
 
 ## Repo Layout
-
 ```
-flake.nix                  # Entry point — defines all hosts via mkSystem
+flake.nix # Entry point — defines all hosts via mkSystem
 home/                      # Shared Home Manager config (all hosts)
 home/desktop/              # Desktop-only home modules — Linux (hyprland/niri, waybar, rofi…)
-home/desktop/sketchybar/   # macOS-only bar config
-home/neovim/               # nixvim configuration split by plugin
-assets/                    # Wallpapers and avatar images — do not modify programmatically
-secrets/                   # age-encrypted secrets — never edit .age files directly
+home/neovim/ # nixvim configuration split by plugin
+darwin/ # Unreferenced macOS/nix-darwin modules — kept for backup only
+assets/ # Wallpapers and avatar images — do not modify programmatically
+secrets/ # age-encrypted secrets — never edit .age files directly
 ```
 
 ## Hosts
@@ -51,19 +52,17 @@ secrets/                   # age-encrypted secrets — never edit .age files dir
 
 All hosts are built via `mkSystem` in `flake.nix`. Key flags:
 
-- `isDarwin = true` → uses `darwin.lib.darwinSystem` + darwin modules
-- `isServer = true` → skips desktop/GUI modules; both flags are passed as `specialArgs` to all modules via `sharedSpecialArgs`
+- `isServer = true` → skips desktop/GUI modules; passed as `specialArgs` to all modules via `sharedSpecialArgs`
 
-Guard platform-specific code with:
+Guard server-specific code with:
 
 ```nix
-if isDarwin then { ... } else { ... }
 if isServer then { ... } else { ... }
 ```
 
 ## Home Manager
 
-A single `home/` tree is shared by all hosts. Desktop-only modules live under `home/desktop/` and are conditionally included. The `isDarwin` and `isServer` flags are available as `specialArgs` inside Home Manager modules.
+A single `home/` tree is shared by all hosts. Desktop-only modules live under `home/desktop/` and are conditionally included. The `isServer` flag is available as `specialArgs` inside Home Manager modules.
 
 ## Secrets
 
@@ -78,14 +77,13 @@ Managed with [sops-nix](https://github.com/Mic92/sops-nix) + age encryption.
 
 - **Formatter:** `nixfmt` (run via nixvim; apply before committing)
 - **No `hardware-configuration.nix` edits** — these are machine-generated; regenerate with `nixos-generate-config` if needed
-- **Homebrew** is managed declaratively via `darwin/homebrew.nix` — do not run `brew install` manually
 - **Catppuccin** theming is applied system-wide via `home/catppuccin.nix` and `nixos/catppuccin.nix`; keep theme tokens consistent across modules
 - **Shell is Fish** — shell aliases and functions live in `home/shell.nix`; use fish syntax
 
 ## Adding a New Host
 
 1. Create `hosts/<hostname>/configuration.nix` (and `hardware-configuration.nix` for NixOS)
-2. Add an entry to `nixosConfigurations` (or `darwinConfigurations`) in `flake.nix` via `mkSystem`
+2. Add an entry to `nixosConfigurations` in `flake.nix` via `mkSystem`
 3. Add the host to the machines table in `README.md` and this file
 
 ## Adding a New Role/Service
@@ -108,5 +106,5 @@ Managed with [sops-nix](https://github.com/Mic92/sops-nix) + age encryption.
 - `primaryUser` is defined in `flake.nix` and injected everywhere via `sharedSpecialArgs` — never hardcode the username
 - `home-manager.backupFileExtension = "backup"` is set globally; conflicts create `.backup` files rather than erroring
 - The `l` fish function calls a Groq LLM (`llama-3.3-70b-versatile`) and pipes output through `glow` — it requires `$GROQ_API_KEY` to be set as a file path
-- sketchybar lives under `home/desktop/sketchybar/` but is macOS-only; hyprland/niri are Linux-only
-- `nix-switch` uses `hostname -s` at runtime — the hostname must match a key in `nixosConfigurations` / `darwinConfigurations`
+- `nix-switch` uses `hostname -s` at runtime — the hostname must match a key in `nixosConfigurations`
+

@@ -1,8 +1,6 @@
 {
   pkgs,
   inputs,
-  lib,
-  isDarwin,
   ...
 }:
 {
@@ -10,7 +8,7 @@
     inputs.spicetify-nix.homeManagerModules.default
   ];
 
-  home.persistence."/persist".directories = lib.mkIf (!isDarwin) [
+  home.persistence."/persist".directories = [
     ".config/spotify"
   ];
 

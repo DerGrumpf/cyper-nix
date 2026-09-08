@@ -1,7 +1,5 @@
 {
   config,
-  lib,
-  isDarwin,
   ...
 }:
 let
@@ -49,7 +47,7 @@ let
   };
 in
 {
-  xdg = lib.mkIf (!isDarwin) {
+  xdg = {
     enable = true;
 
     mimeApps = {

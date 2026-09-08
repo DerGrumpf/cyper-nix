@@ -1,7 +1,5 @@
 {
   pkgs,
-  lib,
-  isDarwin,
   ...
 }:
 let
@@ -27,7 +25,7 @@ let
     };
 in
 {
-  home.persistence."/persist".directories = lib.mkIf (!isDarwin) [
+  home.persistence."/persist".directories = [
     ".floorp"
   ];
 
