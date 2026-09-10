@@ -6,6 +6,10 @@
   ...
 }:
 {
+  sops.secrets."system/openweather" = {
+    mode = "0400";
+  };
+
   programs.waybar = lib.mkIf (!isDarwin) (
     {
       enable = true;
