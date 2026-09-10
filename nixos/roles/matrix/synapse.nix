@@ -1,8 +1,6 @@
 {
   config,
   pkgs,
-  lib,
-  primaryUser,
   ...
 }:
 let
@@ -34,25 +32,42 @@ let
   matrixAppJs = pkgs.writeText "matrix-app.js" (builtins.readFile ./app.js);
 in
 {
-  sops.secrets = {
-    "matrix/macaroon_secret" = { };
-    "matrix/registration_secret" = {
+  sops = {
+    secrets = {
+      "matrix/macaroon_secret" = { };
+      "matrix/registration_secret" = {
+        owner = "matrix-synapse";
+        group = "matrix-synapse";
+      };
+      "matrix/signing_key" = {
+        owner = "matrix-synapse";
+        group = "matrix-synapse";
+        mode = "0400";
+      };
+      "kanidm/synapse_secret" = {
+        owner = "matrix-synapse";
+        group = "matrix-synapse";
+        mode = "0440";
+      };
+      "postgres/synapse" = {
+        owner = "matrix-synapse";
+        group = "matrix-synapse";
+      };
+    };
+
+    templates."synapse-db-config" = {
       owner = "matrix-synapse";
       group = "matrix-synapse";
-    };
-    "matrix/signing_key" = {
-      owner = "matrix-synapse";
-      group = "matrix-synapse";
-      mode = "0400";
-    };
-    "postgres/replication_password" = {
-      owner = "postgres";
-      group = "postgres";
-    };
-    "kanidm/synapse_secret" = {
-      owner = "matrix-synapse";
-      group = "matrix-synapse";
-      mode = "0440";
+      content = ''
+        database:
+          name: psycopg2
+          args:
+            host: 10.10.0.2
+            port: 5432
+            database: matrix-synapse
+            user: matrix-synapse
+            password: ${config.sops.placeholder."postgres/synapse"}
+      '';
     };
   };
 
@@ -84,6 +99,7 @@ in
 
     matrix-synapse = {
       enable = true;
+      extraConfigFiles = [ config.sops.templates."synapse-db-config".path ];
       settings = {
         server_name = "cyperpunk.de";
         public_baseurl = "https://matrix.cyperpunk.de";
@@ -96,6 +112,7 @@ in
         media_retention = {
           remote_media_lifetime = "30d";
         };
+
         matrix_rtc = {
           enabled = true;
           transports = [
@@ -234,16 +251,6 @@ in
         };
       };
     };
-
-    postgresql.initialScript = pkgs.writeText "synapse-init.sql" ''
-      CREATE ROLE "matrix-synapse" WITH LOGIN PASSWORD 'synapse';
-      CREATE ROLE replicator WITH REPLICATION LOGIN;
-      CREATE DATABASE "matrix-synapse" WITH OWNER "matrix-synapse"
-        TEMPLATE template0
-        LC_COLLATE = "C"
-        LC_CTYPE = "C";
-    '';
-
   };
 
   systemd = {
@@ -252,40 +259,6 @@ in
         "/var/lib/mautrix-discord"
         "/var/lib/mautrix-whatsapp"
       ];
-
-      postgresql = {
-        preStart = lib.mkBefore ''
-          cd ${config.services.postgresql.dataDir}
-
-          if [ ! -f server.crt ]; then
-            ${pkgs.openssl}/bin/openssl req \
-              -new \
-              -x509 \
-              -days 3650 \
-              -nodes \
-              -keyout server.key \
-              -out server.crt \
-              -subj "/CN=cyper-proxy"
-
-            chmod 600 server.key
-          fi
-        '';
-
-        postStart = lib.mkAfter ''
-          PG_PASS=$(cat ${config.sops.secrets."postgres/replication_password".path})
-          ${config.services.postgresql.package}/bin/psql -U postgres -c "
-            DO \$\$
-            BEGIN
-              IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'replicator') THEN
-                CREATE ROLE replicator WITH REPLICATION LOGIN PASSWORD '$PG_PASS';
-              ELSE
-                ALTER ROLE replicator WITH PASSWORD '$PG_PASS';
-              END IF;
-            END
-            \$\$;
-          "
-        '';
-      };
     };
 
     tmpfiles.rules = [
@@ -296,5 +269,4 @@ in
       "L+ /var/www/matrix/app.js     0644 nginx nginx - ${matrixAppJs}"
     ];
   };
-
 }

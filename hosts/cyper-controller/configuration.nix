@@ -16,7 +16,7 @@
     ../../nixos/roles/vaultwarden.nix
     ../../nixos/roles/frontpage
     ../../nixos/roles/octoprint.nix
-    ../../nixos/roles/matrix/postgres-backup.nix
+    ../../nixos/roles/postgresql-controller.nix
     ../../nixos/roles/kanidm.nix
     ../../nixos/roles/ollama.nix
     #    ../../nixos/roles/hydra.nix

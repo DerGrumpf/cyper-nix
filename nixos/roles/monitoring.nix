@@ -146,23 +146,12 @@ in
           ];
         }
         {
-          job_name = "postgresql-replica";
+          job_name = "postgresql";
           static_configs = [
             {
-              targets = [ "localhost:9188" ];
+              targets = [ "10.10.0.2:9188" ];
               labels = {
-                instance = config.networking.hostName;
-              };
-            }
-          ];
-        }
-        {
-          job_name = "postgresql-proxy";
-          static_configs = [
-            {
-              targets = [ "10.10.0.1:9188" ];
-              labels = {
-                instance = "cyper-proxy";
+                instance = "cyper-controller";
               };
             }
           ];

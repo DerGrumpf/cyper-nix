@@ -37,6 +37,12 @@ in
       group = "acme";
       mode = "0750";
     }
+    {
+      directory = "/var/www/cyperpunk.de";
+      user = primaryUser;
+      group = "nginx";
+      mode = "0755";
+    }
   ];
 
   networking.firewall.allowedTCPPorts = [
@@ -50,7 +56,7 @@ in
   ];
 
   systemd.tmpfiles.rules = [
-    "d /var/www/home.cyperpunk.de 0755 nginx nginx -"
+    "d /var/www 0755 root root -"
     "d /var/www/cyperpunk.de 0755 ${primaryUser} nginx -"
   ];
 
