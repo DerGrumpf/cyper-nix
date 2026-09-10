@@ -11,7 +11,18 @@
       };
       typst-preview = {
         enable = true;
-        settings = { };
+        settings = {
+          get_main_file.__raw = ''
+            function(path_of_buffer)
+              local dir = vim.fs.dirname(path_of_buffer)
+              local found = vim.fs.find("main.typ", { path = dir, upward = true })
+              if found and found[1] then
+                return found[1]
+              end
+              return path_of_buffer
+            end
+          '';
+        };
       };
     };
     keymaps = [
@@ -22,27 +33,5 @@
         options.desc = "Toggle Typst preview";
       }
     ];
-    extraConfigLua = ''
-      vim.keymap.set("n", "<leader>tm", function()
-        local main = vim.fn.findfile("main.typ", vim.fn.expand("%:p:h") .. ";")
-        if main == "" then
-          vim.notify("No main.typ found upward from current file", vim.log.levels.WARN)
-          return
-        end
-        vim.lsp.buf.execute_command({
-          command = "tinymist.pinMain",
-          arguments = { vim.fn.fnamemodify(main, ":p") },
-        })
-        vim.notify("Pinned main.typ: " .. main)
-      end, { desc = "Pin nearest main.typ (Typst)" })
-
-      vim.keymap.set("n", "<leader>tu", function()
-        vim.lsp.buf.execute_command({
-          command = "tinymist.pinMain",
-          arguments = { vim.NIL },
-        })
-        vim.notify("Unpinned Typst main file")
-      end, { desc = "Unpin Typst main file" })
-    '';
   };
 }
