@@ -1,17 +1,15 @@
 {
   pkgs,
-  lib,
-  isDarwin,
   ...
 }:
 {
-  programs.sketchybar = lib.mkIf isDarwin {
+  programs.sketchybar = {
     enable = true;
     configType = "lua";
     sbarLuaPackage = pkgs.sbarlua;
   };
 
-  home.file = lib.mkIf isDarwin {
+  home.file = {
     ".config/sketchybar/sketchybar.lua".source = ./sketchybar.lua;
     ".config/sketchybar/sketchybarrc".source = ./sketchybarrc;
     ".config/sketchybar/plugins/battery.sh" = {

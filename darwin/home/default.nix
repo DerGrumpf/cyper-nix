@@ -1,10 +1,12 @@
 {
   primaryUser,
-  inputs,
   ...
 }:
 {
-  imports = [ inputs.helium-flake.homeModules.default ];
+  imports = [
+    ./floorp.nix
+    ../sketchybar
+  ];
 
   home = {
     username = primaryUser;

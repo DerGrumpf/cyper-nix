@@ -62,7 +62,7 @@
           {
             nixpkgs = {
               config.allowUnfree = true;
-              overlays = [ helium-flake.overlays.default ];
+              overlays = [ (import ../overlays { inherit nur; }) ];
             };
           }
           ./default.nix
