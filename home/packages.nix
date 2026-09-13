@@ -73,6 +73,7 @@
         pinta
         orca-slicer
         localsend
+        vlc
       ]
       ++ lib.optionals isDarwin [ graphite-cli ];
   };
