@@ -1,5 +1,4 @@
 {
-  config,
   primaryUser,
   inputs,
   self,
@@ -38,6 +37,7 @@
     ./floorp
     ./obsidian.nix
     ./helium.nix
+    ./qute.nix
   ];
 
   home = {

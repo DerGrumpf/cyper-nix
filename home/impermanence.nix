@@ -15,6 +15,8 @@
       ".local/state/wireplumber"
       ".local/state/waypaper"
       ".cache/awww"
+      ".steam"
+      ".local/share/Steam"
     ];
   };
 }
