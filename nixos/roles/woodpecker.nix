@@ -84,7 +84,11 @@
           openssh
           nixos-rebuild
           woodpecker-plugin-git
-          python3
+          (python3.withPackages (
+            ps: with ps; [
+              pyyaml
+            ]
+          ))
           markdownlint-cli2
         ];
       };
