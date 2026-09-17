@@ -21,6 +21,7 @@
     ../../nixos/roles/ollama.nix
     #    ../../nixos/roles/hydra.nix
     ../../nixos/roles/mailserver.nix
+    #    ../../nixos/roles/pumpkin.nix
   ];
 
   net = {

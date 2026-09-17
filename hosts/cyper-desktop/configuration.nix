@@ -1,4 +1,4 @@
-{
+{ pkgs, ... }: {
   imports = [
     ./disko.nix
     ./hardware-configuration.nix
@@ -24,10 +24,13 @@
     };
   };
 
-  environment.pathsToLink = [
-    "/share/applications"
-    "/share/xdg-desktop-portal"
-  ];
+  environment = {
+    systemPackages = with pkgs; [ wireguard-tools ];
+    pathsToLink = [
+      "/share/applications"
+      "/share/xdg-desktop-portal"
+    ];
+  };
 
   system.stateVersion = "26.11";
   virtualisation.docker = {
