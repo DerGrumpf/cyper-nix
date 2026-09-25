@@ -5,8 +5,7 @@
     ./smb.nix
     ../net-config.nix
     ../boot.nix
-    ../../nixos/roles/monitoring.nix
-    ../../nixos/roles/wyl.nix
+    ../../nixos/roles/monitoring
     ../../nixos/roles/adguard.nix
     ../../nixos/roles/unifi.nix
     ../../nixos/roles/searxng.nix

@@ -87,6 +87,7 @@
           (python3.withPackages (
             ps: with ps; [
               pyyaml
+              python-frontmatter
             ]
           ))
           markdownlint-cli2

@@ -135,12 +135,16 @@ in
         mailAddresses = [ u.mail ];
       }) extraUsers;
 
-      groups = builtins.listToAttrs (
-        map (s: {
-          name = s;
-          value.members = groupMembers (lib.removeSuffix "_users" s);
-        }) allServices
-      );
+      groups =
+        builtins.listToAttrs (
+          map (s: {
+            name = s;
+            value.members = groupMembers (lib.removeSuffix "_users" s);
+          }) allServices
+        )
+        // {
+          grafana_admins.members = [ primaryUser ];
+        };
 
       systems.oauth2 = {
         synapse = {

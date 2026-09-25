@@ -63,6 +63,11 @@
           publicKey = "cNGs4YJD4aIHWT5PtqttAgH4nl/0F4b7NLyZaudDO24=";
           allowedIPs = [ "10.10.0.35/32" ];
         }
+        # Jeff
+        {
+          publicKey = "GNN6vkiG8xoS5Y76fSAst9VlmUP8TFATbGCYqYQQnAg=";
+          allowedIPs = [ "10.10.0.100/32" ];
+        }
       ];
     };
 
