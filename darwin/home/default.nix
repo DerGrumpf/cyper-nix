@@ -22,6 +22,17 @@
     homeDirectory = "/Users/${primaryUser}";
     enableNixpkgsReleaseCheck = false;
     stateVersion = "26.05";
+
+    file = {
+      "Pictures/Avatar" = {
+        source = ../../assets/avatar;
+        recursive = true;
+      };
+      "Pictures/Wallpapers" = {
+        source = ../../assets/wallpapers;
+        recursive = true;
+      };
+    };
   };
 
   programs = {

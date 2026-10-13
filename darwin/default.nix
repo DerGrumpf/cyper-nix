@@ -49,7 +49,7 @@
   documentation = {
     enable = true;
     doc.enable = false; # Skip large documentation
-    man.enable = true; # Keep man pages
+    man.enable = false; # Keep man pages
     info.enable = false; # Skip info pages
   };
 

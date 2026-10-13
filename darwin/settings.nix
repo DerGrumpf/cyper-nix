@@ -1,4 +1,9 @@
-{ self, primaryUser, ... }:
+{
+  self,
+  primaryUser,
+  lib,
+  ...
+}:
 let
   hmApps = app: "/Users/${primaryUser}/Applications/Home Manager Apps/${app}.app";
   sysApps = app: "/System/Applications/${app}.app";
@@ -13,14 +18,8 @@ in
 
     startup.chime = false;
 
-    activationScripts.setWallpaper.text = ''
-      /usr/bin/osascript <<EOF
-      tell application "System Events"
-        tell every desktop
-          set picture to "/Users/${primaryUser}/Pictures/Wallpapers/Ghost_in_the_Shell.png"
-        end tell
-      end tell
-      EOF
+    activationScripts.postActivation.text = lib.mkAfter ''
+      /usr/bin/osascript -e 'tell application "System Events" to tell every desktop to set picture to "/Users/${primaryUser}/Pictures/Wallpapers/lucy_with_cat.png"'
     '';
 
     defaults = {
