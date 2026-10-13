@@ -44,6 +44,7 @@ in
           (hmApps "Vesktop")
           (hmApps "Spotify")
           (hmApps "Floorp")
+          (apps "Helium")
           (hmApps "Obsidian")
           (hmApps "OpenSCAD")
           (apps "okular")

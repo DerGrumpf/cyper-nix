@@ -5,6 +5,8 @@
   ...
 }:
 {
+  environment.systemPackages = [ pkgs.wireguard-tools ];
+
   sops.secrets."network/wireguard/${hostName}" = {
     mode = "0400";
   };
@@ -28,11 +30,12 @@
       chmod 600 /etc/wireguard/wg0.conf
       ${pkgs.wireguard-tools}/bin/wg-quick up wg0
     '';
-    environment.WG_IP = "";
+    environment.WG_IP = "10.10.0.3/24";
     serviceConfig = {
       Label = "org.wireguard.wg0";
       RunAtLoad = true;
       KeepAlive = false;
+      AbandonProcessGroup = true;
       StandardOutPath = "/var/log/wireguard.log";
       StandardErrorPath = "/var/log/wireguard.log";
     };

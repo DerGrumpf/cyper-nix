@@ -91,7 +91,9 @@
       };
     };
 
-    cava = { enable = true; };
+    cava = {
+      enable = true;
+    };
 
     yazi = {
       enable = true;

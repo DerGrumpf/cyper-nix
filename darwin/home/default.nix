@@ -4,8 +4,15 @@
 }:
 {
   imports = [
-    ./floorp.nix
-    ../sketchybar
+    ./sketchybar
+    ./shell.nix
+    ./neovim
+    ./floorp
+    ./obsidian.nix
+    ./sops.nix
+    ./ssh.nix
+    ./nixcord.nix
+    ./spicetify.nix
   ];
 
   home = {
@@ -18,12 +25,5 @@
   programs = {
     home-manager.enable = true;
     fish.enable = true;
-    helium = {
-      enable = true;
-      flags = [
-        "--enable-features=TouchpadOverscrollHistoryNavigation"
-        "--start-maximized"
-      ];
-    };
   };
 }

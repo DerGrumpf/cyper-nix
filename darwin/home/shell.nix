@@ -1,0 +1,248 @@
+{
+  pkgs,
+  lib,
+  ...
+}:
+{
+  home = {
+    packages = with pkgs; [
+      eza # ls replacement
+      tdf # terminal pdf viewer
+      jq # json parser
+      fastfetch # system stats
+      tabiew # Table viewer
+      glow # MD Viewer
+      fd # find alternative
+      bat # cat alternative
+      ripgrep # grep alternative
+      dnsutils
+      openscad
+
+      # Fun stuff
+      zoxide
+      lolcat
+      cmatrix
+    ];
+
+    file = {
+      ".config/fastfetch/config.jsonc".source = ./fastfetch.jsonc;
+      ".config/tabiew/theme.toml".source = ./tabiew.toml;
+      ".config/kitty/tab_bar.py".source = ./tab_bar.py;
+      ".cache/starship/init.nu".source = pkgs.runCommand "starship-init-nu" { } ''
+        ${pkgs.starship}/bin/starship init nu > $out
+      '';
+    };
+  };
+
+  programs = {
+    kitty = {
+      enable = true;
+
+      font = {
+        name = "Fira Code Nerd Font";
+        size = 10;
+      };
+
+      settings = {
+        shell = "${pkgs.fish}/bin/fish";
+        confirm_os_window_close = 0;
+        dynamic_background_opacity = true; # ctrl+shift+a>m/l
+        enable_audio_bell = false;
+        mouse_hide_wait = 3.0;
+        window_padding_width = 10;
+
+        background_opacity = 0.8;
+        background_blur = 5;
+
+        tab_bar_min_tabs = 1;
+        tab_bar_edge = "bottom";
+        tab_bar_style = "custom"; # Should be changed to custom
+        tab_title_template = "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{title}";
+
+        symbol_map =
+          let
+            mappings = [
+              "U+23FB-U+23FE"
+              "U+2B58"
+              "U+E200-U+E2A9"
+              "U+E0A0-U+E0A3"
+              "U+E0B0-U+E0BF"
+              "U+E0C0-U+E0C8"
+              "U+E0CC-U+E0CF"
+              "U+E0D0-U+E0D2"
+              "U+E0D4"
+              "U+E700-U+E7C5"
+              "U+F000-U+F2E0"
+              "U+2665"
+              "U+26A1"
+              "U+F400-U+F4A8"
+              "U+F67C"
+              "U+E000-U+E00A"
+              "U+F300-U+F313"
+              "U+E5FA-U+E62B"
+            ];
+          in
+          (builtins.concatStringsSep "," mappings) + " Symbols Nerd Font Mono";
+      };
+    };
+
+    cava = {
+      enable = true;
+    };
+
+    yazi = {
+      enable = true;
+      enableBashIntegration = true;
+      enableZshIntegration = true;
+      enableFishIntegration = true;
+
+      settings = {
+        ration = [
+          1
+          3
+          4
+        ];
+      };
+    };
+
+    fzf = {
+      enable = true;
+      enableBashIntegration = true;
+      enableZshIntegration = true;
+      enableFishIntegration = true;
+      defaultCommand = "fd --type f --strip-cwd-prefix --hidden --exclude .git";
+      fileWidgetCommand = "fd --type f --strip-cwd-prefix --hidden --exclude .git";
+      defaultOptions = [
+        "--height 100%"
+        "--border sharp"
+        "--layout=reverse"
+        "--inline-info"
+        "--preview 'bat --color=always --style=numbers {}'"
+      ];
+    };
+
+    nushell = {
+      enable = true;
+      shellAliases = {
+        la = "ls -la";
+        i = "kitty +kitten icat";
+        grep = "rg";
+      };
+      extraConfig = ''
+        $env.config = {
+        show_banner: false
+        }
+        $env.STARSHIP_SHELL = "nu"
+        source ~/.cache/starship/init.nu
+        # fzf picker for nvim
+        def f [] { nvim (fzf) }
+      '';
+      extraEnv = ''
+        $env.STARSHIP_SHELL = "nu"
+      '';
+    };
+
+    fish = {
+      enable = true;
+
+      shellAliases = {
+        ls = "eza --icons=always";
+        la = "eza -la --icons=always";
+        f = "nvim $(fzf)";
+        tree = "eza --icons=always -T";
+        i = "kitty +kitten icat";
+        bat = "bat --color=always --style=numbers";
+        grep = "rg";
+        cp = "rsync -ah --progress";
+        nix-switch = "sudo -H darwin-rebuild switch --flake ~/.config/nix/darwin#cyper-mac";
+        nix-check = "nix flake check --no-build ~/.config/nix";
+      };
+
+      interactiveShellInit = ''
+        starship init fish | source
+        fzf --fish | source
+        zoxide init fish --cmd cd | source
+        function fish_greeting
+          echo "                                              _         _      ";
+          echo "                                             | |       | |     ";
+          echo "  ___ _   _ _ __   ___ _ __ _ __  _   _ _ __ | | __  __| | ___ ";
+          echo " / __| | | | '_ \\ / _ \\ '__| '_ \\| | | | '_ \\| |/ / / _\` |/ _ \\";
+          echo "| (__| |_| | |_) |  __/ |  | |_) | |_| | | | |   < | (_| |  __/";
+          echo " \\___|\\__, | .__/ \\___|_|  | .__/ \\__,_|_| |_|_|\\_(_)__,_|\\___|";
+          echo "       __/ | |             | |                                 ";
+          echo "      |___/|_|             |_|                                 ";
+        end
+      '';
+    };
+
+    starship = {
+      enable = true;
+      settings = {
+        add_newline = true;
+        command_timeout = 500;
+
+        format = ''
+          $username$hostname $directory $git_branch$git_status
+          $character '';
+        right_format = "$cmd_duration";
+
+        username = {
+          style_user = "bold #cba6f7";
+          style_root = "bold #f38ba8";
+          format = "[┌](bold #a6e3a1)[$user]($style)";
+          show_always = true;
+        };
+
+        hostname = {
+          style = "bold #74c7ec";
+          format = "[@](bold #fab387)[$hostname]($style)";
+          ssh_only = false;
+        };
+
+        directory = {
+          style = "bold #a6e3a1";
+          truncation_length = 0;
+          truncation_symbol = "";
+          format = "[⤇ ](bold #f38ba8)[《$path 》]($style)";
+        };
+
+        git_branch = {
+          format = "[⟦$branch⟧]($style)";
+          style = "bold #f9e2af";
+        };
+
+        # Git status module settings
+        git_status = {
+          format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](red) ($ahead_behind$stashed)]($style)";
+          style = "bold #a6e3a1";
+          conflicted = "";
+          untracked = "";
+          modified = "";
+          staged = "";
+          renamed = "";
+          deleted = "";
+        };
+
+        # Command duration module
+        cmd_duration = {
+          format = "[$duration]($style)";
+          style = "bold #cdd6f4";
+          min_time = 5000; # Only show if command takes longer than 5 seconds
+        };
+
+        # Character module (prompt symbol)
+        character = {
+          success_symbol = "[└──────⇴ ](bold #a6e3a1)";
+          error_symbol = "[└──────⇴ ](bold #f38ba8)";
+        };
+
+        nix_shell = {
+          format = "[$symbol$state( ($name))]($style)";
+          symbol = "U+02744";
+          style = "bold #89dceb";
+        };
+      };
+    };
+  };
+
+}

@@ -19,6 +19,7 @@
         "nix-command"
         "flakes"
       ];
+      ssl-cert-file = "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt";
       max-jobs = "auto"; # Use all CPU cores
       cores = 0; # Use all cores per build
       # disabled due to https://github.com/NixOS/nix/issues/7273
@@ -73,6 +74,20 @@
     shell = pkgs.fish;
     openssh.authorizedKeys.keyFiles = [ ../secrets/ssh-key ];
   };
+
+  sops = {
+    defaultSopsFile = ../secrets/secrets.yaml;
+    defaultSopsFormat = "yaml";
+    age.keyFile = "/Users/${primaryUser}/.config/nix/secrets/age-key.txt";
+  };
+
+  fonts.packages = with pkgs; [
+    nerd-fonts.hack
+    nerd-fonts.fira-code
+    nerd-fonts.fira-mono
+    google-fonts
+    corefonts
+  ];
 
   environment = {
     shells = [ pkgs.fish ];

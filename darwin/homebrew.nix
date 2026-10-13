@@ -9,7 +9,6 @@
       cleanup = "zap";
     };
 
-    caskArgs.no_quarantine = true;
     global.brewfile = true;
 
     # homebrew is best for GUI apps
@@ -18,6 +17,7 @@
       "element"
       "affinity"
       "onlyoffice"
+      "helium-browser"
     ];
     brews = [ ];
     taps = [ ];
