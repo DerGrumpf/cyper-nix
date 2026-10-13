@@ -5,8 +5,6 @@
     defaultSopsFormat = "yaml";
     age.keyFile = "/Users/${primaryUser}/.config/nix/secrets/age-key.txt";
     secrets = {
-      "api_keys/groq" = { };
-      "api_keys/openweather" = { };
       "ssh/private_key" = {
         path = "/Users/${primaryUser}/.ssh/ssh";
         mode = "0600";

@@ -6,6 +6,7 @@
   imports = [
     ./sketchybar
     ./shell.nix
+    ./opencode.nix
     ./neovim
     ./floorp
     ./obsidian.nix
@@ -13,6 +14,7 @@
     ./ssh.nix
     ./nixcord.nix
     ./spicetify.nix
+    ./catppuccin.nix
   ];
 
   home = {

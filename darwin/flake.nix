@@ -47,10 +47,10 @@
       };
     };
 
-    helium-flake = {
-      url = "github:oxcl/nix-flake-helium-browser";
-      inputs.nixpkgs.follows = "nixpkgs";
+    catppuccin = {
+      url = "github:catppuccin/nix/release-26.05";
     };
+
   };
 
   outputs =
@@ -64,7 +64,6 @@
       sops-nix,
       nixvim,
       nixcord,
-      helium-flake,
       ...
     }@inputs:
     let

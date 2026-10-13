@@ -1,6 +1,6 @@
 {
+  config,
   pkgs,
-  lib,
   ...
 }:
 {
@@ -35,6 +35,10 @@
   };
 
   programs = {
+    bat.enable = true;
+    btop.enable = true;
+    lazygit.enable = true;
+
     kitty = {
       enable = true;
 
@@ -130,10 +134,11 @@
       };
       extraConfig = ''
         $env.config = {
-        show_banner: false
+        		show_banner: false
         }
         $env.STARSHIP_SHELL = "nu"
         source ~/.cache/starship/init.nu
+        $env.NVIDIA_API_KEY = (open "${config.sops.templates."nvidia-api-key".path}")
         # fzf picker for nvim
         def f [] { nvim (fzf) }
       '';
@@ -162,6 +167,7 @@
         starship init fish | source
         fzf --fish | source
         zoxide init fish --cmd cd | source
+        set -gx NVIDIA_API_KEY (cat "${config.sops.templates."nvidia-api-key".path}")
         function fish_greeting
           echo "                                              _         _      ";
           echo "                                             | |       | |     ";
