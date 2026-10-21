@@ -22,9 +22,9 @@ in
       enable = true;
       mutableSettings = false;
       allowDHCP = true;
-      port = adguardPort;
 
       settings = {
+        http.address = "0.0.0.0:${toString adguardPort}";
         users = [
           {
             name = "DerGrumpf";

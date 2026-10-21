@@ -2,20 +2,20 @@
   "apiVersion": "dashboard.grafana.app/v2",
   "kind": "Dashboard",
   "metadata": {
-    "name": "lan-cyber-01",
+    "name": "watchyourlan",
     "namespace": "default",
-    "uid": "c5241892-0b4e-4b55-aa95-853de8d21ab1",
-    "resourceVersion": "1790337099813012",
-    "generation": 2,
-    "creationTimestamp": "2026-09-25T11:51:04Z",
+    "uid": "a154521c-c35e-4e61-85ff-82b0be3aa236",
+    "resourceVersion": "1790355988299013",
+    "generation": 6,
+    "creationTimestamp": "2026-09-25T17:02:16Z",
     "labels": {
-      "grafana.app/deprecatedInternalID": "271193737322496"
+      "grafana.app/deprecatedInternalID": "349511871877120"
     },
     "annotations": {
       "grafana.app/createdBy": "user:ffj203vq18dmoa",
       "grafana.app/saved-from-ui": "Grafana v13.1.4 (NA)",
       "grafana.app/updatedBy": "user:ffj203vq18dmoa",
-      "grafana.app/updatedTimestamp": "2026-09-25T11:51:39Z"
+      "grafana.app/updatedTimestamp": "2026-09-25T17:06:28Z"
     }
   },
   "spec": {
@@ -28,26 +28,26 @@
             "group": "grafana",
             "version": "v0",
             "datasource": {
-              "name": "-- Graphics --"
+              "name": "-- Grafana --"
             },
             "spec": {}
           },
           "enable": true,
           "hide": true,
-          "iconColor": "rgba(0, 251, 255, 1)",
+          "iconColor": "rgba(0, 211, 255, 1)",
           "name": "Annotations & Alerts",
           "builtIn": true
         }
       }
     ],
-    "cursorSync": "Off",
+    "cursorSync": "Crosshair",
     "editable": true,
     "elements": {
       "panel-1": {
         "kind": "Panel",
         "spec": {
           "id": 1,
-          "title": "System Total Nodes",
+          "title": "Total tracked devices",
           "description": "",
           "links": [],
           "data": {
@@ -62,10 +62,11 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "prometheus"
+                        "name": "${datasource}"
                       },
                       "spec": {
-                        "expr": "count(watch_your_lan_up)"
+                        "expr": "count(watch_your_lan_up)",
+                        "instant": true
                       }
                     },
                     "refId": "A",
@@ -83,9 +84,9 @@
             "version": "13.1.4",
             "spec": {
               "options": {
-                "colorMode": "background",
+                "colorMode": "value",
                 "graphMode": "none",
-                "justifyMode": "center",
+                "justifyMode": "auto",
                 "orientation": "auto",
                 "percentChangeColorMode": "standard",
                 "reduceOptions": {
@@ -96,7 +97,7 @@
                   "values": false
                 },
                 "showPercentChange": false,
-                "textMode": "value",
+                "textMode": "auto",
                 "wideLayout": true
               },
               "fieldConfig": {
@@ -106,13 +107,12 @@
                     "steps": [
                       {
                         "value": 0,
-                        "color": "green"
+                        "color": "blue"
                       }
                     ]
                   },
                   "color": {
-                    "mode": "fixed",
-                    "fixedColor": "#b800ff"
+                    "mode": "thresholds"
                   }
                 },
                 "overrides": []
@@ -125,7 +125,7 @@
         "kind": "Panel",
         "spec": {
           "id": 2,
-          "title": "Uplinks",
+          "title": "Known devices (up)",
           "description": "",
           "links": [],
           "data": {
@@ -140,10 +140,11 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "prometheus"
+                        "name": "${datasource}"
                       },
                       "spec": {
-                        "expr": "sum(watch_your_lan_up == 1)"
+                        "expr": "sum(watch_your_lan_up{known=\"1\"})",
+                        "instant": true
                       }
                     },
                     "refId": "A",
@@ -161,9 +162,9 @@
             "version": "13.1.4",
             "spec": {
               "options": {
-                "colorMode": "background",
+                "colorMode": "value",
                 "graphMode": "none",
-                "justifyMode": "center",
+                "justifyMode": "auto",
                 "orientation": "auto",
                 "percentChangeColorMode": "standard",
                 "reduceOptions": {
@@ -189,8 +190,7 @@
                     ]
                   },
                   "color": {
-                    "mode": "fixed",
-                    "fixedColor": "#00fbff"
+                    "mode": "thresholds"
                   }
                 },
                 "overrides": []
@@ -203,7 +203,7 @@
         "kind": "Panel",
         "spec": {
           "id": 3,
-          "title": "Offline Alerts",
+          "title": "Unknown devices (up)",
           "description": "",
           "links": [],
           "data": {
@@ -218,10 +218,11 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "prometheus"
+                        "name": "${datasource}"
                       },
                       "spec": {
-                        "expr": "sum(watch_your_lan_up == 0)"
+                        "expr": "sum(watch_your_lan_up{known=\"0\"})",
+                        "instant": true
                       }
                     },
                     "refId": "A",
@@ -239,9 +240,9 @@
             "version": "13.1.4",
             "spec": {
               "options": {
-                "colorMode": "background",
+                "colorMode": "value",
                 "graphMode": "none",
-                "justifyMode": "center",
+                "justifyMode": "auto",
                 "orientation": "auto",
                 "percentChangeColorMode": "standard",
                 "reduceOptions": {
@@ -262,13 +263,16 @@
                     "steps": [
                       {
                         "value": 0,
-                        "color": "red"
+                        "color": "green"
+                      },
+                      {
+                        "value": 1,
+                        "color": "orange"
                       }
                     ]
                   },
                   "color": {
-                    "mode": "fixed",
-                    "fixedColor": "#ff00ff"
+                    "mode": "thresholds"
                   }
                 },
                 "overrides": []
@@ -281,7 +285,7 @@
         "kind": "Panel",
         "spec": {
           "id": 4,
-          "title": "HEARTBEAT_MONITOR",
+          "title": "Devices with recent status changes (flapping)",
           "description": "",
           "links": [],
           "data": {
@@ -293,14 +297,14 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
+                      "datasource": {
+                        "name": "${datasource}"
+                      },
                       "spec": {
-                        "editorMode": "code",
-                        "expr": "go_goroutines{job=~\"watch.*\"}",
-                        "instant": false,
-                        "legendFormat": "ACTIVE_THREADS",
-                        "range": true
+                        "expr": "count(changes(watch_your_lan_up[$__range]) > 0)",
+                        "instant": true
                       }
                     },
                     "refId": "A",
@@ -318,10 +322,10 @@
             "version": "13.1.4",
             "spec": {
               "options": {
-                "colorMode": "background",
-                "graphMode": "area",
-                "justifyMode": "center",
-                "orientation": "horizontal",
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
                 "percentChangeColorMode": "standard",
                 "reduceOptions": {
                   "calcs": [
@@ -331,24 +335,21 @@
                   "values": false
                 },
                 "showPercentChange": false,
-                "textMode": "value_and_name",
+                "textMode": "auto",
                 "wideLayout": true
               },
               "fieldConfig": {
                 "defaults": {
-                  "displayName": "CORE_PULSE",
-                  "min": 0,
-                  "max": 50,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
                       {
                         "value": 0,
-                        "color": "#00fbff"
+                        "color": "green"
                       },
                       {
-                        "value": 40,
-                        "color": "#ff00ff"
+                        "value": 1,
+                        "color": "orange"
                       }
                     ]
                   },
@@ -366,7 +367,7 @@
         "kind": "Panel",
         "spec": {
           "id": 5,
-          "title": "Device Uptime",
+          "title": "All hosts",
           "description": "",
           "links": [],
           "data": {
@@ -381,10 +382,170 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "prometheus"
+                        "name": "${datasource}"
                       },
                       "spec": {
                         "expr": "watch_your_lan_up",
+                        "format": "table",
+                        "instant": true
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [
+                {
+                  "kind": "Transformation",
+                  "group": "organize",
+                  "spec": {
+                    "options": {
+                      "excludeByName": {
+                        "Time": true,
+                        "__name__": true,
+                        "iface": true,
+                        "instance": true,
+                        "job": true,
+                        "mac": true
+                      },
+                      "indexByName": {
+                        "Value": 3,
+                        "ip": 2,
+                        "known": 0,
+                        "name": 1
+                      },
+                      "renameByName": {
+                        "Value": "status"
+                      }
+                    }
+                  }
+                }
+              ],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "table",
+            "version": "13.1.4",
+            "spec": {
+              "options": {
+                "cellHeight": "sm",
+                "showHeader": true,
+                "sortBy": [
+                  {
+                    "desc": true,
+                    "displayName": "known"
+                  }
+                ]
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      },
+                      {
+                        "value": 80,
+                        "color": "red"
+                      }
+                    ]
+                  },
+                  "custom": {
+                    "align": "left",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "footer": {
+                      "reducers": []
+                    },
+                    "inspect": false
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "known"
+                    },
+                    "properties": [
+                      {
+                        "id": "mappings",
+                        "value": [
+                          {
+                            "options": {
+                              "0": {
+                                "text": "❔ unknown"
+                              },
+                              "1": {
+                                "text": "✅ known"
+                              }
+                            },
+                            "type": "value"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "status"
+                    },
+                    "properties": [
+                      {
+                        "id": "mappings",
+                        "value": [
+                          {
+                            "options": {
+                              "0": {
+                                "color": "red",
+                                "text": "🔴 down"
+                              },
+                              "1": {
+                                "color": "green",
+                                "text": "🟢 up"
+                              }
+                            },
+                            "type": "value"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "panel-6": {
+        "kind": "Panel",
+        "spec": {
+          "id": 6,
+          "title": "Known hosts - status over time",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "${datasource}"
+                      },
+                      "spec": {
+                        "expr": "watch_your_lan_up{known=\"1\"}",
                         "legendFormat": "{{name}}"
                       }
                     },
@@ -415,7 +576,7 @@
                   "showLegend": true
                 },
                 "mergeValues": true,
-                "rowHeight": 0.85,
+                "rowHeight": 0.9,
                 "showValue": "never",
                 "tooltip": {
                   "hideZeros": false,
@@ -430,12 +591,12 @@
                       "type": "value",
                       "options": {
                         "0": {
-                          "text": "OFFLINE",
-                          "color": "#ff00ff"
+                          "text": "down",
+                          "color": "red"
                         },
                         "1": {
-                          "text": "ONLINE",
-                          "color": "#00fbff"
+                          "text": "up",
+                          "color": "green"
                         }
                       }
                     }
@@ -475,11 +636,11 @@
           }
         }
       },
-      "panel-6": {
+      "panel-7": {
         "kind": "Panel",
         "spec": {
-          "id": 6,
-          "title": "Network Manifest",
+          "id": 7,
+          "title": "Unknown devices currently up",
           "description": "",
           "links": [],
           "data": {
@@ -494,10 +655,10 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "prometheus"
+                        "name": "${datasource}"
                       },
                       "spec": {
-                        "expr": "watch_your_lan_up",
+                        "expr": "watch_your_lan_up{known=\"0\"} == 1",
                         "format": "table",
                         "instant": true
                       }
@@ -510,13 +671,6 @@
               "transformations": [
                 {
                   "kind": "Transformation",
-                  "group": "labelsToFields",
-                  "spec": {
-                    "options": {}
-                  }
-                },
-                {
-                  "kind": "Transformation",
                   "group": "organize",
                   "spec": {
                     "options": {
@@ -525,7 +679,8 @@
                         "__name__": true,
                         "iface": true,
                         "instance": true,
-                        "job": true
+                        "job": true,
+                        "known": true
                       },
                       "indexByName": {
                         "Value": 3,
@@ -534,10 +689,7 @@
                         "name": 0
                       },
                       "renameByName": {
-                        "Value": "LINK_STATUS",
-                        "ip": "IP_ADDRESS",
-                        "mac": "PHYSICAL_ADDR",
-                        "name": "NODE_IDENTIFIER"
+                        "Value": "status"
                       }
                     }
                   }
@@ -553,31 +705,10 @@
             "spec": {
               "options": {
                 "cellHeight": "sm",
-                "showHeader": true,
-                "sortBy": [
-                  {
-                    "desc": false,
-                    "displayName": "LINK_STATUS"
-                  }
-                ]
+                "showHeader": true
               },
               "fieldConfig": {
                 "defaults": {
-                  "mappings": [
-                    {
-                      "type": "value",
-                      "options": {
-                        "0": {
-                          "text": "DISCONNECTED",
-                          "color": "#ff00ff"
-                        },
-                        "1": {
-                          "text": "UPLINK_STABLE",
-                          "color": "#00fbff"
-                        }
-                      }
-                    }
-                  ],
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -591,15 +722,11 @@
                       }
                     ]
                   },
-                  "color": {
-                    "mode": "thresholds"
-                  },
                   "custom": {
-                    "align": "center",
+                    "align": "left",
                     "cellOptions": {
                       "type": "auto"
                     },
-                    "filterable": true,
                     "footer": {
                       "reducers": []
                     },
@@ -610,16 +737,63 @@
                   {
                     "matcher": {
                       "id": "byName",
-                      "options": "NODE_IDENTIFIER"
+                      "options": "status"
                     },
                     "properties": [
                       {
-                        "id": "custom.width",
-                        "value": 300
+                        "id": "mappings",
+                        "value": [
+                          {
+                            "options": {
+                              "1": {
+                                "color": "green",
+                                "text": "🟢 up"
+                              }
+                            },
+                            "type": "value"
+                          }
+                        ]
                       }
                     ]
                   }
                 ]
+              }
+            }
+          }
+        }
+      },
+      "panel-8": {
+        "kind": "Panel",
+        "spec": {
+          "id": 8,
+          "title": "Linka",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "text",
+            "version": "13.1.4",
+            "spec": {
+              "options": {
+                "code": {
+                  "language": "plaintext",
+                  "showLineNumbers": false,
+                  "showMiniMap": false
+                },
+                "content": "[WatchYourLAN](http://10.10.0.2:8840/config)\n\n[Github](https://github.com/aceberg/WatchYourLAN)",
+                "mode": "markdown"
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
               }
             }
           }
@@ -636,7 +810,7 @@
               "x": 0,
               "y": 0,
               "width": 6,
-              "height": 4,
+              "height": 5,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-1"
@@ -648,8 +822,8 @@
             "spec": {
               "x": 6,
               "y": 0,
-              "width": 6,
-              "height": 4,
+              "width": 4,
+              "height": 5,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-2"
@@ -659,10 +833,10 @@
           {
             "kind": "GridLayoutItem",
             "spec": {
-              "x": 12,
+              "x": 10,
               "y": 0,
-              "width": 6,
-              "height": 4,
+              "width": 4,
+              "height": 5,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-3"
@@ -672,10 +846,10 @@
           {
             "kind": "GridLayoutItem",
             "spec": {
-              "x": 18,
+              "x": 14,
               "y": 0,
               "width": 6,
-              "height": 4,
+              "height": 5,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-4"
@@ -685,10 +859,23 @@
           {
             "kind": "GridLayoutItem",
             "spec": {
+              "x": 20,
+              "y": 0,
+              "width": 4,
+              "height": 5,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-8"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
               "x": 0,
-              "y": 4,
+              "y": 5,
               "width": 24,
-              "height": 16,
+              "height": 10,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-5"
@@ -699,12 +886,25 @@
             "kind": "GridLayoutItem",
             "spec": {
               "x": 0,
-              "y": 20,
-              "width": 24,
-              "height": 10,
+              "y": 15,
+              "width": 11,
+              "height": 13,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-6"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 11,
+              "y": 15,
+              "width": 13,
+              "height": 13,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-7"
               }
             }
           }
@@ -714,14 +914,12 @@
     "links": [],
     "liveNow": false,
     "preload": false,
-    "tags": [
-      "network"
-    ],
+    "tags": ["network"],
     "timeSettings": {
       "timezone": "browser",
-      "from": "now-3h",
+      "from": "now-24h",
       "to": "now",
-      "autoRefresh": "",
+      "autoRefresh": "5s",
       "autoRefreshIntervals": [
         "5s",
         "10s",
@@ -737,7 +935,28 @@
       "hideTimepicker": false,
       "fiscalYearStartMonth": 0
     },
-    "title": "Watch Your LAN",
-    "variables": []
+    "title": "WatchYourLAN",
+    "variables": [
+      {
+        "kind": "DatasourceVariable",
+        "spec": {
+          "name": "datasource",
+          "pluginId": "prometheus",
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "current": {
+            "text": "Prometheus",
+            "value": "prometheus"
+          },
+          "options": [],
+          "multi": false,
+          "includeAll": false,
+          "label": "Prometheus",
+          "hide": "dontHide",
+          "skipUrlSync": false,
+          "allowCustomValue": true
+        }
+      }
+    ]
   }
 }

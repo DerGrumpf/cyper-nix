@@ -1,8 +1,5 @@
 { config, pkgs, ... }:
 let
-  serverIP = builtins.head (
-    builtins.match "([0-9.]+)/.*" config.systemd.network.networks."10-ethernet".networkConfig.Address
-  );
   iface = config.systemd.network.networks."10-ethernet".matchConfig.Name;
 in
 {
@@ -31,20 +28,13 @@ in
     };
     environment = {
       IFACES = iface;
-      GUIIP = "127.0.0.1";
+      GUIIP = "0.0.0.0";
       GUIPORT = "8840";
-      PROMETHEUS = "true";
+      PROMETHEUS_ENABLE = "true";
     };
   };
 
   services = {
-    nginx = {
-      enable = true;
-      virtualHosts."${serverIP}".locations."/wyl/" = {
-        proxyPass = "http://127.0.0.1:8840/";
-        proxyWebsockets = true;
-      };
-    };
     prometheus.scrapeConfigs = [
       {
         job_name = "watchyourlan";

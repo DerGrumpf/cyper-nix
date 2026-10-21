@@ -69,4 +69,5 @@ in
   };
 
   networking.firewall.allowedTCPPorts = map ({ port, ... }: port) instances;
+
 }

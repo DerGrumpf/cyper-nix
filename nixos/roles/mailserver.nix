@@ -15,6 +15,9 @@
     "mail/mastodon" = {
       mode = "0440";
     };
+    "mail/grafana" = {
+      mode = "0440";
+    };
   };
 
   security.acme = {
@@ -61,6 +64,9 @@
       };
       "mastodon@cyperpunk.de" = {
         hashedPasswordFile = config.sops.secrets."mail/mastodon".path;
+      };
+      "grafana@cyperpunk.de" = {
+        hashedPasswordFile = config.sops.secrets."mail/grafana".path;
       };
     };
   };

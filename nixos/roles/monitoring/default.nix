@@ -4,6 +4,6 @@
     ./grafana.nix
     ./gs1200.nix
     ./xonotic.nix
-    #    ./wyl.nix
+    ./wyl.nix
   ];
 }

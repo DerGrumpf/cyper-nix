@@ -81,6 +81,7 @@
           git-lfs
           jq
           nix
+          nixos-container
           openssh
           nixos-rebuild
           woodpecker-plugin-git
@@ -114,5 +115,20 @@
 
   networking.firewall.allowedTCPPorts = [
     8002
+  ];
+
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/etc/nixos-containers";
+      user = "root";
+      group = "root";
+      mode = "0700";
+    }
+    {
+      directory = "/var/lib/nixos-containers";
+      user = "root";
+      group = "root";
+      mode = "0700";
+    }
   ];
 }

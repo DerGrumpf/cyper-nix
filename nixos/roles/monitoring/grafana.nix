@@ -19,6 +19,10 @@
       group = "kanidm";
       mode = "0440";
     };
+    "services/grafana/smtp_password" = {
+      owner = "grafana";
+      group = "grafana";
+    };
   };
 
   environment.persistence."/persist".directories = [
@@ -39,8 +43,16 @@
     grafana = {
       enable = true;
 
-      declarativePlugins = with pkgs.grafanaPlugins; [
-        yesoreyeram-infinity-datasource
+      declarativePlugins = [
+        (pkgs.grafanaPlugins.yesoreyeram-infinity-datasource.overrideAttrs (old: {
+          src = pkgs.fetchurl {
+            name = "yesoreyeram-infinity-datasource-4.1.0.zip";
+            inherit (old.src) url;
+            hash = "sha256-E3CBS3xVqdBJq4ylHaFmX75INZjI0fk6RX4yYNL1IhI=";
+          };
+        }))
+
+        pkgs.grafanaPlugins.prometheus
       ];
 
       provision = {
@@ -92,6 +104,16 @@
           http_addr = "0.0.0.0";
           root_url = "https://www.cyperpunk.de/grafana/";
           serve_from_sub_path = true;
+        };
+
+        smtp = {
+          enabled = true;
+          host = "mail.cyperpunk.de:587";
+          user = "grafana@cyperpunk.de";
+          password = "$__file{${config.sops.secrets."services/grafana/smtp_password".path}}";
+          from_address = "grafana@cyperpunk.de";
+          from_name = "Grafana";
+          starttls_policy = "MandatoryStartTLS";
         };
 
         security = {

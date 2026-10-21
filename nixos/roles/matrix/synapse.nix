@@ -239,15 +239,22 @@ in
               try_files $uri $uri/ =404;
             '';
           };
+          #"~ \\.php$" = {
+          #  root = "/var/www/matrix";
+          #  extraConfig = ''
+          #    fastcgi_pass unix:${config.services.phpfpm.pools.matrix.socket};
+          #    fastcgi_index index.php;
+          #    include ${pkgs.nginx}/conf/fastcgi_params;
+          #    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+          #  '';
+          #};
+
           "~ \\.php$" = {
-            root = "/var/www/matrix";
             extraConfig = ''
-              fastcgi_pass unix:${config.services.phpfpm.pools.matrix.socket};
-              fastcgi_index index.php;
-              include ${pkgs.nginx}/conf/fastcgi_params;
-              fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+              return 404;
             '';
           };
+
         };
       };
     };

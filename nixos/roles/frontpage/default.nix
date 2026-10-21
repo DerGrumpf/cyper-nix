@@ -1,4 +1,7 @@
 { ... }:
 {
-  imports = [ ./frontpage.nix ];
+  imports = [
+    ./frontpage.nix
+    ./phil.nix
+  ];
 }
