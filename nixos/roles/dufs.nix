@@ -32,7 +32,7 @@ in
         User = "dufs";
         LoadCredential = "dufs-pass:${config.sops.secrets."services/dufs".path}";
         ExecStart = pkgs.writeShellScript "dufs-start" ''
-          		exec ${pkgs.dufs}/bin/dufs ${uploadDir} --port ${toString port} --allow-upload -a "${uploadUser}:$(cat "$CREDENTIALS_DIRECTORY/dufs-pass"))@/:rw"
+          		exec ${pkgs.dufs}/bin/dufs ${uploadDir} --port ${toString port} --allow-upload -a "${uploadUser}:$(cat "$CREDENTIALS_DIRECTORY/dufs-pass")@/:rw"
           		'';
         Restart = "on-failure";
       };
