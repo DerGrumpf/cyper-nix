@@ -69,7 +69,6 @@
         irssi
         blender
         nixpkgs-review
-        netradiant-custom
         pinta
         orca-slicer
         localsend
