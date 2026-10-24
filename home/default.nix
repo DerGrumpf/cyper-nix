@@ -38,6 +38,7 @@
     ./obsidian.nix
     ./helium.nix
     ./qute.nix
+    ./mail.nix
   ];
 
   home = {
