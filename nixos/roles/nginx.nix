@@ -56,7 +56,10 @@ in
   ];
 
   systemd.tmpfiles.rules = [
-    "d /var/www 0755 root root -"
+    # Since impermanence and tmpfiles clash against each other
+    # persist needs set the permission, so /var/www
+    # is always mounted with the right ones instead of std 0750
+    "d /persist/var/www 0755 root root -"
     "d /var/www/cyperpunk.de 0755 ${primaryUser} nginx -"
   ];
 
