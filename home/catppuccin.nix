@@ -17,6 +17,7 @@
     eza.enable = true;
     fzf.enable = true;
     bat.enable = true;
+    aerc.enable = true;
     element-desktop = lib.mkIf (!isDarwin) {
       enable = true;
       accent = "green";
