@@ -135,7 +135,6 @@ in
         };
       };
       "search.cyperpunk.de" = mkProxy 11080;
-      "file.cyperpunk.de" = mkProxy 10000;
       "vault.cyperpunk.de" = mkWsProxy 8222;
       "calvin.cyperpunk.de" = mkWsProxy 15006;
       "auth.cyperpunk.de" = mkHttpsProxy 8444;

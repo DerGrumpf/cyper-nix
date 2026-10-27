@@ -5,7 +5,7 @@
   imports = [
     ./synapse.nix
     ./livekit.nix
-    ./clients.nix
+    ./clients
     ./draupnir.nix
     ./coturn.nix
     ./maubot.nix

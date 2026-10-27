@@ -130,13 +130,13 @@
         description = "Code Base";
         isPinned = true;
       }
-      {
-        name = "Storage";
-        url = "https://file.cyperpunk.de/";
-        icon = "https://img.icons8.com/nolan/64/cloud-storage.png";
-        description = "Cloud Storage";
-        isPinned = true;
-      }
+      #{
+      #  name = "Storage";
+      #  url = "https://file.cyperpunk.de/";
+      #  icon = "https://img.icons8.com/nolan/64/cloud-storage.png";
+      #  description = "Cloud Storage";
+      #  isPinned = true;
+      #}
       {
         name = "NAS";
         url = "https://192.168.2.7:5001/#/signin";
@@ -207,13 +207,13 @@
         description = "Matrix Client";
         isPinned = true;
       }
-      {
-        name = "Element";
-        url = "https://element.cyperpunk.de";
-        icon = "https://img.icons8.com/nolan/96/messaging-.png";
-        description = "Matrix Client";
-        isPinned = true;
-      }
+      #{
+      #  name = "Element";
+      #  url = "https://element.cyperpunk.de";
+      #  icon = "https://img.icons8.com/nolan/96/messaging-.png";
+      #  description = "Matrix Client";
+      #  isPinned = true;
+      #}
       {
         name = "Synapse";
         url = "https://cyperpunk.de/admin/";
@@ -221,13 +221,13 @@
         description = "Matrix Admin";
         isPinned = true;
       }
-      {
-        name = "Fluffy Chat";
-        url = "https://fluffy.cyperpunk.de";
-        icon = "https://img.icons8.com/nolan/96/plush.png";
-        description = "Matrix Client";
-        isPinned = true;
-      }
+      #{
+      #  name = "Fluffy Chat";
+      #  url = "https://fluffy.cyperpunk.de";
+      #  icon = "https://img.icons8.com/nolan/96/plush.png";
+      #  description = "Matrix Client";
+      #  isPinned = true;
+      #}
       {
         name = "Xono";
         url = "http://51.91.80.158:3000";
