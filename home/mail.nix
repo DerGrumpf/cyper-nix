@@ -322,6 +322,7 @@ in
 
         openers = {
           "application/pdf" = "kitty tdf {}";
+          "application/octet-stream" = "kitty tdf {}";
           "image/png" = "kitty kitten icat --hold {}";
           "image/jpeg" = "kitty kitten icat --hold {}";
           "image/gif" = "kitty kitten icat --hold {}";

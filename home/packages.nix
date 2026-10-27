@@ -61,13 +61,9 @@
         nautilus
         swayimg
         kdePackages.okular
-        kdePackages.tokodon
-        gnumeric
         sqlitebrowser
         thunderbird
         xonotic
-        irssi
-        blender
         nixpkgs-review
         pinta
         orca-slicer

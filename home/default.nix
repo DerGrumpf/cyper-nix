@@ -37,14 +37,14 @@
     ./floorp
     ./obsidian.nix
     ./helium.nix
-    ./qute.nix
+    #    ./qute.nix
     ./mail.nix
   ];
 
   home = {
     username = primaryUser;
     enableNixpkgsReleaseCheck = false;
-    stateVersion = "26.05";
+    stateVersion = "26.11";
     sessionVariables = lib.mkIf (!isDarwin && !isServer) {
     };
     file = lib.mkIf (!isServer) {

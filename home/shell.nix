@@ -27,8 +27,10 @@
 
     persistence = lib.mkIf (!isDarwin) {
       "/persist" = {
-        directories = [ ".local/share/zoxide" ];
-        files = [ ".local/share/fish/fish_history" ];
+        directories = [
+          ".local/share/zoxide"
+          ".local/share/fish"
+        ];
       };
     };
 
@@ -129,6 +131,7 @@
 
     nushell = {
       enable = true;
+      loadSessionVariables = true;
       shellAliases = {
         la = "ls -la";
         i = "kitty +kitten icat";
