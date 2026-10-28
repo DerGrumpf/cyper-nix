@@ -9,7 +9,7 @@
     ../../nixos/roles/adguard.nix
     ../../nixos/roles/unifi.nix
     ../../nixos/roles/searxng.nix
-    ../../nixos/roles/filebrowser.nix
+    #    ../../nixos/roles/filebrowser.nix
     ../../nixos/roles/jupyterhub.nix
     ../../nixos/roles/forgejo.nix
     ../../nixos/roles/vaultwarden.nix
