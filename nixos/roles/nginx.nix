@@ -37,6 +37,12 @@ in
       group = "acme";
       mode = "0750";
     }
+    {
+      directory = "/var/www/cyperpunk.de";
+      user = primaryUser;
+      group = "nginx";
+      mode = "0755";
+    }
   ];
 
   networking.firewall.allowedTCPPorts = [
@@ -50,7 +56,10 @@ in
   ];
 
   systemd.tmpfiles.rules = [
-    "d /var/www/home.cyperpunk.de 0755 nginx nginx -"
+    # Since impermanence and tmpfiles clash against each other
+    # persist needs set the permission, so /var/www
+    # is always mounted with the right ones instead of std 0750
+    "d /persist/var/www 0755 root root -"
     "d /var/www/cyperpunk.de 0755 ${primaryUser} nginx -"
   ];
 
@@ -126,7 +135,6 @@ in
         };
       };
       "search.cyperpunk.de" = mkProxy 11080;
-      "file.cyperpunk.de" = mkProxy 10000;
       "vault.cyperpunk.de" = mkWsProxy 8222;
       "calvin.cyperpunk.de" = mkWsProxy 15006;
       "auth.cyperpunk.de" = mkHttpsProxy 8444;

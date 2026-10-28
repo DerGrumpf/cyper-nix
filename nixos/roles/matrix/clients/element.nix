@@ -1,5 +1,6 @@
 { pkgs, lib, ... }:
 let
+  # Theme hashes are defined in cinny.nix, we need them here too
   flavours = [
     {
       name = "Latte";
@@ -132,69 +133,12 @@ let
       cp ${elementConfig} $out/config.json
     '';
   });
-
-  cinnyConfigured = pkgs.cinny-unwrapped.overrideAttrs (_: {
-    postInstall = ''
-      cp ${
-        builtins.toFile "cinny-config.json" (
-          builtins.toJSON {
-            defaultHomeserver = 0;
-            homeserverList = [ "cyperpunk.de" ];
-            allowCustomHomeservers = false;
-          }
-        )
-      } $out/config.json
-    '';
-  });
-
 in
 {
-  environment.persistence."/persist".directories = [
-    {
-      directory = "/var/lib/containers";
-      user = "root";
-      group = "root";
-      mode = "0700";
-    }
-  ];
-
-  services.nginx.virtualHosts = {
-    "cinny.cyperpunk.de" = {
-      forceSSL = true;
-      enableACME = true;
-      root = "${cinnyConfigured}";
-      locations."/" = {
-        tryFiles = "$uri $uri/ /index.html";
-      };
-    };
-    "element.cyperpunk.de" = {
-      forceSSL = true;
-      enableACME = true;
-      root = "${elementWebConfigured}";
-    };
-
-    "fluffy.cyperpunk.de" = {
-      forceSSL = true;
-      enableACME = true;
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:8082";
-        proxyWebsockets = true;
-      };
-    };
-  };
-
-  virtualisation.oci-containers.containers.fluffychat = {
-    image = "ghcr.io/krille-chan/fluffychat:latest";
-    ports = [ "127.0.0.1:8082:80" ];
-    volumes = [
-      "${
-        builtins.toFile "fluffychat-config.json" (
-          builtins.toJSON {
-            default_homeserver = "matrix.cyperpunk.de";
-            preset_homeserver = "matrix.cyperpunk.de";
-          }
-        )
-      }:/app/config.json:ro"
-    ];
+  # Element virtual host - disabled: no DNS record for element.cyperpunk.de
+  services.nginx.virtualHosts."element.cyperpunk.de" = {
+    forceSSL = true;
+    enableACME = true;
+    root = "${elementWebConfigured}";
   };
 }

@@ -23,11 +23,12 @@
 
   programs.rofi = {
     enable = true;
-    cycle = true;
-    package = pkgs.rofi;
-    font = "FiraCode Nerd Font Mono 12";
-    location = "center";
-    terminal = "${pkgs.kitty}/bin/kitty";
+    settings = {
+      font = "FiraCode Nerd Font Mono 12";
+      terminal = "${pkgs.kitty}/bin/kitty";
+      cycle = true;
+      location = 0;
+    };
   };
 
 }

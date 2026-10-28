@@ -17,6 +17,14 @@
       owner = "mautrix-meta-instagram";
       group = "mautrix-meta";
     };
+    "postgres/mautrix/facebook" = {
+      owner = "mautrix-meta-facebook";
+      group = "mautrix-meta";
+    };
+    "postgres/mautrix/instagram" = {
+      owner = "mautrix-meta-instagram";
+      group = "mautrix-meta";
+    };
   };
 
   environment.persistence."/persist".directories = [
@@ -50,6 +58,9 @@
         echo "META_HS_TOKEN=$(cat ${
           config.sops.secrets."matrix/bridges/meta/hs_token".path
         })" >> /run/mautrix-meta-facebook/env
+        echo "META_DB_PASSWORD=$(cat ${
+          config.sops.secrets."postgres/mautrix/facebook".path
+        })" >> /run/mautrix-meta-facebook/env
         chmod 600 /run/mautrix-meta-facebook/env
         chown mautrix-meta-facebook:mautrix-meta /run/mautrix-meta-facebook/env
       '';
@@ -70,6 +81,9 @@
         echo "INSTAGRAM_HS_TOKEN=$(cat ${
           config.sops.secrets."matrix/bridges/instagram/hs_token".path
         })" >> /run/mautrix-meta-instagram/env
+        echo "INSTAGRAM_DB_PASSWORD=$(cat ${
+          config.sops.secrets."postgres/mautrix/instagram".path
+        })" >> /run/mautrix-meta-instagram/env
         chmod 600 /run/mautrix-meta-instagram/env
         chown mautrix-meta-instagram:mautrix-meta /run/mautrix-meta-instagram/env
       '';
@@ -80,23 +94,6 @@
   };
 
   services = {
-    postgresql = {
-      ensureUsers = [
-        {
-          name = "mautrix-meta-facebook";
-          ensureDBOwnership = true;
-        }
-        {
-          name = "mautrix-meta-instagram";
-          ensureDBOwnership = true;
-        }
-      ];
-      ensureDatabases = [
-        "mautrix-meta-facebook"
-        "mautrix-meta-instagram"
-      ];
-    };
-
     mautrix-meta.instances = {
       facebook = {
         enable = true;
@@ -108,7 +105,7 @@
           };
           database = {
             type = "postgres";
-            uri = "postgres:///mautrix-meta-facebook?host=/run/postgresql&sslmode=disable";
+            uri = "postgres://mautrix-meta-facebook:$META_DB_PASSWORD@10.10.0.2:5432/mautrix-meta-facebook?sslmode=disable";
           };
           appservice = {
             as_token = "$META_AS_TOKEN";
@@ -131,7 +128,7 @@
           };
           database = {
             type = "postgres";
-            uri = "postgres:///mautrix-meta-instagram?host=/run/postgresql&sslmode=disable";
+            uri = "postgres://mautrix-meta-instagram:$INSTAGRAM_DB_PASSWORD@10.10.0.2:5432/mautrix-meta-instagram?sslmode=disable";
           };
           appservice = {
             as_token = "$INSTAGRAM_AS_TOKEN";

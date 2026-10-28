@@ -36,6 +36,8 @@
       statix
       ruff
       clippy
+      rustc
+      cargo
       eslint
     ];
   };

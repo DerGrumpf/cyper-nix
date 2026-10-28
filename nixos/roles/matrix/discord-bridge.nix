@@ -13,6 +13,10 @@
       owner = "mautrix-discord";
       group = "mautrix-discord";
     };
+    "postgres/mautrix/discord" = {
+      owner = "mautrix-discord";
+      group = "mautrix-discord";
+    };
   };
 
   environment.persistence."/persist".directories = [
@@ -44,6 +48,9 @@
           echo "DISCORD_PICKLE_KEY=$(cat ${
             config.sops.secrets."matrix/bridges/discord/pickle_key".path
           })" >> /run/mautrix-discord/env
+          echo "DISCORD_DB_PASSWORD=$(cat ${
+            config.sops.secrets."postgres/mautrix/discord".path
+          })" >> /run/mautrix-discord/env
           chmod 600 /run/mautrix-discord/env
           chown mautrix-discord:mautrix-discord /run/mautrix-discord/env
         '';
@@ -57,15 +64,6 @@
   };
 
   services = {
-    postgresql = {
-      ensureUsers = [
-        {
-          name = "mautrix-discord";
-          ensureDBOwnership = true;
-        }
-      ];
-      ensureDatabases = [ "mautrix-discord" ];
-    };
 
     mautrix-discord = {
       enable = true;
@@ -77,7 +75,7 @@
         };
         appservice.database = {
           type = "postgres";
-          uri = "postgres:///mautrix-discord?host=/run/postgresql&sslmode=disable";
+          uri = "postgres://mautrix-discord:$DISCORD_DB_PASSWORD@10.10.0.2:5432/mautrix-discord?sslmode=disable";
         };
         bridge = {
           permissions = {

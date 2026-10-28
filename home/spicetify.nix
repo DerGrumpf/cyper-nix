@@ -29,7 +29,7 @@
         popupLyrics
         shuffle
         autoVolume
-        betterGenres
+        #        betterGenres
         adblock
         wikify
         songStats

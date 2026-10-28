@@ -71,7 +71,7 @@
 
       keep-outputs = lib.mkForce false;
       keep-derivations = lib.mkForce false;
-
+      warn-dirty = false;
     };
     gc = {
       automatic = true;
@@ -108,7 +108,10 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [ git ];
+  environment.systemPackages = with pkgs; [
+    git
+    nixos-container
+  ];
 
   security = lib.mkIf (!isServer) {
     pam.services = {

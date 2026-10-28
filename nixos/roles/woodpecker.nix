@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   sops = {
     secrets = {
@@ -59,7 +64,10 @@
           WOODPECKER_SERVER = "localhost:9003";
           WOODPECKER_BACKEND = "local";
           WOODPECKER_HEALTHCHECK_ADDR = ":3001";
-          WOODPECKER_MAX_WORKFLOWS = "2";
+          WOODPECKER_MAX_WORKFLOWS = "4";
+          WOODPECKER_BACKEND_LOCAL_TEMP_DIR = "/storage/fast/woodpecker-ci";
+          WOODPECKER_AGENT_LABELS = "backend=local";
+          WOODPECKER_AGENT_CONFIG_FILE = "/var/lib/woodpecker-agent-exec/agent.conf";
         };
         environmentFile = [
           config.sops.templates."woodpecker-agent-secret.env".path
@@ -73,15 +81,54 @@
           git-lfs
           jq
           nix
+          nixos-container
           openssh
           nixos-rebuild
           woodpecker-plugin-git
+          (python3.withPackages (
+            ps: with ps; [
+              pyyaml
+              python-frontmatter
+            ]
+          ))
+          markdownlint-cli2
         ];
       };
     };
   };
 
+  systemd = {
+    tmpfiles.rules = [
+      "d /storage/fast/woodpecker-ci 1777 root root -"
+    ];
+
+    services."woodpecker-agent-exec".serviceConfig = {
+      ReadWritePaths = [
+        "/storage/fast/woodpecker-ci"
+      ];
+
+      StateDirectory = "woodpecker-agent-exec";
+
+      MemoryDenyWriteExecute = lib.mkForce false;
+    };
+  };
+
   networking.firewall.allowedTCPPorts = [
     8002
+  ];
+
+  environment.persistence."/persist".directories = [
+    {
+      directory = "/etc/nixos-containers";
+      user = "root";
+      group = "root";
+      mode = "0700";
+    }
+    {
+      directory = "/var/lib/nixos-containers";
+      user = "root";
+      group = "root";
+      mode = "0700";
+    }
   ];
 }

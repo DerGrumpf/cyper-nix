@@ -85,11 +85,11 @@ in
         c.DockerSpawner.remove = True
         c.DockerSpawner.notebook_dir = "/home/jovyan/work"
         c.DockerSpawner.volumes = {
-        		"/storage/internal/jupyter/{username}": "/home/jovyan/work"
+        		"/storage/fast/jupyter/{username}": "/home/jovyan/work"
         }
 
         def create_user_dir_hook(spawner):
-        		path = f"/storage/internal/jupyter/{spawner.user.name}"
+        		path = f"/storage/fast/jupyter/{spawner.user.name}"
         		os.makedirs(path, exist_ok=True)
         		os.chown(path, 1000, 100)
 
@@ -120,11 +120,11 @@ in
   systemd.services.jupyterhub = {
     after = [
       "docker.service"
-      "storage-internal.mount"
+      "storage-fast.mount"
     ];
     requires = [
       "docker.service"
-      "storage-internal.mount"
+      "storage-fast.mount"
     ];
   };
 

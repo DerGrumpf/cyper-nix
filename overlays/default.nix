@@ -2,7 +2,7 @@
 final: prev:
 (nur.overlays.default final prev)
 // {
-  netradiant-custom = final.callPackage ./netradiant-custom.nix { };
+  #  netradiant-custom = final.callPackage ./netradiant-custom.nix { };
 
   pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
     (pyFinal: pyPrev: {

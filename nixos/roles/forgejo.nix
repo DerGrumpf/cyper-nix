@@ -54,41 +54,9 @@ in
       group = "forgejo";
       mode = "0750";
     }
-    {
-      directory = "/var/lib/postgresql";
-      user = "postgres";
-      group = "postgres";
-      mode = "0750";
-    }
   ];
 
   systemd = {
-    services = {
-      forgejo-db-password = {
-        description = "Set forgejo postgres user password";
-        requires = [
-          "postgresql.service"
-          "postgresql-setup.service"
-        ];
-        after = [
-          "postgresql.service"
-          "postgresql-setup.service"
-        ];
-        before = [ "forgejo.service" ];
-        wantedBy = [ "forgejo.service" ];
-        serviceConfig = {
-          Type = "oneshot";
-          User = "postgres";
-          RemainAfterExit = true;
-        };
-        script = ''
-          pass=$(cat ${config.sops.secrets."services/forgejo/db_password".path})
-          ${pkgs.postgresql_14}/bin/psql -c \
-            "ALTER USER forgejo WITH PASSWORD '$pass';"
-        '';
-      };
-    };
-
     tmpfiles.rules = [
       "d /var/lib/forgejo 0750 forgejo forgejo -"
       "d /var/lib/forgejo/custom 0750 forgejo forgejo -"
@@ -97,23 +65,6 @@ in
   };
 
   services = {
-    postgresql = {
-      enable = true;
-      package = pkgs.postgresql_14;
-      ensureDatabases = [ "forgejo" ];
-      ensureUsers = [
-        {
-          name = "forgejo";
-          ensureDBOwnership = true;
-        }
-      ];
-      authentication = lib.mkOverride 10 ''
-        local all all trust
-        host  all all 127.0.0.1/32 md5
-        host  all all ::1/128      md5
-      '';
-    };
-
     forgejo = {
       enable = true;
       package = pkgs.forgejo;

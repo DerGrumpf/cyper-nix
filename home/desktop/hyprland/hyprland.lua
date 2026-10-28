@@ -259,8 +259,8 @@ bind_all({
 	{ super .. " + V", hl.dsp.window.float({ action = "toggle" }) },
 	{ super .. " + C", hl.dsp.window.close() },
 	-- Mouse move/resize
-	{ super .. " + mouse:272", hl.dsp.window.drag() },
-	{ super .. " + mouse:273", hl.dsp.window.drag({ resize = true }) },
+	{ super .. " + mouse:272", hl.dsp.window.drag(), { mouse = true } },
+	{ super .. " + mouse:273", hl.dsp.window.resize(), { mouse = true } },
 	-- Switch workspaces with mouse wheel
 	{ super .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }) },
 	{ super .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }) },

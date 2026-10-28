@@ -4,7 +4,6 @@
     systemPackages = with pkgs; [
       maubot
     ];
-
     persistence."/persist".directories = [
       {
         directory = "/var/lib/maubot";
@@ -15,9 +14,25 @@
     ];
   };
 
+  sops = {
+    secrets."postgres/maubot" = {
+      owner = "maubot";
+      group = "maubot";
+    };
+
+    templates."maubot-extra-config" = {
+      owner = "maubot";
+      group = "maubot";
+      content = ''
+        database: postgresql://maubot:${config.sops.placeholder."postgres/maubot"}@10.10.0.2:5432/maubot
+      '';
+    };
+  };
+
   services = {
     maubot = {
       enable = true;
+      extraConfigFile = config.sops.templates."maubot-extra-config".path;
       plugins = with config.services.maubot.package.plugins; [
         weather
         rss
@@ -27,7 +42,7 @@
         dice
       ];
       settings = {
-        database = "postgresql:///maubot?host=/run/postgresql";
+        database = "postgresql://maubot@10.10.0.2:5432/maubot";
         homeservers = {
           "cyperpunk.de" = {
             url = "https://matrix.cyperpunk.de";
@@ -44,17 +59,6 @@
         };
       };
     };
-
-    postgresql = {
-      ensureUsers = [
-        {
-          name = "maubot";
-          ensureDBOwnership = true;
-        }
-      ];
-      ensureDatabases = [ "maubot" ];
-    };
-
     nginx.virtualHosts."cyperpunk.de".locations."/_matrix/maubot/" = {
       proxyPass = "http://127.0.0.1:29316";
       proxyWebsockets = true;

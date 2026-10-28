@@ -86,7 +86,9 @@ in
         config.sops.secrets."services/mastodon/ar_encryption_primary_key".path;
 
       database = {
-        createLocally = true;
+        createLocally = false;
+        host = "10.10.0.2";
+        port = 5432;
         passwordFile = config.sops.secrets."services/mastodon/db_password".path;
       };
 

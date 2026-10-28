@@ -15,6 +15,9 @@
     "mail/mastodon" = {
       mode = "0440";
     };
+    "mail/grafana" = {
+      mode = "0440";
+    };
   };
 
   security.acme = {
@@ -36,14 +39,13 @@
     };
   };
 
-  systemd = {
-    tmpfiles.rules = [
-      "d /storage/internal/mail/dkim 0770 virtualMail rspamd -"
-    ];
-  };
+  systemd.services.postfix-tlspol.serviceConfig.RestrictAddressFamilies = [ "AF_UNIX" ];
 
   system.activationScripts.mailDkimAcl = ''
-    ${pkgs.acl}/bin/setfacl -m g:rspamd:x /storage/internal/mail
+    mkdir -p /storage/fast/mail/dkim
+    chown virtualMail:rspamd /storage/fast/mail/dkim
+    chmod 0770 /storage/fast/mail/dkim
+    ${pkgs.acl}/bin/setfacl -m g:rspamd:x /storage/fast/mail
   '';
 
   mailserver = {
@@ -51,8 +53,8 @@
     stateVersion = 5;
     fqdn = "mail.cyperpunk.de";
     domains = [ "cyperpunk.de" ];
-    storage.path = "/storage/internal/mail";
-    dkim.keyDirectory = "/storage/internal/mail/dkim";
+    storage.path = "/storage/fast/mail";
+    dkim.keyDirectory = "/storage/fast/mail/dkim";
     x509.useACMEHost = config.mailserver.fqdn;
     localDnsResolver = false;
     accounts = {
@@ -62,6 +64,9 @@
       };
       "mastodon@cyperpunk.de" = {
         hashedPasswordFile = config.sops.secrets."mail/mastodon".path;
+      };
+      "grafana@cyperpunk.de" = {
+        hashedPasswordFile = config.sops.secrets."mail/grafana".path;
       };
     };
   };

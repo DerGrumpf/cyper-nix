@@ -11,14 +11,16 @@
   ];
 
   boot = {
-    initrd.availableKernelModules = [
-      "xhci_pci"
-      "ahci"
-      "usb_storage"
-      "sd_mod"
-      "nvme"
-    ];
-    initrd.kernelModules = [ ];
+    initrd = {
+      availableKernelModules = [
+        "xhci_pci"
+        "ahci"
+        "usb_storage"
+        "sd_mod"
+        "nvme"
+      ];
+      kernelModules = [ ];
+    };
     kernelModules = [ "kvm-intel" ];
     extraModulePackages = [ ];
     zfs.forceImportRoot = false;
@@ -30,20 +32,20 @@
       fsType = "tmpfs";
       options = [
         "defaults"
-        "size=6G"
+        "size=1G"
         "mode=755"
       ];
     };
 
-    "/storage/internal" = {
-      device = "/dev/disk/by-label/STORAGE";
-      fsType = "btrfs";
-      options = [
-        "compress=zstd"
-        "noatime"
-        "nofail"
-      ];
-    };
+    #    "/storage/internal" = {
+    #      device = "/dev/disk/by-label/STORAGE";
+    #      fsType = "btrfs";
+    #      options = [
+    #        "compress=zstd"
+    #        "noatime"
+    #        "nofail"
+    #      ];
+    #    };
 
     "/storage/fast" = {
       device = "/dev/disk/by-label/FAST";

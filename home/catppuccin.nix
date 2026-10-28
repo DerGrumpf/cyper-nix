@@ -15,6 +15,7 @@
     eza.enable = true;
     fzf.enable = true;
     bat.enable = true;
+    aerc.enable = true;
     element-desktop = {
       enable = true;
       accent = "green";

@@ -59,18 +59,14 @@
         nautilus
         swayimg
         kdePackages.okular
-        kdePackages.tokodon
-        gnumeric
         sqlitebrowser
         thunderbird
         xonotic
-        irssi
-        blender
         nixpkgs-review
-        netradiant-custom
         pinta
         orca-slicer
         localsend
+        vlc
       ];
   };
 }

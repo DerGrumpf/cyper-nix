@@ -12,7 +12,6 @@
       "/var/lib/nixos"
       "/var/lib/systemd"
       "/var/log"
-      "/var/lib/tailscale"
     ];
   };
 }

@@ -28,6 +28,7 @@ in
     ];
 
     persistence."/persist".directories = [
+      ".config/obsidian" # global app config (vault trust, etc.)
       "Notes"
     ];
 

@@ -1,6 +1,6 @@
 {
   pkgs,
-  lib,
+  config,
   ...
 }:
 {
@@ -25,8 +25,10 @@
 
     persistence = {
       "/persist" = {
-        directories = [ ".local/share/zoxide" ];
-        files = [ ".local/share/fish/fish_history" ];
+        directories = [
+          ".local/share/zoxide"
+          ".local/share/fish"
+        ];
       };
     };
 
@@ -128,6 +130,7 @@
 
     nushell = {
       enable = true;
+      loadSessionVariables = true;
       shellAliases = {
         la = "ls -la";
         i = "kitty +kitten icat";
@@ -142,8 +145,10 @@
         # fzf picker for nvim
         def f [] { nvim (fzf) }
       '';
+
       extraEnv = ''
         $env.STARSHIP_SHELL = "nu"
+        $env.NVIDIA_API_KEY = (open "${config.sops.templates."nvidia-api-key".path}")
       '';
     };
 
@@ -165,6 +170,7 @@
       };
 
       interactiveShellInit = ''
+        set -gx NVIDIA_API_KEY (cat "${config.sops.templates."nvidia-api-key".path}")
         starship init fish | source
         fzf --fish | source
         zoxide init fish --cmd cd | source

@@ -31,3 +31,6 @@ secrets/*.yaml~
 # Editor
 .direnv/
 .envrc
+
+# Ext4(?)
+.Trash-1000

@@ -1,5 +1,4 @@
 {
-  config,
   primaryUser,
   inputs,
   self,
@@ -29,16 +28,14 @@
     ./floorp
     ./obsidian.nix
     ./helium.nix
+    #    ./qute.nix
+    ./mail.nix
   ];
 
   home = {
     username = primaryUser;
     enableNixpkgsReleaseCheck = false;
-    stateVersion = "26.05";
-    sessionVariables = lib.mkIf (!isServer) {
-      GROQ_API_KEY = config.sops.secrets."api_keys/groq".path;
-      OPENWEATHER_API_KEY = config.sops.secrets."api_keys/openweather".path;
-    };
+    stateVersion = "26.11";
     file = lib.mkIf (!isServer) {
       "Pictures/Avatar" = {
         source = "${self}/assets/avatar";
@@ -58,8 +55,6 @@
 
       "/persist/secrets/age-key.txt";
     secrets = {
-      "api_keys/groq" = { };
-      "api_keys/openweather" = { };
       "ssh/private_key" = {
         path = "/home/${primaryUser}/.ssh/ssh";
         mode = "0600";
