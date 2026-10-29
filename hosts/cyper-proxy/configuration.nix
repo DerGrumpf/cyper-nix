@@ -2,11 +2,11 @@
   imports = [
     ./disko.nix
     ./hardware-configuration.nix
-    ../../nixos/roles/nginx.nix
-    ../../nixos/roles/matrix
-    ../../nixos/roles/mastodon.nix
-    ../../nixos/roles/mail-relay.nix
-    ../../nixos/roles/dufs.nix
+    ../../services/nginx.nix
+    ../../services/matrix
+    ../../services/mastodon.nix
+    ../../services/mail-relay.nix
+    ../../services/dufs.nix
   ];
 
   networking = {

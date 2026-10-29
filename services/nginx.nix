@@ -117,7 +117,7 @@ in
         '';
         locations = (mkProxy 9000).locations // {
           "= /dashboard" = {
-            alias = "${./forgejo-dashboard.html}";
+            alias = "${./forgejo/forgejo-dashboard.html}";
             extraConfig = ''
               default_type text/html;
               add_header Cache-Control "no-cache";
@@ -189,7 +189,7 @@ in
             '';
           };
           "= /hydra-theme/mocha.css" = {
-            alias = "${./hydra-theme.css}";
+            alias = "${./hydra/hydra-theme.css}";
             extraConfig = ''
               add_header Cache-Control "no-cache";
             '';

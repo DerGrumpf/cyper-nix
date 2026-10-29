@@ -5,7 +5,7 @@
     ./hardware-configuration.nix
     ../net-config.nix
 
-    ../../nixos/roles/octoprint.nix
+    ../../services/octoprint.nix
   ];
 
   boot = {

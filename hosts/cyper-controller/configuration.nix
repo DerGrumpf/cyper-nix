@@ -5,22 +5,22 @@
     ./smb.nix
     ../net-config.nix
     ../boot.nix
-    ../../nixos/roles/monitoring
-    ../../nixos/roles/adguard.nix
-    ../../nixos/roles/unifi.nix
-    ../../nixos/roles/searxng.nix
-    #    ../../nixos/roles/filebrowser.nix
-    ../../nixos/roles/jupyterhub.nix
-    ../../nixos/roles/forgejo.nix
-    ../../nixos/roles/vaultwarden.nix
-    ../../nixos/roles/frontpage
-    ../../nixos/roles/octoprint.nix
-    ../../nixos/roles/postgresql-controller.nix
-    ../../nixos/roles/kanidm.nix
-    ../../nixos/roles/ollama.nix
-    #    ../../nixos/roles/hydra.nix
-    ../../nixos/roles/mailserver.nix
-    #    ../../nixos/roles/pumpkin.nix
+    ../../services/monitoring
+    ../../services/adguard.nix
+    ../../services/unifi.nix
+    ../../services/searxng.nix
+    #    ../../services/filebrowser.nix
+    ../../services/jupyterhub.nix
+    ../../services/forgejo
+    ../../services/vaultwarden
+    ../../services/frontpage
+    ../../services/octoprint.nix
+    ../../services/postgresql-controller.nix
+    ../../services/kanidm
+    ../../services/ollama.nix
+    #    ../../services/hydra
+    ../../services/mailserver.nix
+    #    ../../services/pumpkin.nix
   ];
 
   net = {
