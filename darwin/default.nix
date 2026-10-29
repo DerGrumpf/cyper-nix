@@ -76,7 +76,7 @@
   };
 
   sops = {
-    defaultSopsFile = ../secrets/secrets.yaml;
+    defaultSopsFile = ../secrets/system.yaml;
     defaultSopsFormat = "yaml";
     age.keyFile = "/Users/${primaryUser}/.config/nix/secrets/age-key.txt";
   };

@@ -92,7 +92,8 @@ Secrets are managed with [sops-nix](https://github.com/Mic92/sops-nix) and age e
 The age key must exist at `~/.config/sops/age/keys.txt` on every host. To edit secrets:
 
 ```bash
-sops secrets/secrets.yaml
+sops secrets/system.yaml
+sops secrets/home.yaml
 ```
 
 Never edit `.age` files directly.

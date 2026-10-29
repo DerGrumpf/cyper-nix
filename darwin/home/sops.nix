@@ -1,7 +1,7 @@
 { primaryUser, ... }:
 {
   sops = {
-    defaultSopsFile = ../../secrets/secrets.yaml;
+    defaultSopsFile = ../../secrets/home.yaml;
     defaultSopsFormat = "yaml";
     age.keyFile = "/Users/${primaryUser}/.config/nix/secrets/age-key.txt";
     secrets = {

@@ -9,7 +9,8 @@ extra-files/*
 secrets/*
 
 # Explicitly allow ONLY these files
-!secrets/secrets.yaml
+!secrets/home.yaml
+!secrets/system.yaml
 !secrets/keys.txt.age
 !secrets/ssh-github
 !secrets/ssh-key

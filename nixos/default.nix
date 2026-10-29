@@ -9,7 +9,6 @@
 }:
 {
   imports = [
-    ./sops.nix
     ./locale.nix
     ./wireguard.nix
     ./ssh.nix
@@ -24,13 +23,19 @@
     ./helium
   ];
 
-  sops.secrets = {
-    "nix/cache_priv_key" = {
-      mode = "0400";
-    };
-    "nix/cachix_auth_token" = { };
-    "system/${primaryUser}" = {
-      neededForUsers = true;
+  sops = {
+    defaultSopsFile = ../secrets/system.yaml;
+    defaultSopsFormat = "yaml";
+    age.keyFile = "/persist/secrets/age-key.txt";
+
+    secrets = {
+      "nix/cache_priv_key" = {
+        mode = "0400";
+      };
+      "nix/cachix_auth_token" = { };
+      "system/${primaryUser}" = {
+        neededForUsers = true;
+      };
     };
   };
 

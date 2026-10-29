@@ -49,11 +49,9 @@
   };
 
   sops = {
-    defaultSopsFile = ../secrets/secrets.yaml;
+    defaultSopsFile = ../secrets/home.yaml;
     defaultSopsFormat = "yaml";
-    age.keyFile =
-
-      "/persist/secrets/age-key.txt";
+    age.keyFile = "/persist/secrets/age-key.txt";
     secrets = {
       "ssh/private_key" = {
         path = "/home/${primaryUser}/.ssh/ssh";
